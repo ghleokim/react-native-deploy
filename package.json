@@ -1,19 +1,27 @@
 {
-  "name": "food-seeker",
+  "name": "foodtruck-map",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "aws-sdk": "^2.607.0",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
+    "ejs": "^3.0.1",
     "express": "~4.16.1",
+    "express-generator": "^4.16.1",
+    "express-session": "^1.17.0",
     "http-errors": "~1.6.3",
+    "method-override": "^3.0.0",
     "morgan": "~1.9.1",
+    "multer": "^1.4.2",
+    "multer-s3": "^2.9.0",
+    "mysql": "^2.17.1",
     "mysql2": "^2.1.0",
-    "pug": "2.0.0-beta11",
+    "pug": "^2.0.4",
     "sequelize": "^5.21.3"
   }
 }
