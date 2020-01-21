@@ -3,19 +3,34 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var cors = require('cors'); 
-
-
+const methodOverride = require('method-override');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+const session = require('express-session');
 
 var app = express();
-app.use(cors());
+const models = require("./models/index.js");
 
+models.sequelize.sync({force:true}).then( () => {
+  console.log(" DB 연결 성공");
+}).catch(err => {
+  console.log("연결 실패");
+  console.log(err);
+});
+
+app.use(methodOverride('_method'));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
-
+app.set('view engine', 'ejs');
+app.use(session({
+  key: 'sid',
+  secret: 'secret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 24000 * 60 * 60 // 쿠키 유효기간 24시간
+  }
+}));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
