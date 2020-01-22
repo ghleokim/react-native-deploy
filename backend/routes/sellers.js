@@ -3,15 +3,15 @@ const router = express.Router();
 const models = require("../models");
 const crypto = require("crypto");
 
-
 router.get('/sign_up', function (req, res, next) {
     res.render("sellers/sign_up");
 });
 
+// 회원가입
 router.post("/sign_up", async function (req, res, next) {
     let body = req.body;
 
-    let inputPassword = body.password;
+    let inputPassword = body.sellerPassword;
     let salt = Math.round((new Date().valueOf() * Math.random())) + "";
     let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
 
@@ -22,10 +22,15 @@ router.post("/sign_up", async function (req, res, next) {
         businessRegistrationNumber: body.sellerBusinessRegistrationNumber,
         salt: salt
     })
-
-    res.redirect("/sellers/sign_up");
+    .then(result => {
+        res.send('회원가입완료');
+        // res.redirect("/sellers/sign_up");
+    })
+    .catch(err => {
+        console.log(err)
+    });
 });
-
+ 
 router.get('/', function (req, res, next) {
     if (req.cookies) {
         console.log(req.cookies);
@@ -34,6 +39,43 @@ router.get('/', function (req, res, next) {
     res.send("사장님 환영합니다 ~");
 });
 
+// sellerEmail 기반 삭제
+router.delete('/:sellerEmail', function (req, res, next) {
+    models.seller.destroy({ where: { email: req.params.sellerEmail } })
+      .then((result) => {
+        console.log(result);
+        res.json(result);
+        // res.redirect('/');
+      })
+      .catch((err) => {
+        console.error(err);
+        next(err);
+      });
+  });
+
+  // 이름 말고 뭘 바꿀까
+  router.put('/', async function (req, res, next) {
+    let result = await models.seller.findOne({
+        where: {
+            email: req.body.sellerEmail
+        }
+    });
+
+    console.log(result.dataValues.salt);
+    
+    models.seller.update(
+      { name: req.body.sellerName},
+      { where: { email: req.body.sellerEmail } })
+      .then((result) => {
+        console.log(result);
+        res.json(result);
+      })
+      .catch((err) => {
+        console.error(err);
+        next(err);
+      });
+  });
+  
 router.get('/login', function (req, res, next) {
     let session = req.session;
     console.log(session);
@@ -52,10 +94,9 @@ router.post("/login", async function (req, res, next) {
     });
 
     let dbPassword = result.dataValues.password;
-    let inputPassword = body.password;
+    let inputPassword = body.sellerPassword;
     let salt = result.dataValues.salt;
     let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
-
     if (dbPassword === hashPassword) {
         // 세션 설정
         req.session.email = body.sellerEmail;
@@ -73,7 +114,8 @@ router.get("/logout", function (req, res, next) {
     res.clearCookie('sid');
 
     res.redirect("/sellers/login")
-})
+});
+
 
 module.exports = router;
 
