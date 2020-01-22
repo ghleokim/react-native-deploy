@@ -12,7 +12,7 @@ router.get('/sign_up', function(req, res, next) {
 router.post("/sign_up", async function(req, res, next) {
   let body = req.body;
 
-  let inputPassword = body.password;
+  let inputPassword = body.userPassword;
   let salt = Math.round((new Date().valueOf() * Math.random())) + "";
   let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
 
@@ -38,11 +38,17 @@ router.get('/', function(req, res, next) {
 
 // 로그인 GET
 router.get('/login', function(req, res, next) {
-  let session = req.session;
+  if(req.session.email){
+    console.log("/user " + JSON.stringify(req.session.email));
+    return res.json(req.sesson.email);
+  }else{
+    res.render("user/login");
+  }
+  /*let session = req.session;
   console.log(session);
   res.render("user/login", {
     session : session
-  });
+  });*/
 });
 
 // 로그인 POST
@@ -56,7 +62,7 @@ router.post("/login", async function(req,res,next){
   });
 
   let dbPassword = result.dataValues.password;
-  let inputPassword = body.password;
+  let inputPassword = body.userPassword;
   let salt = result.dataValues.salt;
   let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
 
