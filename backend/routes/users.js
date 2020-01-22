@@ -5,7 +5,7 @@ const crypto = require("crypto");
 
 // 회원가입 GET
 router.get('/sign_up', function(req, res, next) {
-  res.render("user/sign_up");
+  res.render("users/sign_up");
 });
 
 // 회원가입 POST
