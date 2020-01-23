@@ -81,7 +81,7 @@ app.get('/upload', function(req, res, next){
 // upload.single('userfile'),
 app.post('/upload', upload.single('userfile'), function(req, res, next){
   console.log(req.file);
-  res.send("img post"+ req.file.filename);
+  res.send("img name : "+ req.file.filename);
 });
 
 // catch 404 and forward to error handler
