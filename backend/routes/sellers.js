@@ -7,7 +7,7 @@ router.get('/sign_up', function (req, res, next) {
     res.render("sellers/sign_up");
 });
 
-// 회원가입
+// 회원가입!
 router.post("/sign_up", async function (req, res, next) {
     let body = req.body;
 
