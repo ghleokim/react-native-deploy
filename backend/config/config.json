@@ -1,13 +1,13 @@
 {
   "development": {
-    "username": "root",
-     "password": "dbadmin",
-     "database": "foodseeker",
-     "host": "127.0.0.1",
+    "username": "test",
+     "password": "test",
+     "database": "test",
+     "host": "54.180.141.50",
      "dialect": "mysql",
      "operatorsAliases": false
   },
-  
+
   "test": {
     "username": "test",
     "password": "test",
@@ -16,7 +16,7 @@
     "dialect": "mysql",
     "operatorsAliases": false
   },
-  
+
   "production": {
     "username": "root",
     "password": "dbadmin",
