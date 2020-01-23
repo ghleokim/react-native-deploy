@@ -37,7 +37,10 @@ router.post('/', function (req, res, next) {
     models.truck.create({
         writer: req.body.writer,
         title: req.body.title,
-        contents: req.body.contents
+        contents: req.body.contents,
+        img: req.body.img,
+        latitude: req.body.latitude,
+        longitude: req.body.longitude
     })
         .then((result) => {
             console.log(result);
