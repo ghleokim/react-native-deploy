@@ -1,24 +1,22 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   var user = sequelize.define('truckInfo', {
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    email: {
+    id: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        isEmail: true
-      },
       primaryKey: true
     },
-    password: {
+    name: {
       type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lat: {
+      type: DataTypes.FLOAT,
       allowNull: false
     },
-    salt:{
-      type: DataTypes.STRING
+    long:{
+      type: DataTypes.FLOAT,
+      allowNull: false
     }
   });
 
