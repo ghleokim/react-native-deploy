@@ -7,7 +7,7 @@ var methodOverride = require('method-override');
 
 var multer = require('multer');
 var storage = multer.diskStorage({
-  // 어디에 저장할것인가
+  // 어디에 저장할것인가!
   destination: function (req, file, cb) {
     //if(type 이 img 면)
     cb(null, 'uploads/')
