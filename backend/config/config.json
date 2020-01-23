@@ -9,13 +9,14 @@
   },
   
   "test": {
-    "username": "root",
-    "password": "dbadmin",
-    "database": "mysqltest",
-    "host": "127.0.0.1",
+    "username": "test",
+    "password": "test",
+    "database": "test",
+    "host": "54.180.141.50",
     "dialect": "mysql",
     "operatorsAliases": false
   },
+  
   "production": {
     "username": "root",
     "password": "dbadmin",
