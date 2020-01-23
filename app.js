@@ -6,8 +6,12 @@ var logger = require('morgan');
 var methodOverride = require('method-override');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var session = require('express-session');
-var cors = require('cors');
+var sellersRouter = require('./routes/sellers');
+var trucksRouter = require('./routes/trucks');
+var postsRouter = require('./routes/posts');
+
+const session = require('express-session');
+
 var app = express();
 var models = require("./models/index.js");
 var FileStore = require('session-file-store')(session);
@@ -43,6 +47,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/sellers', sellersRouter);
+app.use('/trucks', trucksRouter);
+app.use('/posts', postsRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
