@@ -4,6 +4,23 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var methodOverride = require('method-override');
+
+var multer = require('multer');
+var storage = multer.diskStorage({
+  // 어디에 저장할것인가!
+  destination: function (req, file, cb) {
+    //if(type 이 img 면)
+    cb(null, 'uploads/')
+    // else if(...)
+  },
+  //파일명 뭐라 할것인가
+  filename: function (req, file, cb) {
+    // 파일 이름 중복 방지 위해 date()값을 넣음
+    cb(null, file.originalname) // + '-' + Date.now())
+  }
+})
+var upload = multer({ storage: storage })
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var sellersRouter = require('./routes/sellers');
@@ -48,6 +65,18 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/sellers', sellersRouter);
 app.use('/trucks', trucksRouter);
+
+app.get('/upload', function(req, res, next){
+  console.log("upload router");
+  res.render('upload');
+});
+
+// single(' ? ') -> user input name과 같아야 함
+// upload.single('userfile'),
+app.post('/upload', upload.single('userfile'), function(req, res, next){
+  console.log(req.file);
+  res.send("img post"+ req.file.filename);
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
