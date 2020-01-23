@@ -25,7 +25,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var sellersRouter = require('./routes/sellers');
 var trucksRouter = require('./routes/trucks');
-
+var cors = require('cors');
 const session = require('express-session');
 
 var app = express();
@@ -70,7 +70,6 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/sellers', sellersRouter);
 app.use('/trucks', trucksRouter);
-
 
 app.get('/upload', function(req, res, next){
   console.log("upload router");
