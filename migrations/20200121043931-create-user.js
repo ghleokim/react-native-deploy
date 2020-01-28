@@ -28,7 +28,10 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
-      }
+      },
+      isSeller: {
+        type: Sequelize.BOOLEAN
+      },
     });
   },
   down: (queryInterface, Sequelize) => {

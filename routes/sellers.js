@@ -20,11 +20,12 @@ router.post("/sign_up", async function (req, res, next) {
         email: body.sellerEmail,
         password: hashPassword,
         businessRegistrationNumber: body.sellerBusinessRegistrationNumber,
-        salt: salt
+        salt: salt,
+        isSeller: 1 // true
     })
     .then(result => {
-        res.send('회원가입완료');
-        // res.redirect("/sellers/sign_up");
+        // res.send('회원가입완료');
+        res.redirect("/sellers/sign_up");
     })
     .catch(err => {
         console.log(err)

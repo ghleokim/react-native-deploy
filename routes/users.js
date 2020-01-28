@@ -20,7 +20,8 @@ router.post("/sign_up", async function(req, res, next) {
     name: body.userName,
     email: body.userEmail,
     password: hashPassword,
-    salt: salt
+    salt: salt,
+    isSeller: 0 // false
   })
 
   res.redirect("/users/sign_up");
