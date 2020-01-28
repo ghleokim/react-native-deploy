@@ -1,3 +1,2 @@
-/// <reference types="react" />
-declare const App: () => JSX.Element;
-export default App;
+import React from 'react';
+export declare const App: React.FC;

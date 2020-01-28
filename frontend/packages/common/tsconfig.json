@@ -14,6 +14,7 @@
       "forceConsistentCasingInFileNames": true,
       "module": "commonjs",     // change module to commonjs
       "outDir": "dist",         // add out directory
+      "experimentalDecorators": true,
       "moduleResolution": "node",
       "resolveJsonModule": true,
       "declaration": true,      // make declaration true: d.ts
