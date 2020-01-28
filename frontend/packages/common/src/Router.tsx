@@ -1,9 +1,10 @@
-import React, { useState, useContext } from 'react';
-import { View, Text, Button } from "react-native"
+import React, { useContext } from 'react';
+import { View, Text } from "react-native"
 import { currentPage, mainStoreContext } from './store/MainStore';
 import { RouteMain } from './modules/RouteMain';
 import { RouteLogin } from './modules/RouteLogin';
 import { RouteMap } from './modules/RouteMap';
+import { RouteTruck } from './modules/RouteTruck';
 import { observer } from 'mobx-react-lite';
 
 export const Router: React.FC = observer(() => {
@@ -25,6 +26,10 @@ export const Router: React.FC = observer(() => {
     } else if (currentPage === 'mapPage') {
       return (
         <RouteMap />
+      )
+    } else if (currentPage === 'truckDetailPage') {
+      return (
+        <RouteTruck />
       )
     } else {
       return (

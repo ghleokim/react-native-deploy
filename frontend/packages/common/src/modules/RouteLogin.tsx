@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { useContext } from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
-import { mainStoreContext } from '../store/MainStore';
-import LoginForm from '../components/auth/LoginForm';
 import { observer } from 'mobx-react-lite';
+import { mainStoreContext } from '../store/MainStore';
+import LoginForm, { NewLoginForm } from '../components/auth/LoginForm';
+import SignupForm from '../components/auth/SignUpForm';
 
 export const RouteLogin: React.FC = observer(() => {
   const mainStore = useContext(mainStoreContext);
@@ -12,7 +13,11 @@ export const RouteLogin: React.FC = observer(() => {
   return (
     <View>
       <Text style={styles.sectionTitle}>{currentPage}</Text>
-      <LoginForm />
+      <NewLoginForm />
+      <SignupForm />
+      {/* test for long contents */}
+      <SignupForm />
+      <SignupForm />
     </View>
   )
 })
