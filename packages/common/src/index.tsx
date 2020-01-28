@@ -5,69 +5,61 @@ import {
   Text,
   ScrollView,
   Dimensions,
-  TouchableOpacity,
 } from 'react-native';
-import axios from 'axios';
-import SignUpForm from './components/auth/SignUpForm';
-import { Router } from './Router';
-import TruckDetail from './components/foodtruckDetail/TruckDetail'
 import { observer } from 'mobx-react-lite';
+import { Router } from './Router';
 import { mainStoreContext } from './store/MainStore';
+import { CustomStyle } from './static/CustomStyle';
+import { Navbar } from './components/main/Navbar';
+import { Header } from './components/main/Header';
 
 export const App: React.FC = observer(() => {
   const mainStore = useContext(mainStoreContext);
-
+  
+  mainStore.screenWidth = Dimensions.get('screen').width;
   mainStore.screenHeight = Dimensions.get('screen').height;
-  mainStore.footerHeight = 30;
-  mainStore.scrollviewHeight = mainStore.screenHeight - mainStore.footerHeight;
+  mainStore.scrollviewHeight = mainStore.screenHeight - mainStore.footerHeight - mainStore.headerHeight;
 
+  console.log(mainStore)
   return (
-    <View style={{height: mainStore.screenHeight, flex: 1}}>
-      <ScrollView style={{height: mainStore.scrollviewHeight, paddingBottom: 30}}>
-        <View style={styles.sectionContainer}>
-          <Router />
-          <SignUpForm></SignUpForm>
-          <TruckDetail/>
-        </View>
+    <View style={{ height: mainStore.screenHeight, flex: 1 }}>
+      <Header />
+      <ScrollView style={{ height: mainStore.scrollviewHeight, marginTop: mainStore.headerHeight, marginBottom: mainStore.footerHeight }} contentContainerStyle={{flex: 1, flexDirection: 'column', alignItems: 'stretch'}}>
+        <Router />
+        <View style={{ backgroundColor: '#e4e4e5', flexGrow: 1, minHeight: 110 }}></View>
       </ScrollView>
-      <View style={[styles.footer]}>
-        <TouchableOpacity onPress={()=>mainStore.currentPage="mainPage"} style={{alignItems: "baseline", flex: 1, flexDirection: "row"}}><Text style={{color:'#FFFFFF'}}>Main</Text></TouchableOpacity>
-        <TouchableOpacity onPress={()=>mainStore.currentPage="loginPage"} style={{alignItems: "baseline", flex: 1, flexDirection: "row"}}><Text style={{color:'#FFFFFF'}}>Login</Text></TouchableOpacity>
-        <TouchableOpacity onPress={()=>mainStore.currentPage="mapPage"} style={{alignItems: "baseline", flex: 1, flexDirection: "row"}}><Text style={{color:'#FFFFFF'}}>Map</Text></TouchableOpacity>
-      </View>
+      <Navbar />
     </View>
   )
 })
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    alignItems: "center"
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
+// define new style here to override CustomStyle stylesheet.
+const localStyle = StyleSheet.create({
+  background: {
     position: 'absolute',
-    height: 30,
-    bottom: 0,
-    right: 0,
-    left: 0,
-    backgroundColor: '#3f3f3f',
-    flexDirection: 'row'
+    backgroundColor: '#efefef',
   },
-  smallButton: {
-    height: 30,
+  sectionContainer: {
+    marginTop: 0,
+  },
+  navButton: {
+    alignItems: "center",
+    justifyContent: "center",
     flex: 1,
     flexDirection: "column"
+  },
+  navButtonImage: {
+    tintColor: '#ffffff',
+    height: 30,
+    width: 30,
+    resizeMode: 'cover',
+    overflow: 'hidden'
+  },
+  navButtonText: {
+    fontWeight: '300',
+    fontSize: 8,
+    color: '#ffffff'
   }
 });
+
+const styles = { ...CustomStyle, ...localStyle }
