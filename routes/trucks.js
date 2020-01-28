@@ -19,7 +19,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/:writer', function (req, res, next) {
-    const TRUCK_ID = req.params.truckId
+    const TRUCK_ID = req.params.writer
 
     models.truck.findOne({
         where: {id: TRUCK_ID},
