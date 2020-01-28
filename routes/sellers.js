@@ -80,9 +80,15 @@ router.delete('/:sellerEmail', function (req, res, next) {
 router.get('/login', function (req, res, next) {
     let session = req.session;
     console.log(session);
-    res.render("sellers/login", {
-        session: session
-    });
+    if(session.isSeller == 1){
+        res.send(session.name + " 판매자님");
+    }
+    else{
+        res.send(session.name + " 사용자님");
+    }
+    // res.render("sellers/login", {
+    //     session: session
+    // });
 });
 
 router.post("/login", async function (req, res, next) {
@@ -101,6 +107,8 @@ router.post("/login", async function (req, res, next) {
     if (dbPassword === hashPassword) {
         // 세션 설정
         req.session.email = body.sellerEmail;
+        req.session.name = result.name;
+        req.session.isSeller = 1;
         res.redirect("/sellers");
     }
     else {
