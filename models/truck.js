@@ -12,7 +12,17 @@ module.exports = (sequelize, DataTypes) => {
     contents: {
       type: DataTypes.STRING,
       allowNull: false
-    }
+    },
+    img: {
+      type: DataTypes.STRING
+    },
+    latitude: {
+      type: DataTypes.STRING
+    },
+    longitude: {
+      type: DataTypes.STRING
+    },
+
   }, {});
   truck.associate = function(models) {
     // associations can be defined here
