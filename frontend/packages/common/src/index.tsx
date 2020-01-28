@@ -16,8 +16,8 @@ import { Header } from './components/main/Header';
 export const App: React.FC = observer(() => {
   const mainStore = useContext(mainStoreContext);
   
-  mainStore.screenWidth = Dimensions.get('screen').width;
-  mainStore.screenHeight = Dimensions.get('screen').height;
+  mainStore.screenWidth = Dimensions.get('window').width;
+  mainStore.screenHeight = Dimensions.get('window').height;
   mainStore.scrollviewHeight = mainStore.screenHeight - mainStore.footerHeight - mainStore.headerHeight;
 
   console.log(mainStore)
