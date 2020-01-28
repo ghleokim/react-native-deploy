@@ -20,7 +20,6 @@ var storage = multer.diskStorage({
   }
 })
 var upload = multer({ storage: storage })
-
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var sellersRouter = require('./routes/sellers');
@@ -29,8 +28,11 @@ var cors = require('cors');
 const session = require('express-session');
 
 var app = express();
-var models = require("./models/index.js");
-var FileStore = require('session-file-store')(session);
+const models = require("./models/index.js");
+
+// localhost:8001/user/file_name.jpg
+// 위 경로로 사용자가 이미지를 불러올수 있다.
+app.use('/user', express.static('uploads'));
 
 models.sequelize.sync().then( () => {
   console.log(" DB 연결 성공");
@@ -40,17 +42,14 @@ models.sequelize.sync().then( () => {
 });
 
 app.use(methodOverride('_method'));
-app.use(cors());
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('view engine', 'pug');
 app.use(session({
-  name:'foodtruck-map',
   key: 'sid',
   secret: 'secret',
   resave: false,
   saveUninitialized: true,
-  store:new FileStore(),
   cookie: {
     maxAge: 24000 * 60 * 60 // 쿠키 유효기간 24시간
   }

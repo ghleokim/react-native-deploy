@@ -1,44 +1,65 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import {
   StyleSheet,
   View,
   Text,
-  Button,
+  ScrollView,
+  Dimensions,
 } from 'react-native';
+import { observer } from 'mobx-react-lite';
+import { Router } from './Router';
+import { mainStoreContext } from './store/MainStore';
+import { CustomStyle } from './static/CustomStyle';
+import { Navbar } from './components/main/Navbar';
+import { Header } from './components/main/Header';
 
-const App = () => {
-  const [count, setCount] = useState(0);
+export const App: React.FC = observer(() => {
+  const mainStore = useContext(mainStoreContext);
+  
+  mainStore.screenWidth = Dimensions.get('screen').width;
+  mainStore.screenHeight = Dimensions.get('screen').height;
+  mainStore.scrollviewHeight = mainStore.screenHeight - mainStore.footerHeight - mainStore.headerHeight;
 
+  console.log(mainStore)
   return (
-    <View style={styles.sectionContainer}>
-      <Text style={styles.sectionTitle}>Step One</Text>
-      <Text style={styles.sectionDescription}>
-        Edit <Text style={styles.highlight}>App.tsx</Text> to change
-        this screen and then come back to see your edits.
-              </Text>
-      <Text style={styles.sectionDescription}>{count}</Text>
-      <Button title="increment" onPress={() => setCount(count + 1)}/>
+    <View style={{ height: mainStore.screenHeight, flex: 1 }}>
+      <Header />
+      <ScrollView style={{ height: mainStore.scrollviewHeight, marginTop: mainStore.headerHeight, marginBottom: mainStore.footerHeight }} contentContainerStyle={{flex: 1, flexDirection: 'column', alignItems: 'stretch'}}>
+        <Router />
+        <View style={{ backgroundColor: '#e4e4e5', flexGrow: 1, minHeight: 110 }}></View>
+      </ScrollView>
+      <Navbar />
     </View>
   )
-}
+})
 
-export default App;
-
-const styles = StyleSheet.create({
+// define new style here to override CustomStyle stylesheet.
+const localStyle = StyleSheet.create({
+  background: {
+    position: 'absolute',
+    backgroundColor: '#efefef',
+  },
   sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+    marginTop: 0,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  navButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+    flexDirection: "column"
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  navButtonImage: {
+    tintColor: '#ffffff',
+    height: 30,
+    width: 30,
+    resizeMode: 'cover',
+    overflow: 'hidden'
   },
-  highlight: {
-    fontWeight: '700',
-  },
+  navButtonText: {
+    fontWeight: '300',
+    fontSize: 8,
+    color: '#ffffff'
+  }
 });
+
+const styles = { ...CustomStyle, ...localStyle }
