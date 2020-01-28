@@ -24,6 +24,7 @@ class MainStore {
 
   // test
   @observable count = 0;
+  @observable testCurrentLocation: any;
 }
 
 export const mainStoreContext = createContext(new MainStore());
