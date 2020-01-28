@@ -32,6 +32,10 @@ var app = express();
 var models = require("./models/index.js");
 var FileStore = require('session-file-store')(session);
 
+// localhost:8001/user/file_name.jpg
+// 위 경로로 사용자가 이미지를 불러올수 있다.
+app.use('/user', express.static('uploads'));
+
 models.sequelize.sync().then( () => {
   console.log(" DB 연결 성공");
 }).catch(err => {
@@ -43,7 +47,7 @@ app.use(methodOverride('_method'));
 app.use(cors());
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('view engine', 'pug');
 app.use(session({
   name:'foodtruck-map',
   key: 'sid',
