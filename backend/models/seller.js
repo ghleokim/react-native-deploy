@@ -23,8 +23,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     salt: {
       type: DataTypes.STRING
-    }
-
+    },
+    isSeller: {
+      type: DataTypes.BOOLEAN
+    },
   }, {});
   seller.associate = function(models) {
     // associations can be defined here
