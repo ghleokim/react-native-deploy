@@ -18,6 +18,26 @@ router.get('/', function (req, res, next) {
         })
 });
 
+router.get('/truckId/:truckId', function (req, res, next) {
+    const TRUCK_ID = req.params.truckId
+
+    models.truck.findOne({
+        where: {id: TRUCK_ID},
+        include: {
+            model: models.menu, 
+            where: {truckId: TRUCK_ID}
+        }
+    })
+        .then((result) => {
+            console.log(result);
+            res.json(result);
+        })
+        .catch((err) => {
+            console.log(err);
+            next(err);
+        });
+});
+
 router.get('/:writer', function (req, res, next) {
     models.truck.findOne({ where: { writer: req.params.writer } }
     )
