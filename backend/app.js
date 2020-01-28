@@ -43,7 +43,7 @@ app.use(methodOverride('_method'));
 app.use(cors());
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('view engine', 'pug');
 app.use(session({
   name:'foodtruck-map',
   key: 'sid',
