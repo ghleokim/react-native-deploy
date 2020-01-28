@@ -48,7 +48,7 @@ const trucks_dummy: SearchResultItems = [
 ]
 
 export const SearchList: React.FC = () => {
-  trucks_dummy.sort((a, b)=> {
+  trucks_dummy.sort((a:SearchResult, b:SearchResult)=> {
     if (a.currentStatus === 'open' || b.currentStatus !== 'open' ) { return -1 }
     else if (a.currentStatus !== 'closed' || b.currentStatus === 'open' ) { return 1 }
     else {
@@ -59,7 +59,7 @@ export const SearchList: React.FC = () => {
 
   return (
     <View>
-      {trucks_dummy.map((truck, index) => {
+      {trucks_dummy.map((truck:SearchResult, index:number) => {
         if (truck.currentStatus !== 'closed') {
         return <ListView
           key={`listview-${index}`}
