@@ -33,8 +33,12 @@ router.get('/', function(req, res, next) {
   if (req.cookies) {
     console.log(req.cookies);
   }
-
-  res.send("환영합니다 ~");
+  if(req.session.isSeller){
+    res.send(req.session.name + " 판매자님 + 사용자");
+  }
+  else{
+    res.send(req.session.name + " 사용자님");
+  }
 });
 
 // 로그인 GET
@@ -72,7 +76,7 @@ router.post("/login", async function(req,res,next){
     // 세션 설정
     req.session.email = body.userEmail;
     req.session.name = result.name;
-    req.session.isSeller = 0;
+    req.session.isSeller = result.isSeller;
     res.redirect("/users");
   }
   else{

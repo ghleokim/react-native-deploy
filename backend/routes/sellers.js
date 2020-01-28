@@ -15,21 +15,27 @@ router.post("/sign_up", async function (req, res, next) {
     let salt = Math.round((new Date().valueOf() * Math.random())) + "";
     let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
 
-    let result = models.seller.create({
+    let resultSeller = models.seller.create({
         name: body.sellerName,
         email: body.sellerEmail,
         password: hashPassword,
         businessRegistrationNumber: body.sellerBusinessRegistrationNumber,
         salt: salt,
         isSeller: 1 // true
-    })
-    .then(result => {
-        // res.send('회원가입완료');
-        res.redirect("/sellers/sign_up");
-    })
-    .catch(err => {
-        console.log(err)
     });
+    console.log("seller 회원가입");
+    
+    let resultUser = models.user.create({
+        name: body.sellerName,
+        email: body.sellerEmail,
+        password: hashPassword,
+        salt: salt,
+        isSeller: 1 // true
+    });
+    
+    console.log("user 회원가입");
+
+    res.redirect("/sellers/sign_up");
 });
  
 router.get('/', function (req, res, next) {
