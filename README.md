@@ -12,6 +12,7 @@ $ npm start
 $ npm install --save express-session
 $ npm install aws-sdk
 # npm install multer
+$ npm install --save multer
 # npm install multer-s3
 "username": "root",
 "password": "dbadmin",

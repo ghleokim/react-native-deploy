@@ -7,7 +7,7 @@
      "dialect": "mysql",
      "operatorsAliases": false
   },
-  
+
   "test": {
     "username": "test",
     "password": "test",
@@ -16,7 +16,7 @@
     "dialect": "mysql",
     "operatorsAliases": false
   },
-  
+
   "production": {
     "username": "root",
     "password": "dbadmin",
