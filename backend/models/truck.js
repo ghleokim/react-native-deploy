@@ -1,6 +1,11 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const truck = sequelize.define('truck', {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
     writer: {
       type: DataTypes.STRING,
       allowNull: false
@@ -13,19 +18,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    img: {
-      type: DataTypes.STRING
-    },
-    latitude: {
-      type: DataTypes.STRING
-    },
-    longitude: {
-      type: DataTypes.STRING
-    },
-
+    imgURL: DataTypes.STRING,
+    latitude: DataTypes.FLOAT,
+    longitude: DataTypes.FLOAT
   }, {});
   truck.associate = function(models) {
-    // associations can be defined here
+    truck.hasMany(models.menu)
   };
   return truck;
 };

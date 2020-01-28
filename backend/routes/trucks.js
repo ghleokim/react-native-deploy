@@ -19,8 +19,15 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/:writer', function (req, res, next) {
-    models.truck.findOne({ where: { writer: req.params.writer } }
-    )
+    const TRUCK_ID = req.params.truckId
+
+    models.truck.findOne({
+        where: {id: TRUCK_ID},
+        include: {
+            model: models.menu, 
+            where: {truckId: TRUCK_ID}
+        }
+    })
         .then((result) => {
             console.log(result);
             res.json(result);
@@ -30,6 +37,7 @@ router.get('/:writer', function (req, res, next) {
             next(err);
         });
 });
+
 // insert truck
 router.post('/', function (req, res, next) {
     console.log(req.body.writer);
