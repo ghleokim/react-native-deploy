@@ -18,7 +18,7 @@ router.get('/', function (req, res, next) {
         })
 });
 
-router.get('/truckId/:truckId', function (req, res, next) {
+router.get('/:writer', function (req, res, next) {
     const TRUCK_ID = req.params.truckId
 
     models.truck.findOne({
@@ -38,18 +38,6 @@ router.get('/truckId/:truckId', function (req, res, next) {
         });
 });
 
-router.get('/:writer', function (req, res, next) {
-    models.truck.findOne({ where: { writer: req.params.writer } }
-    )
-        .then((result) => {
-            console.log(result);
-            res.json(result);
-        })
-        .catch((err) => {
-            console.log(err);
-            next(err);
-        });
-});
 // insert truck
 router.post('/', function (req, res, next) {
     console.log(req.body.writer);
