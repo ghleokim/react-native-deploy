@@ -9,6 +9,7 @@ import {
 import { observer } from 'mobx-react-lite';
 import { mainStoreContext } from '../../store/MainStore';
 import { CustomStyle } from '../../static/CustomStyle';
+import { COLOR_HEADER } from '../../static/CustomColor';
 
 export const Navbar: React.FC = observer(() => {
   const mainStore = useContext(mainStoreContext);
@@ -53,7 +54,7 @@ const localStyle = StyleSheet.create({
     bottom: 0,
     right: 0,
     left: 0,
-    backgroundColor: '#3f3f3f',
+    backgroundColor: `rgba(${COLOR_HEADER},0.5)`,
     flexDirection: 'row'
   },
   navButton: {
@@ -63,7 +64,7 @@ const localStyle = StyleSheet.create({
     flexDirection: "column"
   },
   navButtonImage: {
-    tintColor: '#ffffff',
+    tintColor: '#505050',
     height: 30,
     width: 30,
     resizeMode: 'cover',
@@ -72,7 +73,7 @@ const localStyle = StyleSheet.create({
   navButtonText: {
     fontWeight: '300',
     fontSize: 8,
-    color: '#ffffff'
+    color: '#303030'
   }
 });
 
