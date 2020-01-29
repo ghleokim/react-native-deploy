@@ -2,7 +2,10 @@ const express = require('express');
 const router = express.Router();
 const models = require("../models");
 const crypto = require("crypto");
+const calcDistance = require("../lib/distance")
 
+const sequelize = require("sequelize");
+const Op = sequelize.Op;
 
 // select all truck
 router.get('/', function (req, res, next) {
@@ -11,6 +14,52 @@ router.get('/', function (req, res, next) {
         .then((trucks) => {
             console.log(trucks);
             res.json(trucks);
+        })
+        .catch((err) => {
+            console.log(err);
+            next(err);
+        })
+});
+
+router.get('/search/:searchKeyword', function (req, res, next) {
+    console.log("query", req.query)
+
+    const searchKeyword = req.params.searchKeyword
+    const userLatitude = req.query.latitude;
+    const userLongitude = req.query.longitude;
+
+    models.truck.findAll({
+        attributes: ['id', 'title', 'contents', 'imgURL', 'latitude', 'longitude'],
+        where: {
+            [Op.or]: [
+                {
+                    title: {
+                        [Op.like]: "%" + searchKeyword + "%"
+                    },
+                },
+                {
+                    '$menus.name$': {
+                        [Op.like]: "%" + searchKeyword + "%"
+                    }        
+                }
+            ]
+        },
+        include: {
+            model: models.menu,
+            attributes: [],
+        }
+    })
+        .then((result) => {
+            for ( var i = 0; i < result.length; i++) {
+                result[i].dataValues.distance = calcDistance(result[i].latitude, result[i].longitude, userLatitude, userLongitude);
+            }
+            console.log(result);
+
+            const sortedResult = result.sort((a, b) => {
+                return a.distance - b.distance;
+            });
+
+            res.json(sortedResult);
         })
         .catch((err) => {
             console.log(err);
