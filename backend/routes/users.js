@@ -11,23 +11,32 @@ router.get('/sign_up', function(req, res, next) {
 // 회원가입 POST
 router.post("/sign_up", async function(req, res, next) {
   let body = req.body;
+ let haveEmail = await models.user.findOne({
+   where: {
+     email: body.userEmail
+   }
+ });
+ if (haveEmail == null) {
+   let inputPassword = body.userPassword;
+   let salt = Math.round((new Date().valueOf() * Math.random())) + "";
+   let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
 
-  let inputPassword = body.userPassword;
-  let salt = Math.round((new Date().valueOf() * Math.random())) + "";
-  let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
+   let result = models.user.create({
+     name: body.userName,
+     email: body.userEmail,
+     password: hashPassword,
+     salt: salt,
+     isSeller: 0 // false
 
-  let result = models.user.create({
-    name: body.userName,
-    email: body.userEmail,
-    password: hashPassword,
-    salt: salt,
-    isSeller: 0 // false
-  })
-
-  res.redirect("/users/sign_up");
-})
-
-
+   })
+   res.redirect("/user/sign_up");
+ }
+ else{
+   res.status(401).send({
+     code: 0,
+     message: "이미 존재하는 이메일입니다."
+   });
+ }
 // 메인 페이지
 router.get('/', function(req, res, next) {
   if (req.cookies) {
@@ -66,23 +75,34 @@ router.post("/login", async function(req,res,next){
       email : body.userEmail
     }
   });
+  if (result == null) {
+   res.status(401).send({
+     code: 0,
+     message: "존재하지 않는 이메일입니다."
+   });
+ }
+ else {
+   let dbPassword = result.dataValues.password;
+   let inputPassword = body.userPassword;
+   let salt = result.dataValues.salt;
+   let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
 
-  let dbPassword = result.dataValues.password;
-  let inputPassword = body.userPassword;
-  let salt = result.dataValues.salt;
-  let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
-
-  if(dbPassword === hashPassword){
-    // 세션 설정
-    req.session.email = body.userEmail;
-    req.session.name = result.name;
-    req.session.isSeller = result.isSeller;
-    res.redirect("/users");
-  }
-  else{
-    console.log("비밀번호 불일치");
-    res.redirect("/users/login");
-  }
+   if (dbPassword === hashPassword) {
+     // 세션 설정
+     req.session.save(function() {
+       req.session.email = body.userEmail;
+       req.session.name = result.name;
+       req.session.isSeller = result.isSeller;
+       res.redirect("/users");
+       res.json(req.session);
+     })
+   } else {
+     res.status(401).send({
+       code: 0,
+       message: "비밀번호 불일치"
+     });
+   }
+ }
 });
 
 // 로그아웃
@@ -99,9 +119,9 @@ router.put('/', async function (req, res, next) {
       email: req.body.userEmail
     }
   });
-  
+
   console.log(result.dataValues.salt);
-  
+
   models.user.update(
     { name: req.body.userName},
     { where: { email: req.body.userEmail } })
@@ -128,6 +148,5 @@ router.put('/', async function (req, res, next) {
         next(err);
       });
   });
-  
+
   module.exports = router;
-  
