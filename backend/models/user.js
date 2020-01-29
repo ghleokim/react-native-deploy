@@ -23,7 +23,13 @@ module.exports = (sequelize, DataTypes) => {
     isSeller: {
       type: DataTypes.BOOLEAN
     },
-  });
-
+  },
+  // {
+  //   timestamps: false,
+  //   paranoid: true,
+  //   charset: 'utf8',
+  //   collate: 'utf8_general_ci',
+  // }
+  );
   return user;
 };
