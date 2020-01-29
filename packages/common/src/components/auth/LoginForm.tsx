@@ -1,5 +1,5 @@
 import React, { Component, useContext } from "react";
-import { View, Text, TouchableOpacity, TextInput, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, AsyncStorage } from "react-native";
 import axios from 'axios';
 import { observer } from "mobx-react-lite";
 import { mainStoreContext } from "../../store/MainStore";
@@ -22,7 +22,7 @@ export const NewLoginForm: React.FC = observer(() => {
 
   const handleLogin = (email: string, pass: string) => {
     axios({
-      url: loginStore.proxy + '/users/login/',
+      url: mainStore.proxy + '/users/login/',
       method: 'post',
       data: {
         userEmail: loginStore.userEmail,
@@ -31,21 +31,20 @@ export const NewLoginForm: React.FC = observer(() => {
     }).then((response) => {
       console.log(response);
       // 현재 내부 state에서 필요한 값을 유지하도록 구현하였다. 라우팅할 때 쓰일 수 있을 듯.
-      loginStore.responsedata = response.data
+      mainStore.isSeller = response.data.isSeller;
+      console.log(mainStore.isSeller)
 
       // session 로컬 스토리지에 저장하기
-      localStorage.setItem(
-        "userInfo",
-        loginStore.responsedata
-      )
+      localStorage.setItem('cookies', JSON.stringify(response.data.cookie))
 
       // if success 추가해야됨
-      if (true) {
+      if (response.status === 200) {
         mainStore.isLoggedIn = true;
       }
     })
-      .catch(function (error) {
-        console.log(error);
+      .catch((error) => {
+        console.log(error.response);
+        console.log(error.response.data.message)
       });
   }
 

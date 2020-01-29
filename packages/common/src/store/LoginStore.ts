@@ -9,7 +9,6 @@ class LoginStore {
   @observable responsedata: string = '';
 
   // Login info
-  @observable proxy: string = 'http://70.12.246.0:8001';
   @observable userEmail: string = '';
   @observable pass: string = '';
 

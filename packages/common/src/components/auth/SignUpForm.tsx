@@ -25,7 +25,7 @@ export const SignupForm: React.FC = observer(() => {
 
   const handleSignUp = (name: string, email: string, pass: string) => {
     axios({
-      url: loginStore.proxy + '/users/sign_up/',
+      url: mainStore.proxy + '/users/sign_up/',
       method: 'post',
       data: {
         userName: name,
