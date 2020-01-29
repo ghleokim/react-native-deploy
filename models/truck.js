@@ -20,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     imgURL: DataTypes.STRING,
     latitude: DataTypes.FLOAT,
-    longitude: DataTypes.FLOAT
+    longitude: DataTypes.FLOAT,
+    state: DataTypes.STRING
   }, {});
   truck.associate = function(models) {
     truck.hasMany(models.menu)

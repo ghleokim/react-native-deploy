@@ -84,14 +84,13 @@ router.post("/login", async function(req, res, next) {
     let inputPassword = body.userPassword;
     let salt = result.dataValues.salt;
     let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
-
+    
     if (dbPassword === hashPassword) {
       // 세션 설정
       req.session.save(function() {
         req.session.email = body.userEmail;
         req.session.name = result.name;
         req.session.isSeller = result.isSeller;
-        res.redirect("/users");
         res.json(req.session);
       })
     } else {
