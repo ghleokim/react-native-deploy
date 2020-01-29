@@ -37,32 +37,17 @@ router.post("/sign_up", async function(req, res, next) {
     });
   }
 });
-// 메인 페이지
-router.get('/', function(req, res, next) {
-  if (req.cookies) {
-    console.log(req.cookies);
-  }
-  if (req.session.isSeller) {
-    res.send(req.session.name + " 판매자님 + 사용자");
-  } else {
-    res.send(req.session.name + " 사용자님");
-  }
-});
 
-// 로그인 GET
-router.get('/login', function(req, res, next) {
-  let session = req.session;
-  console.log(session);
-  if (session.isSeller == 0) {
-    res.send(session.name + " 사용자님");
-  }
-  // 아래 else문은 실행 안됨
-  else {
-    res.send(session.name + " 판매자님");
-  }
-  // res.render("user/login", {
-  //   session : session
-  // });
+router.get('/login', async function(req, res, next) {
+
+  let result = await models.user.findOne({
+    where: {
+      email: req.session.email
+    },
+    attributes: ['name', 'email','isSeller']
+  });
+  console.log(result);
+  res.send(result);
 });
 
 // 로그인 POST
@@ -72,6 +57,11 @@ router.post("/login", async function(req, res, next) {
   let result = await models.user.findOne({
     where: {
       email: body.userEmail
+    }
+  });
+  let resultSeller = await models.seller.findOne({
+    where : {
+      userEmail: body.userEmail
     }
   });
   if (result == null) {
@@ -91,6 +81,10 @@ router.post("/login", async function(req, res, next) {
         req.session.email = body.userEmail;
         req.session.name = result.name;
         req.session.isSeller = result.isSeller;
+        if(result.isSeller){            
+          req.session.businessRegistrationNumber = resultSeller.businessRegistrationNumber;
+          req.session.truckId = resultSeller.truckId;
+        }
         res.json(req.session);
       })
     } else {
