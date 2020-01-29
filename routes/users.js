@@ -91,7 +91,6 @@ router.post("/login", async function(req, res, next) {
         req.session.email = body.userEmail;
         req.session.name = result.name;
         req.session.isSeller = result.isSeller;
-        // res.redirect("/users");
         res.json(req.session);
       })
     } else {

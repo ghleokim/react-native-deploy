@@ -10,20 +10,9 @@ router.get('/sign_up', function (req, res, next) {
 // 회원가입!
 router.post("/sign_up", async function (req, res, next) {
     let body = req.body;
-
     let inputPassword = body.sellerPassword;
     let salt = Math.round((new Date().valueOf() * Math.random())) + "";
     let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
-
-    let resultSeller = models.seller.create({
-        name: body.sellerName,
-        email: body.sellerEmail,
-        password: hashPassword,
-        businessRegistrationNumber: body.sellerBusinessRegistrationNumber,
-        salt: salt,
-        isSeller: 1 // true
-    });
-    console.log("seller 회원가입");
     
     let resultUser = models.user.create({
         name: body.sellerName,
@@ -34,6 +23,13 @@ router.post("/sign_up", async function (req, res, next) {
     });
     
     console.log("user 회원가입");
+
+
+    let resultSeller = models.seller.create({
+        userEmail: body.sellerEmail, // fk (user의 pk)
+        businessRegistrationNumber: body.sellerBusinessRegistrationNumber,
+    });
+    console.log("seller 회원가입");
 
     res.redirect("/sellers/sign_up");
 });
@@ -97,6 +93,7 @@ router.get('/login', function (req, res, next) {
     // });
 });
 
+// 로그인은 여기 말고 /users/login 에서 하자
 router.post("/login", async function (req, res, next) {
     let body = req.body;
 
