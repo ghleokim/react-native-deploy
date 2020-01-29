@@ -21,6 +21,18 @@ router.get('/', function(req, res, next) {
     })
 });
 
+router.get('/login', async function(req, res, next) {
+
+  let result = await models.truck.findOne({
+    where: {
+      id: req.session.truckId
+    },
+    attributes: ['writer', 'title','contents','imgURL','latitude','longitude','state']
+  });
+  console.log(result);
+  res.send(result);
+});
+
 router.get('/search/:searchKeyword', function(req, res, next) {
   console.log("query", req.query)
 
