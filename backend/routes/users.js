@@ -47,7 +47,7 @@ router.get('/login', async function(req, res, next) {
     attributes: ['name', 'email','isSeller']
   });
   console.log(result);
-  res.send(result);
+  res.send({result, businessRegistrationNumber: req.session.businessRegistrationNumber});
 });
 
 // 로그인 POST
