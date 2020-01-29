@@ -30,7 +30,7 @@ router.get('/search/:searchKeyword', function(req, res, next) {
   //const userLatitude = 40;
   //const userLongitude = 100;
   models.truck.findAll({
-      attributes: ['id', 'title', 'contents', 'imgURL', 'latitude', 'longitude'],
+      attributes: ['id', 'title', 'contents', 'imgURL', 'latitude', 'longitude','state'],
       where: {
         [Op.or]: [{
             title: {
@@ -114,7 +114,8 @@ router.post('/', function(req, res, next) {
       contents: req.body.contents,
       img: req.body.img,
       latitude: req.body.latitude,
-      longitude: req.body.longitude
+      longitude: req.body.longitude,
+      state: req.body.state
     })
     .then((result) => {
       console.log(result);
@@ -129,7 +130,8 @@ router.post('/', function(req, res, next) {
 router.put('/:writer', function(req, res, next) {
   models.truck.update({
       title: req.body.title,
-      contents: req.body.contents
+      contents: req.body.contents,
+      state:req.body.state
     }, {
       where: {
         writer: req.params.writer
