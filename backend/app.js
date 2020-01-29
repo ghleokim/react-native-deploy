@@ -28,6 +28,7 @@ var cors = require('cors');
 const session = require('express-session');
 
 var app = express();
+app.use(cors());
 const models = require("./models/index.js");
 
 // localhost:8001/user/file_name.jpg

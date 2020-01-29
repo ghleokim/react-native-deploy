@@ -1,11 +1,12 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const menu = sequelize.define('menu', {
-    menuID: {
+    id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
     },
-    truckID: {
+    truckId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -23,8 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     imgURL: DataTypes.STRING
   }, {});
   menu.associate = function(models) {
-    menu.belongsTo(models.truck,{
-      foreignKey:"truckID"
+    menu.belongsTo(models.truck, {
+      foreignKey:"truckId"
     })
   };
   return menu;

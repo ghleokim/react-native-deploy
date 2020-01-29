@@ -19,7 +19,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     salt:{
       type: DataTypes.STRING
-    }
+    },
+    isSeller: {
+      type: DataTypes.BOOLEAN
+    },
   });
 
   return user;
