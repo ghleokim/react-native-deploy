@@ -3,7 +3,7 @@ import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { CustomText, CustomStyle } from '../../static/CustomStyle'
 import { COLOR_DARKGRAY, Colors } from '../../static/CustomColor'
 
-import { truckStatus } from '../../store/SearchStore'
+import { truckStatus, searchResultContext } from '../../store/SearchStore'
 
 interface Props {
 	id: number,
@@ -16,12 +16,19 @@ interface Props {
 	destination?: string,
 }
 
-export const ListView: React.FC<Props> = ({ imageUri, title, description, currentStatus }) => {
+export const ListView: React.FC<Props> = ({ id, imageUri, title, description, currentStatus }) => {
+	const searchResultStore = React.useContext(searchResultContext)
 
+	const handleItemSelect = (id) => {
+		searchResultStore.isSelected = true;
+		searchResultStore.selectedItem = id;
+		console.log(searchResultStore.isSelected)
+	}
+	
 	const isOpen = () => { return currentStatus === 'open' }
 
 	return (
-		<TouchableOpacity disabled={!isOpen()} onPress={()=>{console.log(title)}} style={[styles.listView, { flexDirection: 'row' }]}>
+		<TouchableOpacity disabled={!isOpen()} onPress={()=>handleItemSelect(id)} style={[styles.listView, { flexDirection: 'row' }]}>
 			<View style={{ flex: 1 }}>
 				<Image style={{ borderRadius: 30, width: 60, height: 60 }} source={{ uri: imageUri === undefined ? 'https://picsum.photos/200' : imageUri }} />
 			</View>

@@ -41,7 +41,7 @@ export const NewLoginForm: React.FC = observer(() => {
 
       // if success 추가해야됨
       if (true) {
-        mainStore.loggedIn = true;
+        mainStore.isLoggedIn = true;
       }
     })
       .catch(function (error) {

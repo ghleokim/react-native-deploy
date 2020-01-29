@@ -14,6 +14,20 @@ import { COLOR_HEADER } from '../../static/CustomColor';
 export const Navbar: React.FC = observer(() => {
   const mainStore = useContext(mainStoreContext);
 
+  const LoginButton = () => {
+    if (mainStore.isLoggedIn === false) {
+      return <TouchableOpacity onPress={() => mainStore.currentPage = "loginPage"} style={styles.navButton}>
+        <Image
+          style={styles.navButtonImage}
+          source={require('@foodtruckmap/common/src/static/icon_processed/noun_User_1485759.png')}
+        />
+        <Text style={styles.navButtonText}>Login</Text>
+      </TouchableOpacity>
+    } else {
+      return <View></View>
+    }
+  }
+
   mainStore.footerHeight = 80;
 
   return (
@@ -25,13 +39,7 @@ export const Navbar: React.FC = observer(() => {
         />
         <Text style={styles.navButtonText}>Main</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => mainStore.currentPage = "loginPage"} style={styles.navButton}>
-        <Image
-          style={styles.navButtonImage}
-          source={require('@foodtruckmap/common/src/static/icon_processed/noun_User_1485759.png')}
-        />
-        <Text style={styles.navButtonText}>Login</Text>
-      </TouchableOpacity>
+      {LoginButton()}
       <TouchableOpacity onPress={() => mainStore.currentPage = "mapPage"} style={styles.navButton}>
         <Image
           style={styles.navButtonImage}
@@ -39,8 +47,8 @@ export const Navbar: React.FC = observer(() => {
         />
         <Text style={styles.navButtonText}>Map</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => mainStore.currentPage = "truckDetailPage"} style={styles.navButton}>
-        <Text style={styles.navButtonText}>TruckDetail</Text>
+      <TouchableOpacity onPress={() => mainStore.currentPage = "searchList"} style={styles.navButton}>
+        <Text style={styles.navButtonText}>SearchList</Text>
       </TouchableOpacity>
     </View>
   )

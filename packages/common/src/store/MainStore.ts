@@ -1,7 +1,7 @@
 import { observable } from 'mobx';
 import { createContext } from 'react';
 
-export type currentPage = 'mainPage' | 'loginPage' | 'mapPage' | 'truckDetailPage'
+export type currentPage = 'mainPage' | 'loginPage' | 'mapPage' | 'truckDetailPage' | 'searchList'
 
 class MainStore {
   // global setting
@@ -14,7 +14,7 @@ class MainStore {
   @observable scrollviewHeight: number = 0;
 
   // userinfo
-  @observable loggedIn: boolean = false;
+  @observable isLoggedIn: boolean = false;
   @observable isSeller: boolean = false;
 
   // bannerinfo

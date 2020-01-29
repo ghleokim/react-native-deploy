@@ -1,31 +1,28 @@
 import * as React from 'react';
 import { useContext } from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
-import { mainStoreContext } from '../store/MainStore';
+import { View, TouchableOpacity, Text, Button } from 'react-native';
 import { observer } from 'mobx-react-lite';
 import { SearchList } from '../components/result/SearchList';
+import { CustomStyle } from '../static/CustomStyle';
+import TruckDetail, { TruckDetailDummy } from '../components/foodtruckDetail/TruckDetail';
+import { searchResultContext } from '../store/SearchStore';
 
 export const RouteList: React.FC = observer(() => {
-  const mainStore = useContext(mainStoreContext);
-  const getCoordinate = () => {
-    const cur = navigator.geolocation.getCurrentPosition(
-      function (position) {
-        alert(position)
-        mainStore.testCurrentLocation = position
-      },
-      function (positionError) {
-        console.log('error', positionError)
-      }
-    )
+  const searchResultStore = useContext(searchResultContext)
+
+  const ItemSelect: React.FC = () => {
+    return <Button title={searchResultStore.isSelected ? 'true' : 'close'} onPress={() => {
+      searchResultStore.isSelected = !searchResultStore.isSelected
+    }} />
   }
 
-  return (
+  return (searchResultStore.isSelected === true ?
     <View>
+      <ItemSelect />
+      <TruckDetailDummy />
+    </View>
+    : <View>
       <SearchList />
-      <TouchableOpacity onPress={getCoordinate}>
-        <Text>test get current position</Text>
-        <Text>{mainStore.testCurrentLocation}</Text>
-      </TouchableOpacity>
     </View>
   )
 })

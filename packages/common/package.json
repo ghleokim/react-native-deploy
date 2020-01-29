@@ -16,6 +16,7 @@
     "mobx-react-lite": "^1.5.2",
     "react": "^16.12.0",
     "react-native": "^0.61.5",
+    "react-naver-maps": "^0.0.13",
     "redux": "^4.0.5"
   }
 }

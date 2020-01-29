@@ -25,7 +25,9 @@ export interface SearchResult {
 export interface SearchResultItems extends Array<SearchResult>{}
 
 class SearchResultStore {
-  searchResultItems: SearchResultItems;
+  @observable isSelected: boolean = false;
+  @observable selectedItem: number;
+  @observable searchResultItems: SearchResultItems;
 }
 
 export const searchResultContext = createContext(new SearchResultStore());
