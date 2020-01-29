@@ -6,6 +6,7 @@ import { RouteLogin } from './modules/RouteLogin';
 import { RouteMap } from './modules/RouteMap';
 import { RouteTruck } from './modules/RouteTruck';
 import { observer } from 'mobx-react-lite';
+import { RouteList } from './modules/RouteList';
 
 export const Router: React.FC = observer(() => {
   const mainStore = useContext(mainStoreContext);
@@ -30,6 +31,10 @@ export const Router: React.FC = observer(() => {
     } else if (currentPage === 'truckDetailPage') {
       return (
         <RouteTruck />
+      )
+    } else if (currentPage === 'searchList') {
+      return (
+        <RouteList />
       )
     } else {
       return (

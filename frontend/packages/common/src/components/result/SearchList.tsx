@@ -4,6 +4,7 @@ import { ListView } from './ListView'
 import { CustomStyle } from '../../static/CustomStyle'
 import { Colors, COLOR_DARKGRAY } from '../../static/CustomColor'
 import { SearchResult, SearchResultItems, truckStatus } from '../../store/SearchStore'
+import axios from 'axios'
 
 
 const trucks_dummy: SearchResultItems = [
@@ -48,6 +49,17 @@ const trucks_dummy: SearchResultItems = [
 ]
 
 export const SearchList: React.FC = () => {
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios(
+        'http://70.12.246.199:8001/trucks/1',
+      );
+      console.log(result.data)
+      console.log(JSON.stringify(result.data));
+    };
+    fetchData();
+  }, []);
+
   trucks_dummy.sort((a:SearchResult, b:SearchResult)=> {
     if (a.currentStatus === 'open' || b.currentStatus !== 'open' ) { return -1 }
     else if (a.currentStatus !== 'closed' || b.currentStatus === 'open' ) { return 1 }
@@ -55,7 +67,6 @@ export const SearchList: React.FC = () => {
       0
     }
   })
-
 
   return (
     <View>
@@ -74,6 +85,7 @@ export const SearchList: React.FC = () => {
         }
       })}
     </View>
+    
   )
 }
 
