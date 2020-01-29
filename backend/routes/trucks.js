@@ -88,10 +88,7 @@ router.get('/:writer', function(req, res, next) {
         id: TRUCK_ID
       },
       include: {
-        model: models.menu,
-        where: {
-          truckId: TRUCK_ID
-        }
+        model: models.menu
       }
     })
     .then((result) => {
