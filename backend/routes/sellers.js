@@ -43,32 +43,30 @@ router.get('/', function (req, res, next) {
 });
 
 // sellerEmail 기반 삭제
-router.delete('/:sellerEmail', function (req, res, next) {
-    models.seller.destroy({ where: { email: req.params.sellerEmail } })
-      .then((result) => {
-        console.log(result);
-        res.json(result);
-        // res.redirect('/');
-      })
-      .catch((err) => {
-        console.error(err);
-        next(err);
-      });
+router.delete('/delete', async function (req, res, next) {
+
+    let resultUser = models.user.destroy({
+        where : {email: req.session.email}
+    });
+
+    let resultSeller = models.seller.destroy({
+        where: {userEmail: req.session.email}
+    });
+
+    res.json(resultSeller);
+
   });
 
   // 이름 말고 뭘 바꿀까
-  router.put('/', async function (req, res, next) {
-    let result = await models.seller.findOne({
-        where: {
-            email: req.body.sellerEmail
-        }
-    });
+  router.put('/update', async function (req, res, next) {
 
-    console.log(result.dataValues.salt);
-    
-    models.seller.update(
-      { name: req.body.sellerName},
-      { where: { email: req.body.sellerEmail } })
+      models.user.update({
+        name: req.body.sellerName
+      }, {
+        where: {
+          email: req.session.email
+        }
+      })
       .then((result) => {
         console.log(result);
         res.json(result);
@@ -77,6 +75,7 @@ router.delete('/:sellerEmail', function (req, res, next) {
         console.error(err);
         next(err);
       });
+
   });
   
 router.get('/login', function (req, res, next) {
