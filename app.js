@@ -25,8 +25,8 @@ var usersRouter = require('./routes/users');
 var sellersRouter = require('./routes/sellers');
 var trucksRouter = require('./routes/trucks');
 var menusRouter = require('./routes/menus');
-//var reviewsRouter = require('./routes/reviews');
-//var repliesRouter = require('./routes/replies');
+var reviewsRouter = require('./routes/reviews');
+var repliesRouter = require('./routes/replies');
 var cors = require('cors');
 const session = require('express-session');
 
@@ -69,8 +69,8 @@ app.use('/users', usersRouter);
 app.use('/sellers', sellersRouter);
 app.use('/trucks', trucksRouter);
 app.use('/menus', menusRouter);
-//app.use('/reviews', reviewsRouter);
-//app.use('/replies', repliesRouter);
+app.use('/reviews', reviewsRouter);
+app.use('/replies', repliesRouter);
 app.get('/upload', function(req, res, next){
   console.log("upload router");
   res.render('upload');
