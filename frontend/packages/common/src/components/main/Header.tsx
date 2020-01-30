@@ -11,6 +11,7 @@ import { mainStoreContext } from '../../store/MainStore';
 import { CustomStyle } from '../../static/CustomStyle';
 import { Colors, COLOR_HEADER } from '../../static/CustomColor';
 import axios from 'axios';
+import https from 'https'
 
 export const Header: React.FC = observer(() => {
   const mainStore = useContext(mainStoreContext);
@@ -18,8 +19,14 @@ export const Header: React.FC = observer(() => {
 
   // test for dev
   const devTest = () => {
-    axios({ url: mainStore.proxy + '/', method: 'get' })
-      .then((response) => { console.log(response); alert(JSON.stringify(response.data)) })
+    const instance = axios.create({
+      httpsAgent: new https.Agent({
+        rejectUnauthorized: false
+      })
+    })
+
+    instance({ url: mainStore.proxy + '/', method: 'get' })
+      .then((response) => { console.log(response); if(response){console.log(response); alert(JSON.stringify(response.data))} })
       .catch((error) => { console.log(error.response); alert(JSON.stringify(error.response.data)) })
   }
 
