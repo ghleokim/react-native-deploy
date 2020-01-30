@@ -43,61 +43,53 @@ router.get('/', function(req, res, next) {
 });
 
 // sellerEmail 기반 삭제
-router.delete('/:sellerEmail', function(req, res, next) {
-  models.seller.destroy({
-      where: {
-        email: req.params.sellerEmail
-      }
-    })
-    .then((result) => {
-      console.log(result);
-      res.json(result);
-      // res.redirect('/');
-    })
-    .catch((err) => {
-      console.error(err);
-      next(err);
-    });
-});
+router.delete('/delete', async function (req, res, next) {
 
-// 이름 말고 뭘 바꿀까
-router.put('/', async function(req, res, next) {
-  let result = await models.seller.findOne({
-    where: {
-      email: req.body.sellerEmail
-    }
+    let resultUser = models.user.destroy({
+        where : {email: req.session.email}
+    });
+
+    let resultSeller = models.seller.destroy({
+        where: {userEmail: req.session.email}
+    });
+
+    res.json(resultSeller);
+
   });
 
-  console.log(result.dataValues.salt);
+  // 이름 말고 뭘 바꿀까
+  router.put('/update', async function (req, res, next) {
 
-  models.seller.update({
-      name: req.body.sellerName
-    }, {
-      where: {
-        email: req.body.sellerEmail
-      }
-    })
-    .then((result) => {
-      console.log(result);
-      res.json(result);
-    })
-    .catch((err) => {
-      console.error(err);
-      next(err);
-    });
-});
+      models.user.update({
+        name: req.body.sellerName
+      }, {
+        where: {
+          email: req.session.email
+        }
+      })
+      .then((result) => {
+        console.log(result);
+        res.json(result);
+      })
+      .catch((err) => {
+        console.error(err);
+        next(err);
+      });
 
-router.get('/login', function(req, res, next) {
-  let session = req.session;
-  console.log(session);
-  if (session.isSeller == 1) {
-    res.send(session.name + " 판매자님");
-  } else {
-    res.send(session.name + " 사용자님");
-  }
-  // res.render("sellers/login", {
-  //     session: session
-  // });
+  });
+  
+router.get('/login', function (req, res, next) {
+    let session = req.session;
+    console.log(session);
+    if(session.isSeller == 1){
+        res.send(session.name + " 판매자님");
+    }
+    else{
+        res.send(session.name + " 사용자님");
+    }
+    // res.render("sellers/login", {
+    //     session: session
+    // });
 });
 
 // 로그인은 여기 말고 /users/login 에서 하자
