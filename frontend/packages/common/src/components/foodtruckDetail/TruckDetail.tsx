@@ -27,6 +27,7 @@ export const TruckDetail: React.FC = () => {
     id: 0, imgURL: '', title: '', contents: '', menus: []
   });
 
+  console.log(searchResultStore.selectedItem)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,7 +45,7 @@ export const TruckDetail: React.FC = () => {
       <Image
           style={{ width: '100%', height: 150, marginBottom: -30 }}
           source={{ uri: data.imgURL ? data.imgURL : '' }}
-          defaultSource={{uri: `https://picsum.photos/id/${data.id}/200`}}
+          defaultSource={{uri: `https://picsum.photos/id/${data.id ? data.id : 0}/200`}}
       />
       <View style={{paddingBottom: 10, backgroundColor: '#edaa11', width: '70%',  alignSelf: 'center', borderRadius: 9, marginBottom: 5}}>
         <View style={{ width: '100%', backgroundColor: '#f2be46', paddingHorizontal: 15, paddingVertical: 8, borderRadius: 9, alignItems: 'center'}}>
