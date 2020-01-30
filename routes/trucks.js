@@ -7,9 +7,32 @@ const calcDistance = require("../lib/distance")
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
 // select all truck
-router.get('/getAll', function(req, res, next) {
+router.get('/', function(req, res, next) {
   // res.send('all trucks');
   models.truck.findAll()
+    .then((trucks) => {
+      console.log(trucks);
+      res.json(trucks);
+    })
+    .catch((err) => {
+      console.log(err);
+      next(err);
+    })
+});
+router.get('/boundary', function(req, res, next) {
+  const x1 = Number(req.query.startLatitude);
+  const y1 = Number(req.query.startLongitude);
+  const x2 = Number(req.query.endLatitude);
+  const y2 = Number(req.query.endLongitude);
+
+  // res.send('all trucks');
+  models.truck.findAll({
+      attributes: ['id', 'title', 'contents', 'imgURL', 'latitude', 'longitude', 'state'],
+      where:{
+        latitude:{[Op.between]:[x1,x2]},
+        longitude:{[Op.between]:[y1,y2]}
+      }
+  })
     .then((trucks) => {
       console.log(trucks);
       res.json(trucks);
@@ -138,7 +161,7 @@ router.post('/', async function(req, res, next) {
         userEmail: req.session.email
       }
     });
-    
+
     res.json(resultTruck);
 });
 

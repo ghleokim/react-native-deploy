@@ -30,7 +30,7 @@ router.post("/sign_up", async function(req, res, next) {
 
     })
 
-    res.redirect("/user/sign_up");
+    res.redirect("/users/sign_up");
   } else {
     res.status(401).send({
       code: 0,
@@ -76,14 +76,17 @@ router.post("/login", async function(req, res, next) {
     res.status(401).send({
       code: 0,
       message: "존재하지 않는 이메일입니다."
-    }); 
+    });
   } else {
     let dbPassword = result.dataValues.password;
     let inputPassword = body.userPassword;
     let salt = result.dataValues.salt;
     let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
-
+    console.log(dbPassword);
+    console.log(inputPassword);
+    console.log(hashPassword);
     if (dbPassword === hashPassword) {
+
       // 세션 설정
       req.session.save(function() {
         req.session.email = body.userEmail;
