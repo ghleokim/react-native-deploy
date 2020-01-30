@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import { mainStoreContext } from '../store/MainStore';
 import { observer } from 'mobx-react-lite';
-import TruckDetail from '../components/foodtruckDetail/TruckDetail';
+import { TruckDetail } from '../components/foodtruckDetail/TruckDetail';
 
 export const RouteTruck: React.FC = observer(() => {
   const mainStore = useContext(mainStoreContext);

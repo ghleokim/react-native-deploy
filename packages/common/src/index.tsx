@@ -26,7 +26,7 @@ export const App: React.FC = observer(() => {
       <Header />
       <ScrollView style={{ height: mainStore.scrollviewHeight, marginTop: mainStore.headerHeight, marginBottom: mainStore.footerHeight }} contentContainerStyle={{flex: 1, flexDirection: 'column', alignItems: 'stretch'}}>
         <Router />
-        <View style={{ backgroundColor: '#e4e4e5', flexGrow: 1, minHeight: 110 }}></View>
+        <View style={{ backgroundColor: '#e4e4e5', flexGrow: 1 }}></View>
       </ScrollView>
       <Navbar />
     </View>
