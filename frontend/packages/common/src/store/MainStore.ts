@@ -5,6 +5,8 @@ export type currentPage = 'mainPage' | 'loginPage' | 'mapPage' | 'truckDetailPag
 
 class MainStore {
   // global setting
+  @observable DEVELOP: boolean = true;
+
   @observable proxy: string = 'http://54.180.141.50:8001';
   @observable currentPage: currentPage = 'mainPage';
   @observable screenWidth: number = 0;

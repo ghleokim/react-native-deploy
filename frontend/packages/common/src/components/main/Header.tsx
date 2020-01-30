@@ -10,16 +10,25 @@ import { observer } from 'mobx-react-lite';
 import { mainStoreContext } from '../../store/MainStore';
 import { CustomStyle } from '../../static/CustomStyle';
 import { Colors, COLOR_HEADER } from '../../static/CustomColor';
+import axios from 'axios';
 
 export const Header: React.FC = observer(() => {
   const mainStore = useContext(mainStoreContext);
   mainStore.headerHeight = mainStore.screenHeight / 13.5;
 
-  return (
-    <View style={[styles.header, {height: mainStore.headerHeight}]}>
-      <Text style={styles.headerText}>foodtruck 🚚</Text>
-    </View>
-  )
+  // test for dev
+  const devTest = () => {
+    axios({ url: mainStore.proxy + '/', method: 'get' })
+      .then((response) => { console.log(response); alert(JSON.stringify(response.data)) })
+      .catch((error) => { console.log(error.response); alert(JSON.stringify(error.response.data)) })
+  }
+
+return (
+  <View style={[styles.header, { height: mainStore.headerHeight }]}>
+    <Text style={styles.headerText}>foodtruck 🚚 </Text>
+    <TouchableOpacity style={{alignSelf: 'center'}} onPress={devTest}><View style={{ paddingVertical: 1, paddingHorizontal: 4, backgroundColor: Colors.deepcoral, borderRadius: 3 }}><Text style={{ color: Colors.white, fontSize: 12 }}>DEV</Text></View></TouchableOpacity>
+  </View>
+)
 })
 
 const localStyle = StyleSheet.create({
