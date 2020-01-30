@@ -16,8 +16,8 @@ import { Header } from './components/main/Header';
 export const App: React.FC = observer(() => {
   const mainStore = useContext(mainStoreContext);
   
-  mainStore.screenWidth = Dimensions.get('screen').width;
-  mainStore.screenHeight = Dimensions.get('screen').height;
+  mainStore.screenWidth = Dimensions.get('window').width;
+  mainStore.screenHeight = Dimensions.get('window').height;
   mainStore.scrollviewHeight = mainStore.screenHeight - mainStore.footerHeight - mainStore.headerHeight;
 
   console.log(mainStore)
@@ -26,7 +26,7 @@ export const App: React.FC = observer(() => {
       <Header />
       <ScrollView style={{ height: mainStore.scrollviewHeight, marginTop: mainStore.headerHeight, marginBottom: mainStore.footerHeight }} contentContainerStyle={{flex: 1, flexDirection: 'column', alignItems: 'stretch'}}>
         <Router />
-        <View style={{ backgroundColor: '#e4e4e5', flexGrow: 1, minHeight: 110 }}></View>
+        <View style={{ backgroundColor: '#e4e4e5', flexGrow: 1 }}></View>
       </ScrollView>
       <Navbar />
     </View>
