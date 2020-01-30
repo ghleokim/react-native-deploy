@@ -9,9 +9,26 @@ import {
 import { observer } from 'mobx-react-lite';
 import { mainStoreContext } from '../../store/MainStore';
 import { CustomStyle } from '../../static/CustomStyle';
+import { COLOR_HEADER } from '../../static/CustomColor';
+import { searchResultContext } from '../../store/SearchStore';
 
 export const Navbar: React.FC = observer(() => {
   const mainStore = useContext(mainStoreContext);
+  const searchResultStore = useContext(searchResultContext)
+
+  const LoginButton = () => {
+    if (mainStore.isLoggedIn === false) {
+      return <TouchableOpacity onPress={() => mainStore.currentPage = "loginPage"} style={styles.navButton}>
+        <Image
+          style={styles.navButtonImage}
+          source={require('@foodtruckmap/common/src/static/icon_processed/noun_User_1485759.png')}
+        />
+        <Text style={styles.navButtonText}>Login</Text>
+      </TouchableOpacity>
+    } else {
+      return <View></View>
+    }
+  }
 
   mainStore.footerHeight = 80;
 
@@ -24,13 +41,7 @@ export const Navbar: React.FC = observer(() => {
         />
         <Text style={styles.navButtonText}>Main</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => mainStore.currentPage = "loginPage"} style={styles.navButton}>
-        <Image
-          style={styles.navButtonImage}
-          source={require('@foodtruckmap/common/src/static/icon_processed/noun_User_1485759.png')}
-        />
-        <Text style={styles.navButtonText}>Login</Text>
-      </TouchableOpacity>
+      {LoginButton()}
       <TouchableOpacity onPress={() => mainStore.currentPage = "mapPage"} style={styles.navButton}>
         <Image
           style={styles.navButtonImage}
@@ -38,8 +49,8 @@ export const Navbar: React.FC = observer(() => {
         />
         <Text style={styles.navButtonText}>Map</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => mainStore.currentPage = "truckDetailPage"} style={styles.navButton}>
-        <Text style={styles.navButtonText}>TruckDetail</Text>
+      <TouchableOpacity onPress={() => {mainStore.currentPage = "searchList"; searchResultStore.isSelected = false}} style={styles.navButton}>
+        <Text style={styles.navButtonText}>SearchList</Text>
       </TouchableOpacity>
     </View>
   )
@@ -53,7 +64,7 @@ const localStyle = StyleSheet.create({
     bottom: 0,
     right: 0,
     left: 0,
-    backgroundColor: '#3f3f3f',
+    backgroundColor: `rgba(${COLOR_HEADER},0.5)`,
     flexDirection: 'row'
   },
   navButton: {
@@ -63,7 +74,7 @@ const localStyle = StyleSheet.create({
     flexDirection: "column"
   },
   navButtonImage: {
-    tintColor: '#ffffff',
+    tintColor: '#505050',
     height: 30,
     width: 30,
     resizeMode: 'cover',
@@ -72,7 +83,7 @@ const localStyle = StyleSheet.create({
   navButtonText: {
     fontWeight: '300',
     fontSize: 8,
-    color: '#ffffff'
+    color: '#303030'
   }
 });
 

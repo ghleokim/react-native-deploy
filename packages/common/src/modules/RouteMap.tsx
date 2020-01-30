@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { useContext } from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, Dimensions, TouchableOpacity } from 'react-native';
 import { mainStoreContext } from '../store/MainStore';
 import { observer } from 'mobx-react-lite';
+import { Maps } from '../components/Maps';
 
 export const RouteMap: React.FC = observer(() => {
   const mainStore = useContext(mainStoreContext);
@@ -12,14 +13,7 @@ export const RouteMap: React.FC = observer(() => {
     <View>
       <Text style={styles.sectionTitle}>{currentPage}</Text>
       {/* put content here */}
-      <Text style={styles.sectionTitle}>Step One</Text>
-      <Text style={styles.sectionDescription}>
-        Edit <Text style={styles.highlight}>App.tsx</Text> to change
-        this screen and then come back to see your edits.
-                  </Text>
-      <Text style={styles.sectionDescription}>{mainStore.count}</Text>
-      <Button title="increment" onPress={() => mainStore.count++} />
-      <Text style={styles.sectionDescription}>screen {mainStore.screenHeight}</Text>
+      <Maps />
     </View>
   )
 })
