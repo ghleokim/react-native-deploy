@@ -9,8 +9,19 @@ const Op = sequelize.Op;
 
 // select all truck
 router.get('/', function(req, res, next) {
+  const x1 = Number(req.query.startLatitude);
+  const y1 = Number(req.query.startLongitude);
+  const x2 = x1+Number(req.query.width);
+  const y2 = y1+Number(req.query.height);
+
   // res.send('all trucks');
-  models.truck.findAll()
+  models.truck.findAll({
+      attributes: ['id', 'title', 'contents', 'imgURL', 'latitude', 'longitude', 'state'],
+      where:{
+        latitude:{[Op.between]:[x1,x2]},
+        longitude:{[Op.between]:[y1,y2]}
+      }
+  })
     .then((trucks) => {
       console.log(trucks);
       res.json(trucks);
@@ -21,20 +32,8 @@ router.get('/', function(req, res, next) {
     })
 });
 
-router.get('/login', async function(req, res, next) {
-
-  let result = await models.truck.findOne({
-    where: {
-      id: req.session.truckId
-    },
-    attributes: ['writer', 'title','contents','imgURL','latitude','longitude','state']
-  });
-  console.log(result);
-  res.send(result);
-});
-
 router.get('/search/:searchKeyword', function(req, res, next) {
-  console.log("query", req.query)
+  console.log("query", req.query);
 
   const searchKeyword = req.params.searchKeyword
   const userLatitude = req.query.latitude;
@@ -42,7 +41,7 @@ router.get('/search/:searchKeyword', function(req, res, next) {
   //const userLatitude = 40;
   //const userLongitude = 100;
   models.truck.findAll({
-      attributes: ['id', 'title', 'contents', 'imgURL', 'latitude', 'longitude','state'],
+      attributes: ['id', 'title', 'contents', 'imgURL', 'latitude', 'longitude', 'state'],
       where: {
         [Op.or]: [{
             title: {
@@ -71,7 +70,7 @@ router.get('/search/:searchKeyword', function(req, res, next) {
       for (var i = 0; i < sortedResult.length; i++) {
         var dist = Math.round(sortedResult[i].dataValues.distance);
         if (dist >= 1000) {
-          var StrDist = ""+dist;
+          var StrDist = "" + dist;
           var len = StrDist.length;
           var frontNum = StrDist.substring(0, len - 3);
           var backNum = StrDist.substring(len - 3, len - 2);
@@ -100,7 +99,10 @@ router.get('/:writer', function(req, res, next) {
         id: TRUCK_ID
       },
       include: {
-        model: models.menu
+        model: models.menu,
+        where: {
+          truckId: TRUCK_ID
+        }
       }
     })
     .then((result) => {
@@ -140,7 +142,7 @@ router.put('/:writer', function(req, res, next) {
   models.truck.update({
       title: req.body.title,
       contents: req.body.contents,
-      state:req.body.state
+      state: req.body.state
     }, {
       where: {
         writer: req.params.writer
