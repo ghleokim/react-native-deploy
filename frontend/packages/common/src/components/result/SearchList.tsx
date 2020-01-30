@@ -1,68 +1,40 @@
 import * as React from 'react'
-import { View, Image, StyleSheet } from 'react-native'
+import { useState } from 'react'
+import { View, Image, StyleSheet, Text } from 'react-native'
 import { ListView } from './ListView'
 import { CustomStyle } from '../../static/CustomStyle'
 import { Colors, COLOR_DARKGRAY } from '../../static/CustomColor'
-import { SearchResult, SearchResultItems, truckStatus } from '../../store/SearchStore'
+import { SearchResultType, SearchResultItem, truckStatus, searchResultContext } from '../../store/SearchStore'
 import axios from 'axios'
+import { mainStoreContext } from '../../store/MainStore'
 
+interface Props {
+  isDefault?: Boolean,
+  searchKeyword?: String,
+  searchResult?: SearchResultType
+}
 
-const trucks_dummy: SearchResultItems = [
-  {
-    id: 1,
-    title: '찹스테이크 1',
-    description: 'title2',
-    currentStatus: 'closed',
-  },
-  {
-    id: 2,
-    title: '붕어빵',
-    description: 'title2',
-    currentStatus: 'open',
-    imgURL: 'https://avatars2.githubusercontent.com/u/22673963?s=400&v=4',
-    latitude: 37.5005,
-    longitude: 127.037
-  },
-  {
-    id: 3,
-    title: '타코야끼',
-    description: '둥글둥글 맛있는 타코야끼',
-    currentStatus: 'closed',
-  },
-  {
-    id: 4,
-    title: '떡볶이',
-    description: '스트레스 풀러 오세요',
-    currentStatus: 'open',
-    imgURL: 'https://avatars2.githubusercontent.com/u/22673963?s=400&v=4',
-    latitude: 37.5005,
-    longitude: 127.037
-  },
-  {
-    id: 5,
-    title: '찹스테이크 3',
-    description: '준비중입니다.',
-    currentStatus: 'prepare',
-    latitude: 37.5005,
-    longitude: 127.037
+export const SearchList: React.FC<Props> = ({ isDefault, searchKeyword, searchResult }) => {
+  const mainStore = React.useContext(mainStoreContext)
+  const searchResultStore = React.useContext(searchResultContext)
+  const [trucks, setTrucks] = useState<SearchResultType>([])
+
+  const fetchData = async () => {
+    const result = await axios(
+      // 검색어가 들어오면 검색, 없으면 기본 내용 찾아오기
+      searchKeyword ? `${mainStore.proxy}/trucks/search/${searchKeyword}` : `${mainStore.proxy}/trucks/`
+    )
+    console.log(result.data)
+    setTrucks(result.data)
   }
-]
 
-export const SearchList: React.FC = () => {
   React.useEffect(() => {
-    const fetchData = async () => {
-      const result = await axios(
-        'http://70.12.246.199:8001/trucks/1',
-      );
-      console.log(result.data)
-      console.log(JSON.stringify(result.data));
-    };
-    fetchData();
+    fetchData()
   }, []);
 
-  trucks_dummy.sort((a:SearchResult, b:SearchResult)=> {
-    if (a.currentStatus === 'open' || b.currentStatus !== 'open' ) { return -1 }
-    else if (a.currentStatus !== 'closed' || b.currentStatus === 'open' ) { return 1 }
+  trucks.sort((a: SearchResultItem, b: SearchResultItem) => {
+    if (a.currentStatus === 'open' || b.currentStatus !== 'open') { return -1 }
+    else if (a.currentStatus !== 'closed' || b.currentStatus === 'open') { return 1 }
     else {
       0
     }
@@ -70,22 +42,22 @@ export const SearchList: React.FC = () => {
 
   return (
     <View>
-      {trucks_dummy.map((truck:SearchResult, index:number) => {
+      {trucks.map((truck: SearchResultItem, index: number) => {
         if (truck.currentStatus !== 'closed') {
-        return <ListView
-          key={`listview-${index}`}
-          id={truck.id}
-          title={truck.title}
-          description={truck.description}
-          currentStatus={truck.currentStatus}
-          imageUri={truck.imgURL ? truck.imgURL : undefined}
-          latitude={truck.latitude ? truck.latitude : undefined}
-          longitude={truck.longitude ? truck.longitude : undefined}
-        />
+          return <ListView
+            key={`listview-${index}`}
+            id={truck.id}
+            title={truck.title}
+            contents={truck.contents}
+            currentStatus={truck.currentStatus}
+            imageUri={truck.imgURL ? truck.imgURL : ''}
+            latitude={truck.latitude ? truck.latitude : undefined}
+            longitude={truck.longitude ? truck.longitude : undefined}
+          />
         }
       })}
     </View>
-    
+
   )
 }
 

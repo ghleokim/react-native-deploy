@@ -18,11 +18,14 @@ export const RouteMain: React.FC = observer(() => {
   console.log(`bannerheight`, bannerHeight)
 
   const handleSearchBar = (keyword: string) => {
-    searchStore.searchKeyword = keyword;
+    console.log(keyword === '' ? 'no text' : keyword)
+    keyword === ''
+    ? null
+    : mainStore.currentPage = 'searchList'
   }
 
-  const handleSearchButton = (text?: string) => {
-    text !== undefined ? console.log('button', text) : console.log('enter', searchStore.searchKeyword)
+  const handleSearchButton = () => {
+    searchStore.searchKeyword === undefined ? undefined : handleSearchBar(searchStore.searchKeyword)
   }
   
   return (
@@ -36,14 +39,14 @@ export const RouteMain: React.FC = observer(() => {
           <TextInput
             style={[styles.input, { flex: 4 }]}
             underlineColorAndroid="transparent"
+            defaultValue = {searchStore.searchKeyword}
             placeholder={searchStore.searchPlaceholder}
             autoCapitalize="none"
             onChangeText={keyword => searchStore.searchKeyword = keyword}
-            onSubmitEditing={(e) => handleSearchButton(e.nativeEvent.text)}
-            // onKeyPress={(e)=>(e.nativeEvent.key === 'Enter' ? handleSearchButton : null)}
+            onSubmitEditing={(e) => handleSearchBar(e.nativeEvent.text)}
             multiline={false}
           />
-          <TouchableOpacity onPress={e => handleSearchButton} style={[styles.buttons, { flex: 1, marginLeft: 5 }]}>
+          <TouchableOpacity onPress={handleSearchButton} style={[styles.buttons, { flex: 1, marginLeft: 5 }]}>
             <Text style={{ color: Colors.white }}>검색</Text>
           </TouchableOpacity>
         </View>

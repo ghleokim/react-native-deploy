@@ -1,24 +1,26 @@
 {
   "development": {
-    "username": "root",
-    "password": "dbadmin",
-    "database": "foodseeker",
-    "host": "127.0.0.1",
-    "dialect": "mysql",
-    "operatorsAliases": false
+    "username": "test",
+    "password": "test",
+    "database": "test",
+    "host": "54.180.141.50",
+     "dialect": "mysql",
+     "operatorsAliases": false
   },
+
   "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
+    "username": "test",
+    "password": "test",
+    "database": "test",
+    "host": "54.180.141.50",
     "dialect": "mysql",
     "operatorsAliases": false
   },
+
   "production": {
     "username": "root",
-    "password": null,
-    "database": "database_production",
+    "password": "dbadmin",
+    "database": "mysqltest",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "operatorsAliases": false

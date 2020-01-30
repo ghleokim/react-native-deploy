@@ -10,9 +10,11 @@ import { observer } from 'mobx-react-lite';
 import { mainStoreContext } from '../../store/MainStore';
 import { CustomStyle } from '../../static/CustomStyle';
 import { COLOR_HEADER } from '../../static/CustomColor';
+import { searchResultContext } from '../../store/SearchStore';
 
 export const Navbar: React.FC = observer(() => {
   const mainStore = useContext(mainStoreContext);
+  const searchResultStore = useContext(searchResultContext)
 
   const LoginButton = () => {
     if (mainStore.isLoggedIn === false) {
@@ -47,7 +49,7 @@ export const Navbar: React.FC = observer(() => {
         />
         <Text style={styles.navButtonText}>Map</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => mainStore.currentPage = "searchList"} style={styles.navButton}>
+      <TouchableOpacity onPress={() => {mainStore.currentPage = "searchList"; searchResultStore.isSelected = false}} style={styles.navButton}>
         <Text style={styles.navButtonText}>SearchList</Text>
       </TouchableOpacity>
     </View>

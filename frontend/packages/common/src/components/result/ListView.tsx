@@ -8,7 +8,7 @@ import { truckStatus, searchResultContext } from '../../store/SearchStore'
 interface Props {
 	id: number,
 	title: string,
-	description: string,
+	contents: string,
 	imageUri?: string,
 	currentStatus: truckStatus,
 	latitude?: number,
@@ -16,7 +16,7 @@ interface Props {
 	destination?: string,
 }
 
-export const ListView: React.FC<Props> = ({ id, imageUri, title, description, currentStatus }) => {
+export const ListView: React.FC<Props> = ({ id, imageUri, title, contents, currentStatus }) => {
 	const searchResultStore = React.useContext(searchResultContext)
 
 	const handleItemSelect = (id) => {
@@ -25,16 +25,16 @@ export const ListView: React.FC<Props> = ({ id, imageUri, title, description, cu
 		console.log(searchResultStore.isSelected)
 	}
 	
-	const isOpen = () => { return currentStatus === 'open' }
+	const isOpen = () => { return true } // this has to be removed // ? currentStatus === 'open' }
 
 	return (
 		<TouchableOpacity disabled={!isOpen()} onPress={()=>handleItemSelect(id)} style={[styles.listView, { flexDirection: 'row' }]}>
 			<View style={{ flex: 1 }}>
-				<Image style={{ borderRadius: 30, width: 60, height: 60 }} source={{ uri: imageUri === undefined ? 'https://picsum.photos/200' : imageUri }} />
+				<Image style={{ borderRadius: 30, width: 60, height: 60 }} defaultSource={{uri: `https://picsum.photos/id/${id}/200`}} source={{ uri: imageUri === undefined ? 'https://picsum.photos/200' : imageUri }} />
 			</View>
 			<View style={{ flex: 3, justifyContent: 'center' }}>
-				<Text style={[CustomText.title, isOpen() ? { color: Colors.black } : { color: Colors.gray }]}>{title}</Text>
-				<Text style={[CustomText.body, isOpen() ? { color: Colors.black } : { color: Colors.gray }]}>{description}</Text>
+				<Text style={[CustomText.title, isOpen() ? { color: Colors.black } : { color: Colors.gray }]}>id {id} | {title}</Text>
+				<Text style={[CustomText.body, isOpen() ? { color: Colors.black } : { color: Colors.gray }]}>{contents}</Text>
 				<Text style={[CustomText.body, isOpen() ? { color: Colors.black } : { color: Colors.gray }]}>{currentStatus}</Text>
 			</View>
 		</TouchableOpacity>

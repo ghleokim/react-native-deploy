@@ -3,6 +3,7 @@ import {
     View,
     Text,
     Image,
+    StyleSheet,
  } from "react-native";
 
 interface IProps {
@@ -10,16 +11,17 @@ interface IProps {
   name: string,
   price: number,
   content: string,
-  imgURL: string,
+  imgURL?: string,
 }
 
 export default (props:IProps) => {
 
   return (
-    <View>
+    <View style={styles.menuContainer}>
       <Image
-      style={{width: 50, height: 50}}
+      defaultSource={{uri: `https://picsum.photos/id/${props.id}/200`}}
       source={{uri: props.imgURL}}
+      style={{width: 50, height: 50}}
      />  
       <Text>이름: {props.name}</Text>
       <Text>내용: {props.content}</Text>
@@ -28,3 +30,13 @@ export default (props:IProps) => {
   );
   
 };
+
+const styles = StyleSheet.create({
+  menuContainer: {
+    borderBottomColor: '#969698',
+    borderBottomWidth: 2,
+    borderStyle: "dashed",
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+  }
+})
