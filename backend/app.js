@@ -48,7 +48,7 @@ models.sequelize.sync().then( () => {
 app.use(methodOverride('_method'));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+app.set('view engine', 'ejs');
 app.use(session({
   key: 'sid',
   secret: 'secret',
