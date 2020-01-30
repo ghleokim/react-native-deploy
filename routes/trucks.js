@@ -19,29 +19,6 @@ router.get('/', function(req, res, next) {
       next(err);
     })
 });
-router.get('/boundary', function(req, res, next) {
-  const x1 = Number(req.query.startLatitude);
-  const y1 = Number(req.query.startLongitude);
-  const x2 = Number(req.query.endLatitude);
-  const y2 = Number(req.query.endLongitude);
-
-  // res.send('all trucks');
-  models.truck.findAll({
-      attributes: ['id', 'title', 'contents', 'imgURL', 'latitude', 'longitude', 'state'],
-      where:{
-        latitude:{[Op.between]:[x1,x2]},
-        longitude:{[Op.between]:[y1,y2]}
-      }
-  })
-    .then((trucks) => {
-      console.log(trucks);
-      res.json(trucks);
-    })
-    .catch((err) => {
-      console.log(err);
-      next(err);
-    })
-});
 
 router.get('/getTruck', async function(req, res, next) {
 
