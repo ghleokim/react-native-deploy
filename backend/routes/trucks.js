@@ -6,7 +6,6 @@ const calcDistance = require("../lib/distance")
 
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
-
 // select all truck
 router.get('/getAll', function(req, res, next) {
   // res.send('all trucks');
@@ -53,7 +52,7 @@ router.get('/:truckId', async function(req, res, next) {
 });
 
 router.get('/search/:searchKeyword', function(req, res, next) {
-  console.log("query", req.query)
+  console.log("query", req.query);
 
   const searchKeyword = req.params.searchKeyword
   const userLatitude = req.query.latitude;
@@ -61,7 +60,7 @@ router.get('/search/:searchKeyword', function(req, res, next) {
   //const userLatitude = 40;
   //const userLongitude = 100;
   models.truck.findAll({
-      attributes: ['id', 'title', 'contents', 'imgURL', 'latitude', 'longitude','state'],
+      attributes: ['id', 'title', 'contents', 'imgURL', 'latitude', 'longitude', 'state'],
       where: {
         [Op.or]: [{
             title: {
@@ -90,7 +89,7 @@ router.get('/search/:searchKeyword', function(req, res, next) {
       for (var i = 0; i < sortedResult.length; i++) {
         var dist = Math.round(sortedResult[i].dataValues.distance);
         if (dist >= 1000) {
-          var StrDist = ""+dist;
+          var StrDist = "" + dist;
           var len = StrDist.length;
           var frontNum = StrDist.substring(0, len - 3);
           var backNum = StrDist.substring(len - 3, len - 2);

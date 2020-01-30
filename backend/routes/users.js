@@ -5,7 +5,7 @@ const crypto = require("crypto");
 
 // 회원가입 GET
 router.get('/sign_up', function(req, res, next) {
-  res.render("users/sign_up");
+  res.render("user/sign_up");
 });
 
 // 회원가입 POST
@@ -52,7 +52,7 @@ router.get('/getUser', async function(req, res, next) {
     where: {
       email: req.session.email
     },
-    attributes: ['name', 'email','isSeller']
+    attributes: ['name', 'email', 'isSeller']
   });
   console.log(result);
   res.send({result, businessRegistrationNumber: req.session.businessRegistrationNumber});
@@ -68,7 +68,7 @@ router.post("/login", async function(req, res, next) {
     }
   });
   let resultSeller = await models.seller.findOne({
-    where : {
+    where: {
       userEmail: body.userEmail
     }
   });
@@ -82,14 +82,14 @@ router.post("/login", async function(req, res, next) {
     let inputPassword = body.userPassword;
     let salt = result.dataValues.salt;
     let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
-    
+
     if (dbPassword === hashPassword) {
       // 세션 설정
       req.session.save(function() {
         req.session.email = body.userEmail;
         req.session.name = result.name;
         req.session.isSeller = result.isSeller;
-        if(result.isSeller){            
+        if (result.isSeller) {
           req.session.businessRegistrationNumber = resultSeller.businessRegistrationNumber;
           req.session.truckId = resultSeller.truckId;
         }
