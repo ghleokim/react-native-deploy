@@ -5,7 +5,7 @@ const crypto = require("crypto");
 
 // 회원가입 GET
 router.get('/sign_up', function(req, res, next) {
-  res.render("users/sign_up");
+  res.render("user/sign_up");
 });
 
 // 회원가입 POST
@@ -29,7 +29,8 @@ router.post("/sign_up", async function(req, res, next) {
       isSeller: 0 // false
 
     })
-    res.redirect("/user/sign_up");
+
+    res.redirect("/users/sign_up");
   } else {
     res.status(401).send({
       code: 0,
@@ -37,32 +38,24 @@ router.post("/sign_up", async function(req, res, next) {
     });
   }
 });
-// 메인 페이지
-router.get('/', function(req, res, next) {
-  if (req.cookies) {
-    console.log(req.cookies);
-  }
-  if (req.session.isSeller) {
-    res.send(req.session.name + " 판매자님 + 사용자");
-  } else {
-    res.send(req.session.name + " 사용자님");
-  }
-});
 
-// 로그인 GET
 router.get('/login', function(req, res, next) {
   let session = req.session;
   console.log(session);
-  if (session.isSeller == 0) {
-    res.send(session.name + " 사용자님");
-  }
-  // 아래 else문은 실행 안됨
-  else {
-    res.send(session.name + " 판매자님");
-  }
-  // res.render("user/login", {
-  //   session : session
-  // });
+  res.render("user/login", {
+    session : session
+  });
+});
+
+router.get('/getUser', async function(req, res, next) {
+  let result = await models.user.findOne({
+    where: {
+      email: req.session.email
+    },
+    attributes: ['name', 'email', 'isSeller']
+  });
+  console.log(result);
+  res.send({result, businessRegistrationNumber: req.session.businessRegistrationNumber});
 });
 
 // 로그인 POST
@@ -72,6 +65,11 @@ router.post("/login", async function(req, res, next) {
   let result = await models.user.findOne({
     where: {
       email: body.userEmail
+    }
+  });
+  let resultSeller = await models.seller.findOne({
+    where: {
+      userEmail: body.userEmail
     }
   });
   if (result == null) {
@@ -84,13 +82,20 @@ router.post("/login", async function(req, res, next) {
     let inputPassword = body.userPassword;
     let salt = result.dataValues.salt;
     let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
-    
+    console.log(dbPassword);
+    console.log(inputPassword);
+    console.log(hashPassword);
     if (dbPassword === hashPassword) {
+
       // 세션 설정
       req.session.save(function() {
         req.session.email = body.userEmail;
         req.session.name = result.name;
         req.session.isSeller = result.isSeller;
+        if (result.isSeller) {
+          req.session.businessRegistrationNumber = resultSeller.businessRegistrationNumber;
+          req.session.truckId = resultSeller.truckId;
+        }
         res.json(req.session);
       })
     } else {
@@ -110,20 +115,18 @@ router.get("/logout", function(req, res, next) {
   res.redirect("/users/login")
 })
 
-router.put('/', async function(req, res, next) {
+router.put('/update', async function(req, res, next) {
   let result = await models.user.findOne({
     where: {
-      email: req.body.userEmail
+      email: req.session.email
     }
   });
-
-  console.log(result.dataValues.salt);
 
   models.user.update({
       name: req.body.userName
     }, {
       where: {
-        email: req.body.userEmail
+        email: req.session.email
       }
     })
     .then((result) => {
@@ -137,10 +140,10 @@ router.put('/', async function(req, res, next) {
 });
 
 // userEmail 기반 삭제
-router.delete('/:userEmail', function(req, res, next) {
+router.delete('/delete', function(req, res, next) {
   models.user.destroy({
       where: {
-        email: req.params.userEmail
+        email: req.session.email
       }
     })
     .then((result) => {
