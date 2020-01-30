@@ -29,6 +29,7 @@ router.post("/sign_up", async function(req, res, next) {
       isSeller: 0 // false
 
     })
+
     res.redirect("/user/sign_up");
   } else {
     res.status(401).send({
@@ -38,8 +39,15 @@ router.post("/sign_up", async function(req, res, next) {
   }
 });
 
-router.get('/login', async function(req, res, next) {
+router.get('/login', function(req, res, next) {
+  let session = req.session;
+  console.log(session);
+  res.render("user/login", {
+    session : session
+  });
+});
 
+router.get('/getUser', async function(req, res, next) {
   let result = await models.user.findOne({
     where: {
       email: req.session.email
@@ -47,7 +55,7 @@ router.get('/login', async function(req, res, next) {
     attributes: ['name', 'email', 'isSeller']
   });
   console.log(result);
-  res.send(result);
+  res.send({result, businessRegistrationNumber: req.session.businessRegistrationNumber});
 });
 
 // 로그인 POST
@@ -68,7 +76,7 @@ router.post("/login", async function(req, res, next) {
     res.status(401).send({
       code: 0,
       message: "존재하지 않는 이메일입니다."
-    });
+    }); 
   } else {
     let dbPassword = result.dataValues.password;
     let inputPassword = body.userPassword;
@@ -104,20 +112,18 @@ router.get("/logout", function(req, res, next) {
   res.redirect("/users/login")
 })
 
-router.put('/', async function(req, res, next) {
+router.put('/update', async function(req, res, next) {
   let result = await models.user.findOne({
     where: {
-      email: req.body.userEmail
+      email: req.session.email
     }
   });
-
-  console.log(result.dataValues.salt);
 
   models.user.update({
       name: req.body.userName
     }, {
       where: {
-        email: req.body.userEmail
+        email: req.session.email
       }
     })
     .then((result) => {
@@ -131,10 +137,10 @@ router.put('/', async function(req, res, next) {
 });
 
 // userEmail 기반 삭제
-router.delete('/:userEmail', function(req, res, next) {
+router.delete('/delete', function(req, res, next) {
   models.user.destroy({
       where: {
-        email: req.params.userEmail
+        email: req.session.email
       }
     })
     .then((result) => {
