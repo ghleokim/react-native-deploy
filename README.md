@@ -1,6 +1,6 @@
 # FOODTRUCK MAP(가제)
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e2c59ccf-28cf-4fa8-bdfc-45ba47e55257/.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e2c59ccf-28cf-4fa8-bdfc-45ba47e55257/.png)
+![foodtruckMap.png](foodtruckMap.png)
 
 ---
 
