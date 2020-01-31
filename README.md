@@ -1,5 +1,6 @@
-# FOODTRUCK MAP(가제)
-
+<br>
+### &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FOODTRUCK MAP(가제)
+<br></br>
 ![foodtruckMap.png](foodtruckMap.png)
 
 ---
@@ -22,7 +23,7 @@
 
 ---
 
-# 👨‍💻 팀 역할
+# 👦팀 역할
 
 - 김건호(팀장, 서기)
 - 이호준(팀원, 백엔드 담당)
@@ -44,12 +45,12 @@
 
 - 프론트엔드 빌드 방법
 
-    1. cd foodtruck-map
-    2. yarn
-    3. cd foodtruck-map/frontend/packages/common
-    4. yarn build
-    5. cd ../web
-    6. yarn start
+    1. $ cd foodtruck-map
+    2. $ yarn
+    3. $ cd foodtruck-map/frontend/packages/common
+    4. $ yarn build
+    5. $ cd ../web
+    6. $ yarn start
 
 ---
 
