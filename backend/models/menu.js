@@ -21,7 +21,10 @@ module.exports = (sequelize, DataTypes) => {
     content: {
       type: DataTypes.TEXT
     },
-    imgURL: DataTypes.STRING
+    imgURL: DataTypes.STRING,
+    isSoldOut: {
+      type: DataTypes.BOOLEAN
+    },
   }, {});
   menu.associate = function(models) {
     menu.belongsTo(models.truck, {
