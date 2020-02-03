@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     startRating: {
       type: DataTypes.INTEGER,
+      allowNull: false
     },
   }, {});
   review.associate = function(models) {
