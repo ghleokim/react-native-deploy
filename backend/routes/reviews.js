@@ -52,14 +52,20 @@ router.put('/update', async function(req, res, next){
     res.json(result);
 });
 
-// 그 밑에 딸린 댓글들도 다 삭제?
+// 그 밑에 달린 댓글들도 다 삭제
 router.delete('/delete/:reviewId', async function(req, res, next){
-    let result = await models.review.destroy({
+    let resultReplies = await models.reply.destroy({
+        where: {
+            reviewId: req.params.reviewId
+        }
+    });
+
+    let resultReview = await models.review.destroy({
         where :{
             id: req.params.reviewId,
         }
     });
-    res.json(result);
+    res.json(resultReview);
     //res.redirect('/');
 });
 
