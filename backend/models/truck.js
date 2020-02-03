@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true
     },
-    writer: {
+    email: {
       type: DataTypes.STRING,
       allowNull: false
     },
@@ -24,7 +24,11 @@ module.exports = (sequelize, DataTypes) => {
     state: DataTypes.STRING
   }, {});
   truck.associate = function(models) {
-    truck.hasMany(models.menu)
+    truck.hasMany(models.menu);
+    truck.hasMany(models.review);
+    truck.belongsToMany(models.user, {through: 'userTrucks'});
+    truck.belongsToMany(models.seller, {through: 'sellerTrucks'});
   };
+  
   return truck;
 };

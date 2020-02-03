@@ -9,7 +9,16 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {});
   review.associate = function(models) {
-    // associations can be defined here
+    review.belongsTo(models.truck, {
+      foreignKey:"truckId"
+    });
+
+    review.belongsTo(models.user, {
+      foreignKey:"userEmail"
+    });
+
+    review.hasMany(models.reply);
+
   };
   return review;
 };
