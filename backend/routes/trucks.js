@@ -24,12 +24,12 @@ router.get('/getTruck', async function(req, res, next) {
 
   let result = await models.truck.findOne({
     where: {
-      writer: req.session.email
+      email: req.session.email
     },
     include: {
       model: models.menu
     },
-    attributes: ['writer', 'title','contents','imgURL','latitude','longitude','state']
+    attributes: ['email', 'title','contents','imgURL','latitude','longitude','state']
   });
   console.log(result);
   res.send(result);
@@ -45,7 +45,7 @@ router.get('/:truckId', async function(req, res, next) {
     include: {
       model: models.menu
     },
-    attributes: ['writer', 'title','contents','imgURL','latitude','longitude','state']
+    attributes: ['email', 'title','contents','imgURL','latitude','longitude','state']
   });
   console.log(result);
   res.send(result);
@@ -116,7 +116,7 @@ router.get('/search/:searchKeyword', function(req, res, next) {
 router.post('/', async function(req, res, next) {
   console.log(req.session.email);
     let resultTruck = await models.truck.create({
-      writer: req.session.email,
+      email: req.session.email,
       title: req.body.title,
       contents: req.body.contents,
       imgURL: req.body.imgURL,
@@ -126,7 +126,7 @@ router.post('/', async function(req, res, next) {
     });
     let getTruck = await models.truck.findOne({
       where: {
-        writer: req.session.email
+        email: req.session.email
       }
     });
     console.log(getTruck);
@@ -153,7 +153,7 @@ router.put('/update', function(req, res, next) {
 
     }, {
       where: {
-        writer: req.session.email
+        email: req.session.email
       }
     })
     .then((result) => {
@@ -168,7 +168,7 @@ router.put('/update', function(req, res, next) {
 
 router.delete('/delete', function (req, res, next) {
   let resultTruck = models.truck.destroy({
-    where: { writer: req.session.email }
+    where: { email: req.session.email }
   });
 
   let resultSeller = models.seller.update({
