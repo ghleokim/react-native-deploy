@@ -112,7 +112,8 @@ router.get("/logout", function(req, res, next) {
   req.session.destroy();
   res.clearCookie('sid');
 
-  res.redirect("/users/login")
+  // res.redirect("/users/login")
+  res.send(true);
 })
 
 router.put('/update', async function(req, res, next) {
