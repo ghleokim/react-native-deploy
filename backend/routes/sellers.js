@@ -14,7 +14,7 @@ router.post("/sign_up", async function(req, res, next) {
   let salt = Math.round((new Date().valueOf() * Math.random())) + "";
   let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
 
-  let resultUser = models.user.create({
+  let resultUser = await models.user.create({
     name: body.sellerName,
     email: body.sellerEmail,
     password: hashPassword,
@@ -25,7 +25,7 @@ router.post("/sign_up", async function(req, res, next) {
   console.log("user 회원가입");
 
 
-  let resultSeller = models.seller.create({
+  let resultSeller = await models.seller.create({
     userEmail: body.sellerEmail, // fk (user의 pk)
     businessRegistrationNumber: body.sellerBusinessRegistrationNumber,
   });
@@ -77,7 +77,7 @@ router.delete('/delete', async function (req, res, next) {
       });
 
   });
-  
+
 router.get('/login', function (req, res, next) {
     let session = req.session;
     console.log(session);
