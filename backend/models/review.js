@@ -7,6 +7,10 @@ module.exports = (sequelize, DataTypes) => {
     startLating: {
       type: DataTypes.FLOAT,
     },
+    rating: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   }, {});
   review.associate = function(models) {
     review.belongsTo(models.truck, {
