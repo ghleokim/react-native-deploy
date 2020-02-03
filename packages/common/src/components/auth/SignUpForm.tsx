@@ -6,8 +6,13 @@ import { mainStoreContext } from "../../store/MainStore";
 import { loginStoreContext } from "../../store/LoginStore";
 import { Colors } from "../../static/CustomColor";
 import { observer } from "mobx-react-lite";
+import { History, LocationState } from 'history';
 
-export const SignupForm: React.FC = observer(() => {
+interface Props {
+  history: History<LocationState>;
+}
+
+export const SignupForm: React.FC<Props> = observer(({history}) => {
   const mainStore = useContext(mainStoreContext);
   const loginStore = useContext(loginStoreContext);
 
@@ -41,6 +46,9 @@ export const SignupForm: React.FC = observer(() => {
         "signupInfo",
         loginStore.responsedata
       )
+      if (response.status === 200) {
+        history.replace('/login')
+      }
     })
       .catch(function (error) {
         console.log(error);

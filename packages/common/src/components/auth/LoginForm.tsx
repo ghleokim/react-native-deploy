@@ -6,8 +6,13 @@ import { mainStoreContext } from "../../store/MainStore";
 import { loginStoreContext } from "../../store/LoginStore";
 import { CustomStyle } from "../../static/CustomStyle";
 import { Colors } from "../../static/CustomColor";
+import { History, LocationState } from 'history';
 
-export const NewLoginForm: React.FC = observer(() => {
+interface Props {
+  history: History<LocationState>;
+}
+
+export const NewLoginForm: React.FC<Props> = observer(({history}) => {
   const mainStore = useContext(mainStoreContext);
   const loginStore = useContext(loginStoreContext);
 
@@ -40,7 +45,13 @@ export const NewLoginForm: React.FC = observer(() => {
       // if success 추가해야됨
       if (response.status === 200) {
         mainStore.isLoggedIn = true;
+        if (response.data.isSeller === true){
+          mainStore.isSeller = true;
+        }
+
         alert(response.statusText)
+
+        history.push('/')
       }
     })
       .catch((error) => {

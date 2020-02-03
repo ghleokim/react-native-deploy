@@ -1,5 +1,5 @@
 import { observable } from 'mobx';
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
 
 class MapStore {
   // user current pos
@@ -17,8 +17,13 @@ class MapStore {
   @observable bounds = {
   }
   @observable mapPosition = {}
+  @observable fabtop;
+  @observable mapHeight = "400px"
 
+  @observable myPosState:boolean = false;
+  @observable listState = false
   //test
+  @observable reftest: any;
   @observable stat: number = -1;
 }
 
