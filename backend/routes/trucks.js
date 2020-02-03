@@ -165,9 +165,10 @@ router.post('/', async function(req, res, next) {
     res.json(resultTruck);
 });
 
-router.put('/update', function(req, res, next) {
+router.put('/update/:truckId', function(req, res, next) {
+console.log(req.session.email);
+console.log(req.params.truckId);
   models.truck.update({
-      title: req.body.title,
       contents: req.body.contents,
       state:req.body.state,
       imgURL: req.body.imgURL,
@@ -176,7 +177,8 @@ router.put('/update', function(req, res, next) {
 
     }, {
       where: {
-        email: req.session.email
+        email: req.session.email,
+        id: req.params.truckId
       }
     })
     .then((result) => {
@@ -189,9 +191,11 @@ router.put('/update', function(req, res, next) {
     });
 });
 
-router.delete('/delete', function (req, res, next) {
+router.delete('/delete/:truckId', function (req, res, next) {
   let resultTruck = models.truck.destroy({
-    where: { email: req.session.email }
+    where: { email: req.session.email,
+        id:req.params.truckId
+      }
   });
 
   let resultSeller = models.seller.update({
