@@ -95,6 +95,7 @@ router.post("/login", async function(req, res, next) {
         if (result.isSeller) {
           req.session.businessRegistrationNumber = resultSeller.businessRegistrationNumber;
           req.session.truckId = resultSeller.truckId;
+          req.session.sellerId = resultSeller.id;
         }
         res.json(req.session);
       })
