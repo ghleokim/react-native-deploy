@@ -4,12 +4,9 @@ module.exports = (sequelize, DataTypes) => {
     content: {
       type: DataTypes.TEXT,
     },
-    startLating: {
-      type: DataTypes.FLOAT,
-    },
-    rating: {
+    startRating: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: false
     },
   }, {});
   review.associate = function(models) {
