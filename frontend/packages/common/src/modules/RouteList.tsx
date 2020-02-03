@@ -6,16 +6,26 @@ import { SearchList } from '../components/result/SearchList';
 import { CustomStyle } from '../static/CustomStyle';
 import { TruckDetail, TruckDetailDummy } from '../components/foodtruckDetail/TruckDetail';
 import { searchResultContext, searchStoreContext } from '../store/SearchStore';
+import { RouteComponentProps } from 'react-router-dom';
 
-export const RouteList: React.FC = observer(() => {
+interface MatchParams {
+  keyword: string;
+}
+
+interface Props extends RouteComponentProps<MatchParams> {
+
+}
+
+export const RouteList: React.FC<Props> = observer(({history, match}) => {
   const searchResultStore = useContext(searchResultContext)
   const searchStore = useContext(searchStoreContext)
 
   const getKeyword = () => {
-    const keyword = searchStore.searchKeyword === '' ? undefined : searchStore.searchKeyword
+    const keyword = match.params.keyword
     return keyword
   }
-
+  
+  console.log(searchResultStore.searchResult)
   console.log(getKeyword())
 
   const CloseButton: React.FC = () => {
@@ -25,10 +35,6 @@ export const RouteList: React.FC = observer(() => {
         source={require('@foodtruckmap/common/src/static/icon_processed/noun_Close_1015372.png')}
       />
       </TouchableOpacity>
-    
-    // <Button title={searchResultStore.isSelected ? 'true' : 'close'} onPress={() => {
-    //   searchResultStore.isSelected = !searchResultStore.isSelected
-    // }} />
   }
 
   return (searchResultStore.isSelected === true ?

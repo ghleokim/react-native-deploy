@@ -1,24 +1,21 @@
 import React, { useContext } from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 import { observer } from 'mobx-react-lite';
 import { mainStoreContext } from '../../store/MainStore';
 import { CustomStyle } from '../../static/CustomStyle';
 import { COLOR_HEADER } from '../../static/CustomColor';
 import { searchResultContext } from '../../store/SearchStore';
+import { RouteComponentProps } from 'react-router-dom';
 
-export const Navbar: React.FC = observer(() => {
+interface Props extends RouteComponentProps {}
+
+export const Navbar: React.FC<Props> = observer(({ history }) => {
   const mainStore = useContext(mainStoreContext);
   const searchResultStore = useContext(searchResultContext)
 
-  const LoginButton = () => {
+  const AuthButton = () => {
     if (mainStore.isLoggedIn === false) {
-      return <TouchableOpacity onPress={() => mainStore.currentPage = "loginPage"} style={styles.navButton}>
+      return <TouchableOpacity onPress={() => history.push('/login')} style={styles.navButton}>
         <Image
           style={styles.navButtonImage}
           source={require('@foodtruckmap/common/src/static/icon_processed/noun_User_1485759.png')}
@@ -26,7 +23,13 @@ export const Navbar: React.FC = observer(() => {
         <Text style={styles.navButtonText}>Login</Text>
       </TouchableOpacity>
     } else {
-      return <View></View>
+      return <TouchableOpacity onPress={() => history.push('/mypage')} style={styles.navButton}>
+      <Image
+        style={styles.navButtonImage}
+        source={require('@foodtruckmap/common/src/static/icon_processed/noun_User_1485759.png')}
+      />
+      <Text style={styles.navButtonText}>Mypage</Text>
+    </TouchableOpacity>
     }
   }
 
@@ -34,24 +37,21 @@ export const Navbar: React.FC = observer(() => {
 
   return (
     <View style={[styles.footer]}>
-      <TouchableOpacity onPress={() => mainStore.currentPage = "mainPage"} style={styles.navButton}>
+      <TouchableOpacity onPress={() => history.replace('/')} style={styles.navButton}>
         <Image
           style={styles.navButtonImage}
           source={require('@foodtruckmap/common/src/static/icon_processed/noun_main_1902023.png')}
         />
         <Text style={styles.navButtonText}>Main</Text>
       </TouchableOpacity>
-      {LoginButton()}
-      <TouchableOpacity onPress={() => mainStore.currentPage = "mapPage"} style={styles.navButton}>
+      <TouchableOpacity onPress={() => history.push('/map')} style={styles.navButton}>
         <Image
           style={styles.navButtonImage}
           source={require('@foodtruckmap/common/src/static/icon_processed/noun_Map_1485766.png')}
-        />
+          />
         <Text style={styles.navButtonText}>Map</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => {mainStore.currentPage = "searchList"; searchResultStore.isSelected = false}} style={styles.navButton}>
-        <Text style={styles.navButtonText}>SearchList</Text>
-      </TouchableOpacity>
+      {AuthButton()}
     </View>
   )
 })
@@ -75,15 +75,16 @@ const localStyle = StyleSheet.create({
   },
   navButtonImage: {
     tintColor: '#505050',
-    height: 30,
-    width: 30,
+    height: 35,
+    width: 35,
     resizeMode: 'cover',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    marginBottom: -5
   },
   navButtonText: {
-    fontWeight: '300',
-    fontSize: 8,
-    color: '#303030'
+    fontWeight: '700',
+    fontSize: 16,
+    color: '#505050'
   }
 });
 

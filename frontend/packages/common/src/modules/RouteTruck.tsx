@@ -7,11 +7,9 @@ import { TruckDetail } from '../components/foodtruckDetail/TruckDetail';
 
 export const RouteTruck: React.FC = observer(() => {
   const mainStore = useContext(mainStoreContext);
-  const currentPage = mainStore.currentPage
 
   return (
     <View>
-      <Text>{currentPage}</Text>
       <TruckDetail />
     </View>
   )

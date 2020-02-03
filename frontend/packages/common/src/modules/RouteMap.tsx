@@ -4,15 +4,15 @@ import { StyleSheet, Text, View, Button, Dimensions, TouchableOpacity } from 're
 import { mainStoreContext } from '../store/MainStore';
 import { observer } from 'mobx-react-lite';
 import { Maps } from '../components/Maps';
+import { RouteComponentProps } from 'react-router-dom';
 
-export const RouteMap: React.FC = observer(() => {
+interface Props extends RouteComponentProps {}
+
+export const RouteMap: React.FC<Props> = observer(({history}) => {
   const mainStore = useContext(mainStoreContext);
-  const currentPage = mainStore.currentPage
 
   return (
     <View>
-      <Text style={styles.sectionTitle}>{currentPage}</Text>
-      {/* put content here */}
       <Maps />
     </View>
   )
