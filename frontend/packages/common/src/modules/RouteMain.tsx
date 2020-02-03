@@ -4,9 +4,10 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput } from 'reac
 import { mainStoreContext } from '../store/MainStore';
 import { searchStoreContext } from '../store/SearchStore';
 import { observer } from 'mobx-react-lite';
-import { CustomStyle } from '../static/CustomStyle';
+import { CustomStyle, CustomText } from '../static/CustomStyle';
 import { Colors } from '../static/CustomColor';
 import { BannerSwiper } from '../components/main/BannerSwiper'
+import { RouteList } from './RouteList';
 
 export const RouteMain: React.FC = observer(() => {
   const mainStore = useContext(mainStoreContext);
@@ -14,37 +15,38 @@ export const RouteMain: React.FC = observer(() => {
   const currentPage = mainStore.currentPage
 
   const bannerHeight = mainStore.screenWidth / 2.6
-  console.log(`bannerheight` , bannerHeight)
+  console.log(`bannerheight`, bannerHeight)
 
   const handleSearchBar = (keyword: string) => {
-    searchStore.searchKeyword = keyword;
+    console.log(keyword === '' ? 'no text' : keyword)
+    keyword === ''
+    ? null
+    : mainStore.currentPage = 'searchList'
   }
 
-  const handleSearchButton = (text: string) => {
-    console.log(text)
-    console.log('enter')
+  const handleSearchButton = () => {
+    searchStore.searchKeyword === undefined ? undefined : handleSearchBar(searchStore.searchKeyword)
   }
-
+  
   return (
     <View style={{ flex: 1, flexDirection: 'column' }}>
       <View>
         <BannerSwiper />
-        {/* <View style={[styles.mainBanner, {height: bannerHeight}]}>
-          <Image style={[styles.mainBannerImage, {height: bannerHeight}]} source={require('@foodtruckmap/common/src/static/banner/bamdokkabi_1280_480.png')} />
-        </View> */}
         <View style={styles.mainButtonWrapper}>
           <TouchableOpacity style={styles.mainButton} onPress={() => { mainStore.currentPage = 'mapPage' }}><Text style={styles.sectionTitle}> 내 주변 푸드트럭 찾기 🚚 > </Text></TouchableOpacity>
         </View>
-        <View style={styles.searchBarWrapper}>
+        <View style={[styles.inputContainer, { flex: 1, flexDirection: 'row' }]}>
           <TextInput
             style={[styles.input, { flex: 4 }]}
             underlineColorAndroid="transparent"
+            defaultValue = {searchStore.searchKeyword}
             placeholder={searchStore.searchPlaceholder}
             autoCapitalize="none"
-            onChangeText={handleSearchBar}
-            onSubmitEditing={(text) => handleSearchButton}
+            onChangeText={keyword => searchStore.searchKeyword = keyword}
+            onSubmitEditing={(e) => handleSearchBar(e.nativeEvent.text)}
+            multiline={false}
           />
-          <TouchableOpacity style={{ marginLeft: 5, borderRadius: 10, alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: Colors.navy }}>
+          <TouchableOpacity onPress={handleSearchButton} style={[styles.buttons, { flex: 1, marginLeft: 5 }]}>
             <Text style={{ color: Colors.white }}>검색</Text>
           </TouchableOpacity>
         </View>
@@ -83,14 +85,6 @@ const LocalStyles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1
   },
-  searchBarWrapper: {
-    height: 70,
-    width: '100%',
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    flex: 1,
-    flexDirection: 'row',
-  },
   sectionTitle: {
     fontSize: 24,
     fontWeight: '600'
@@ -105,6 +99,7 @@ const LocalStyles = StyleSheet.create({
     alignSelf: 'stretch'
   },
   staticText: {
+    ...CustomText.logo,
     fontSize: 14,
     color: '#505050'
   },

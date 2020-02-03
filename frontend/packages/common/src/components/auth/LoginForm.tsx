@@ -1,69 +1,59 @@
 import React, { Component, useContext } from "react";
-import { View, Text, TouchableOpacity, TextInput, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, AsyncStorage } from "react-native";
 import axios from 'axios';
-import { CustomStyle } from "../../static/CustomStyle";
+import { observer } from "mobx-react-lite";
 import { mainStoreContext } from "../../store/MainStore";
 import { loginStoreContext } from "../../store/LoginStore";
+import { CustomStyle } from "../../static/CustomStyle";
 import { Colors } from "../../static/CustomColor";
-import { observer } from "mobx-react-lite";
 
-export const SignupForm: React.FC = observer(() => {
+export const NewLoginForm: React.FC = observer(() => {
   const mainStore = useContext(mainStoreContext);
   const loginStore = useContext(loginStoreContext);
 
   const handleEmail = (email: string) => {
-    loginStore.signupEmail = email;
-  }
+    loginStore.userEmail = email;
+  };
 
+  // security handling required.
   const handlePassword = (pass: string) => {
-    loginStore.signupPass = pass;
+    loginStore.pass = pass;
   }
 
-  const handleName = (name: string) => {
-    loginStore.signupName = name;
-  }
-
-  const handleSignUp = (name: string, email: string, pass: string) => {
+  const handleLogin = (email: string, pass: string) => {
     axios({
-      url: mainStore.proxy + '/users/sign_up/',
+      url: mainStore.proxy + '/users/login/',
       method: 'post',
       data: {
-        userName: name,
-        userEmail: email,
-        userPassword: pass
+        userEmail: loginStore.userEmail,
+        userPassword: loginStore.pass
       }
     }).then((response) => {
       console.log(response);
       // 현재 내부 state에서 필요한 값을 유지하도록 구현하였다. 라우팅할 때 쓰일 수 있을 듯.
-      loginStore.responsedata = response.data
+      mainStore.isSeller = response.data.isSeller;
+      console.log('isSeller:', mainStore.isSeller)
 
-      localStorage.setItem(
-        "signupInfo",
-        loginStore.responsedata
-      )
+      // session 로컬 스토리지에 저장하기
+      localStorage.setItem('cookies', JSON.stringify(response.data.cookie))
+
+      // if success 추가해야됨
+      if (response.status === 200) {
+        mainStore.isLoggedIn = true;
+        alert(response.statusText)
+      }
     })
-      .catch(function (error) {
-        console.log(error);
+      .catch((error) => {
+        console.log(error.response);
+        console.log(error.response.data.message)
+        alert(error.response.statusText)
       });
   }
 
   return (
     <>
-      <View style={styles.inputContainer}>
-        <Text style={LocalStyles.caption}>이름</Text>
-
-        <TextInput
-          style={[styles.input, LocalStyles.form]}
-          underlineColorAndroid="transparent"
-          placeholder="Name"
-          placeholderTextColor="#9a73ef"
-          autoCapitalize="none"
-          onChangeText={handleName}
-        />
-      </View>
-      <View style={styles.inputContainer}>
+      <View style={[styles.inputContainer]}>
         <Text style={LocalStyles.caption}>이메일</Text>
-
         <TextInput
           style={[styles.input, LocalStyles.form]}
           underlineColorAndroid="transparent"
@@ -73,9 +63,8 @@ export const SignupForm: React.FC = observer(() => {
           onChangeText={handleEmail}
         />
       </View>
-      <View style={styles.inputContainer}>
+      <View style={[styles.inputContainer]}>
         <Text style={LocalStyles.caption}>비밀번호</Text>
-
         <TextInput
           style={[styles.input, LocalStyles.form]}
           underlineColorAndroid="transparent"
@@ -88,7 +77,7 @@ export const SignupForm: React.FC = observer(() => {
       <View style={styles.inputContainer}>
         <TouchableOpacity
           style={[styles.buttons, LocalStyles.form]}
-          onPress={() => handleSignUp(loginStore.signupName, loginStore.signupEmail, loginStore.signupPass)}
+          onPress={() => handleLogin(loginStore.userEmail, loginStore.pass)}
         >
           <Text style={{ color: Colors.white }}>Submit</Text>
         </TouchableOpacity>
