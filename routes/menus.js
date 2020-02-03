@@ -39,10 +39,10 @@ router.get('/:truckId/:name', function(req, res, next) {
 router.post('/:truckId', function(req, res, next) {
   const TRUCK_ID = req.params.truckId
   models.menu.create({
-      turckId: req.body.turckId,
+      truckId: TRUCK_ID,
       price: req.body.price,
       name: req.body.name,
-      contents: req.body.contents,
+      content: req.body.content,
       imgURL: req.body.imgURL
     })
     .then((result) => {
@@ -59,7 +59,7 @@ router.put('/:truckId/:name', function(req, res, next) {
   models.menu.update({
       price: req.body.price,
       name: req.body.name,
-      contents: req.body.contents
+      content: req.body.content
     }, {
       where: {
         truckId: req.params.truckId,
@@ -76,11 +76,11 @@ router.put('/:truckId/:name', function(req, res, next) {
     });
 });
 
-router.delete('/:truckId/:name', function(req, res, next) {
+router.delete('/:truckId/:id', function(req, res, next) {
   models.menu.destroy({
       where: {
         truckId: req.params.truckId,
-        name: req.params.name
+        id: req.params.id
       }
     })
     .then((result) => {
