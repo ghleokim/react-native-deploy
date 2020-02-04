@@ -208,4 +208,19 @@ router.delete('/delete/:truckId', function (req, res, next) {
   res.json(resultSeller);
 })
 
+router.put("/update/state/:truckId", async function(req, res, next) {
+  let result = await models.truck.update(
+    {
+      state: req.body.state
+    }, {
+      where: {
+        email: req.session.email,
+        id: req.params.truckId
+      }
+    }
+  );
+  console.log(result);
+  res.json(result);
+});
+
 module.exports = router;
