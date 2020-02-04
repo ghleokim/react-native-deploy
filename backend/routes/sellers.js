@@ -118,6 +118,14 @@ router.post("/login", async function(req, res, next) {
   }
 });
 
+router.get('/myTrucks', async function(req, res, next){
+  let result = await models.truck.findAll({
+    where: { email: req.session.email },
+  });
+  console.log(result);
+  res.json(result);
+});
+
 // 로그아웃
 router.get("/logout", function(req, res, next) {
   req.session.destroy();
