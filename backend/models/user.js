@@ -34,7 +34,8 @@ module.exports = (sequelize, DataTypes) => {
   user.associate = function(models) {
     user.hasMany(models.review);
     user.hasMany(models.reply);
-    user.belongsToMany(models.truck, {through: 'userTrucks'});
+    user.hasMany(models.truckUsers);
+    user.hasMany(models.userTrucks);
   };
 
   return user;
