@@ -33,7 +33,15 @@ var cors = require('cors');
 const session = require('express-session');
 
 var app = express();
-app.use(cors());
+require('dotenv').config();
+
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN,
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 const models = require("./models/index.js");
 
 // localhost:8001/user/file_name.jpg
