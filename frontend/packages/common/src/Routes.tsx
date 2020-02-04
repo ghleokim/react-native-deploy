@@ -7,6 +7,7 @@ import { RouteList } from './modules/RouteList';
 import { Router, Switch, Route, Redirect } from './Router';
 import { Navbar } from './components/main/Navbar';
 import { RouteMypage } from './modules/RouteMypage';
+import { RouteTruck } from './modules/RouteTruck';
 
 interface Props {
   height: number;
@@ -28,6 +29,7 @@ export const Routes = (Props: Props) => {
             <Route exact path='/signup' component={RouteLogin} />
             <Route exact path='/map' component={RouteMap} />
             <Route exact path='/mypage' component={RouteMypage} />
+            <Route exact path='/trucks/:targetId' component={RouteTruck} />
             <Redirect path='*' to='/' />
           </Switch>
         </ScrollView>

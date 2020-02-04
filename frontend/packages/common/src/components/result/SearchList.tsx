@@ -1,22 +1,23 @@
 import * as React from 'react'
 import { useState } from 'react'
-import { View, Image, StyleSheet, Text } from 'react-native'
+import { View, Image, StyleSheet, Text, Button } from 'react-native'
 import { ListView } from './ListView'
 import { CustomStyle } from '../../static/CustomStyle'
 import { Colors, COLOR_DARKGRAY } from '../../static/CustomColor'
 import { SearchResultType, SearchResultItem, truckStatus, searchResultContext } from '../../store/SearchStore'
 import axios from 'axios'
 import { mainStoreContext } from '../../store/MainStore'
+import { History, LocationState } from 'history';
 
 interface Props {
+  history: History<LocationState>,
   isDefault?: Boolean,
   searchKeyword?: String,
-  searchResult?: SearchResultType
+  searchResult?: SearchResultType,
 }
 
-export const SearchList: React.FC<Props> = ({ isDefault, searchKeyword, searchResult }) => {
+export const SearchList: React.FC<Props> = ({ history, isDefault, searchKeyword, searchResult }) => {
   const mainStore = React.useContext(mainStoreContext)
-  const searchResultStore = React.useContext(searchResultContext)
   const [trucks, setTrucks] = useState<SearchResultType>([])
 
   const fetchData = async () => {
@@ -44,6 +45,7 @@ export const SearchList: React.FC<Props> = ({ isDefault, searchKeyword, searchRe
       {trucks.map((truck: SearchResultItem, index: number) => {
         if (truck.currentStatus !== 'closed') {
           return <ListView
+            history={history}
             key={`listview-${index}`}
             id={truck.id}
             title={truck.title}

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useContext } from 'react';
-import { StyleSheet, Text, View, Button, Dimensions, TouchableOpacity } from 'react-native';
-import { mainStoreContext } from '../store/MainStore';
+import { StyleSheet, View } from 'react-native';
 import { observer } from 'mobx-react-lite';
 import { Maps } from '../components/Maps';
 import { RouteComponentProps } from 'react-router-dom';
@@ -9,11 +8,10 @@ import { RouteComponentProps } from 'react-router-dom';
 interface Props extends RouteComponentProps {}
 
 export const RouteMap: React.FC<Props> = observer(({history}) => {
-  const mainStore = useContext(mainStoreContext);
 
   return (
     <View>
-      <Maps />
+      <Maps history={history} />
     </View>
   )
 })
