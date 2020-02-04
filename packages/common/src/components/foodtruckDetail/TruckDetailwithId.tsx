@@ -8,9 +8,9 @@ import {
 import MenuList from './MenuList';
 import Line from '../Line'
 import axios from 'axios'
-import { searchResultContext, searchStoreContext } from '../../store/SearchStore';
 import { mainStoreContext } from '../../store/MainStore';
 import { CustomStyle, CustomText } from '../../static/CustomStyle';
+import ReviewList from './ReviewList';
 
 interface IState {
   id: Number,
@@ -20,24 +20,47 @@ interface IState {
   menus: []
 }
 
-export const TruckDetail: React.FC = () => {
+interface IReview {
+  id: number,
+  content: string,
+  startRating: number,
+  createdAt: string,
+  updatedAt: string,
+  truckId: number,
+  userEmail: string
+}
+
+interface Props {
+  targetId: number
+}
+
+export const TruckDetailwithId: React.FC<Props> = ({targetId}) => {
   const mainStore = useContext(mainStoreContext)
-  const searchResultStore = useContext(searchResultContext)
   const [data, setData] = useState<IState>({
     id: 0, imgURL: '', title: '', contents: '', menus: []
-  });
+  })
+  const [review, setReview] = useState<IReview[]>([{
+    id: 0, content: '', startRating: 1, createdAt: '', updatedAt: '', truckId: 0, userEmail: ''
+  }])
 
-  console.log(searchResultStore.selectedItem)
 
   useEffect(() => {
     const fetchData = async () => {
       const result = await axios(
-        `${mainStore.proxy}/trucks/${searchResultStore.selectedItem}`,
+        `${mainStore.proxy}/trucks/${targetId}`,
       );
-      setData(result.data);
       console.log(JSON.stringify(result.data));
+      setData(result.data)
     };
+    const fetchReview = async () => {
+      const result = await axios(
+        `${mainStore.proxy}/reviews/all/${targetId}`,
+      );
+      console.log(JSON.stringify(result.data))
+      setReview(result.data)
+    }
     fetchData();
+    fetchReview();
   }, []);
 
   return (
@@ -58,17 +81,9 @@ export const TruckDetail: React.FC = () => {
 
       <MenuList menulist={data.menus} />
       <Line></Line>
+      <ReviewList reviewList={review} />
     </View>
   )
-}
-
-export const TruckDetailDummy: React.FC = () => {
-  const searchResultStore = useContext(searchResultContext)
-  return (searchResultStore.isSelected === true
-      ? <View style={{ height: 1000, width: '100%', justifyContent: 'center', alignContent: 'center', alignItems: 'center' }}>
-        <Text>{searchResultStore.selectedItem} detail - dummy. update when backend is ready.</Text>
-      </View>
-      : <View></View>)
 }
 
 const localStyle = StyleSheet.create({
@@ -89,7 +104,7 @@ const localStyle = StyleSheet.create({
     fontSize: 10
   },
   truckContentsContainer: {
-    paddingBottom: 1
+    paddingBottom: 10,
   },
 })
 

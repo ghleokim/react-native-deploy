@@ -5,19 +5,21 @@ import {
   FlatList,
   StyleSheet,
 } from "react-native";
-import Menu from './Menu'
 import { CustomText } from '../../static/CustomStyle';
+import Review from './Review';
 
-interface IMenu {
+interface IReview {
   id: number,
-  name: string,
-  price: number,
   content: string,
-  imgURL?: string,
+  startRating: number,
+  createdAt: string,
+  updatedAt: string,
+  truckId: number,
+  userEmail: string
 }
 
 interface IProps {
-  menulist: IMenu[]
+  reviewList: IReview[]
 }
 
 export default (props: IProps) => {
@@ -26,20 +28,21 @@ export default (props: IProps) => {
     <View style={styles.menuListContainer}>
       <View style={styles.menuListContentContainer}>
         <View style={styles.menuListTitle}>
-          <Text style={[CustomText.textCenter, CustomText.titleHN, { fontSize: 22 }]}>메뉴</Text>
+          <Text style={[CustomText.textCenter, CustomText.titleHN, { fontSize: 22 }]}>리뷰</Text>
         </View>
-        <FlatList<IMenu>
-          data={props.menulist}
+        <FlatList<IReview>
+          data={props.reviewList}
           renderItem={({ item }) =>
-            <Menu
-              name={item.name}
-              price={item.price}
+            <Review
               id={item.id}
-              imgURL={item.imgURL}
               content={item.content}
+              startRating={item.startRating}
+              createdAt={item.createdAt}
+              updatedAt={item.updatedAt}
+              truckId={item.truckId}
+              userEmail={item.userEmail}
             />}
-
-          keyExtractor={item => item.name}
+          keyExtractor={item => item.userEmail}
         />
       </View>
     </View>

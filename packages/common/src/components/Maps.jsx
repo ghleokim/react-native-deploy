@@ -1,20 +1,16 @@
-import React, { Component, useContext, useEffect } from 'react';
-import { View, ListView, Text, Image, ScrollView } from "react-native";
-import { NaverMap, Marker, Circle } from 'react-naver-maps';
+import React, { useContext, useEffect } from 'react';
+import { View, TouchableOpacity, Text, Image, ScrollView } from "react-native";
+import { NaverMap, Marker } from 'react-naver-maps';
 import { observer } from 'mobx-react-lite';
 import { mainStoreContext } from '../store/MainStore';
 import { MapStoreContext } from '../store/MapStore';
 import axios from 'axios';
-import { refDecorator } from 'mobx/lib/internal';
 
-export const Maps = observer(() => {
+export const Maps =  observer(({history}) => {
   const mainStore = useContext(mainStoreContext);
   const mapStore = useContext(MapStoreContext);
 
-  /*1. 내 위치를 받는 메소드
-    2. 백엔드로부터 푸드트럭 데이터를 받아오는 메소드(해결)
-    3. 지도 위에 마커를 그리는 메소드(해결, 내 위치를 기반하여 마커를 띄워주는 것으로 확장 필요)
-  */
+  // const searchResultStore = useContext(SearchResultContext);
 
   const getMyLocation = () => {
     if (navigator.geolocation) { // GPS를 지원하면
@@ -58,19 +54,8 @@ export const Maps = observer(() => {
       });
   }
 
-  const make_markers = mapStore.markers.map((element, index) => {
-    return <Marker key={index}
-        position={{lat:element.latitude, lng:element.longitude}}
-        onClick={(e) => {
-          mapStore.stat = index;
-          console.log("e :", e);
-        }}
-      />
-  });
-
   useEffect(() => { // 라이프사이클 주기때문에 이렇게 하지 않으면, 렌더할 때 무한히 돈당..
     getMyLocation()
-    // getMarkersFromLocation()
   }, []);
 
   const handleBoundsChanged = (bounds) => {
@@ -84,40 +69,106 @@ export const Maps = observer(() => {
   const handleCenter = (center) => {
     mapStore.center = center;
     console.log("mapStore.center : ", mapStore.center);
-    mapStore.myPosState = false;
+    mapStore.stat = -1;
   }
 
-  const newOverlay = ({stat}) => {
-    if(mapStore.stat === -1) return;
-    console.log("position : ", mapStore.position)
+  const newOverlay = () => {
     console.log("mapStore.stat : ", mapStore.stat);
-    console.log("markers data : ", mapStore.markers[mapStore.stat]);
-    return <View style={{position: 'absolute', left: mapStore.position.domEvent.clientX, 
-      top: mapStore.position.domEvent.clientY - 50, width: 150, height: 150, zIndex: 1, backgroundColor:'#ffffff'}}>
+    console.log("markers data : ", mapStore.markerData);
+    return <View style={{position: 'absolute', 
+    left: mapStore.markerData.domEvent.clientX + 150 <= mainStore.screenWidth ?
+    mapStore.markerData.domEvent.clientX : mapStore.markerData.domEvent.clientX - 150, 
+      top: mapStore.markerData.domEvent.clientY - 20 + 150 <= mapStore.mapHeight ? 
+      mapStore.markerData.domEvent.clientY - 20 : mapStore.markerData.domEvent.clientY - 200, 
+      width: 150, height: 150, zIndex: 1, backgroundColor:'#ffffff'}}>
       <Image style={{height:50, width: 50}}
         source={require('@foodtruckmap/common/src/static/icon_processed/noun_User_1485759.png')} />
-      {/* <Text>latitude : {mapStore.markers[mapStore.stat].latitude}</Text>
-      <Text>longitude : {mapStore.markers[mapStore.stat].longitude}</Text> */}
       <Text>{mapStore.markers[mapStore.stat].title}</Text>
-      <button style={{width: 100,  }}>상세페이지로</button>
+      <button style={{width: 100,  }} onClick={() => handleRouteDetail(mapStore.markers[mapStore.stat])}>상세페이지로</button>
       </View>
+  }
+
+  const make_markers = mapStore.markers.map((element, index) => {
+    return <Marker key={index}
+        position={{lat:element.latitude, lng:element.longitude}}
+        onClick={(e) => {
+          mapStore.markerData = e;
+          mapStore.stat = index;
+          console.log("e : ", e);
+        }}
+      />
+  });
+
+  const handleListMarkerTrace = (el) => {
+    console.log("choiced element : ", el);
+
+    let defaultDistance = {
+      y: mapStore.bounds._max.y - mapStore.bounds._min.y,
+      x: mapStore.bounds._max.x - mapStore.bounds._min.x
+    }
+    let defaultZoom = mapStore.zoom;
+
+    while(defaultZoom != 1) {
+      defaultZoom--;
+      defaultDistance.y *= 2;
+      defaultDistance.x *= 2;
+    }
+  
+    const focusCenter = {
+      x: (el.longitude + mapStore.userCenter.lng) / 2,
+      y: (el.latitude + mapStore.userCenter.lat) / 2,
+      _lat: (el.latitude + mapStore.userCenter.lat) / 2,
+      _lng: (el.longitude + mapStore.userCenter.lng) / 2
+    }
+
+    while(1) {
+      let minLat = focusCenter._lat - defaultDistance.y / 2;
+      let maxLat = focusCenter._lat + defaultDistance.y / 2;
+      let minLng = focusCenter._lng - defaultDistance.x / 2;
+      let maxLng = focusCenter._lng + defaultDistance.x / 2;
+
+      if(minLat > mapStore.userCenter.lat || maxLat < mapStore.userCenter.lat || 
+        minLng > mapStore.userCenter.lng || maxLng < mapStore.userCenter.lng || 
+        minLat > el.latitude || maxLat < el.latitude || 
+        minLng > el.longitude || maxLng < el.longitude 
+      ) {
+        defaultZoom--;
+        defaultDistance.y *= 2;
+        defaultDistance.x *= 2;
+        break;
+      }
+      else {
+        defaultZoom++;
+        defaultDistance.y /= 2;
+        defaultDistance.x /= 2;
+      }
+    }
+
+    handleCenter(focusCenter);
+    mapStore.zoom = defaultZoom;
+    mapStore.selectedId = el.id;
+  }
+
+  // 라우팅 소스 작성
+  const handleRouteDetail = (el) => {
+    history.push(`/trucks/${el.id}`)
   }
 
   const makeList = mapStore.markers.map((element, index) => {
     console.log("element : ", element);
     return (
-      <View key={index}
-        id={element.id}
-        title={element.title}
-        contents={element.contents}
-        currentStatus={element.currentStatus}
-        imageUri={element.imgURL ? element.imgURL : ''}
-        latitude={element.latitude ? element.latitude : undefined}
-        longitude={element.longitude ? element.longitude : undefined}
-        onClick={(e) => {
-          console.log(`index : ${index}, e : ${e}`);
-        }}
-      />
+      <TouchableOpacity
+        style={{ flexDirection: 'row' }}
+        key={index} 
+        onPress={() => mapStore.selectedId != element.id ? handleListMarkerTrace(element) : handleRouteDetail(element)}>
+        <Image
+          style={{ borderRadius: 30, width: 60, height: 60 }}
+          source={{ uri: element.imgURL }} />
+        <View>
+          <Text>{element.title}</Text>
+          <Text>{element.contents}</Text>
+        </View>
+      </TouchableOpacity>
     )
   });
 
@@ -165,6 +216,7 @@ export const Maps = observer(() => {
         onBoundsChanged = { (bounds) => handleBoundsChanged(bounds) }
         center={ mapStore.center }
         onCenterChanged = { (center) => handleCenter(center) }
+        naverRef={ref => mapStore.reftest = ref}
         >
 
         <Marker // 내 위치를 띄우는 마커
@@ -215,7 +267,7 @@ export const Maps = observer(() => {
           <Text>리스트</Text>
         </View>
 
-      { newOverlay(mapStore.stat) }
+        { mapStore.stat != -1 && newOverlay() }
 
         {mapStore.listState == true &&  // 리스트의 조건부 렌더링
           showListView()
@@ -223,4 +275,3 @@ export const Maps = observer(() => {
       </View>
   )
 })
-
