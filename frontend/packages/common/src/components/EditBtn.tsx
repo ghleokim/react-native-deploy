@@ -1,22 +1,17 @@
 import React from 'react';
 import {
-    View,
-    TouchableOpacity,
-    Button,
-    Image
- } from "react-native";
+  View,
+  TouchableOpacity,
+  Button,
+  Image
+} from "react-native";
 
 export default () => {
-    return (
-      <View>
-      <TouchableOpacity activeOpacity = { .5 } >
- 
+  return (
+    <TouchableOpacity activeOpacity={.5} onPress={()=>{console.log('clicked')}}>
       <Image
-      style={{width: 50, height: 50}}
-      source={{uri: 'https://facebook.github.io/react-native/img/tiny_logo.png'}}
-    />          
-        </TouchableOpacity>
-
-        </View>
-      )
+        style={{ width: 15, height: 15 }}
+        source={require('@foodtruckmap/common/src/static/icon_processed/edit_marker.png')} />
+    </TouchableOpacity>
+  )
 };
