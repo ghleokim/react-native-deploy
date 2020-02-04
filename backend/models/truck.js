@@ -26,8 +26,8 @@ module.exports = (sequelize, DataTypes) => {
   truck.associate = function(models) {
     truck.hasMany(models.menu);
     truck.hasMany(models.review);
-    // truck.belongsToMany(models.user, {through: 'userTrucks'});
-    // truck.belongsToMany(models.seller, {through: 'sellerTrucks'});
+    truck.hasMany(models.truckUsers);
+    truck.hasMany(models.userTrucks);
   };
   
   return truck;
