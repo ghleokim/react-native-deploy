@@ -169,6 +169,7 @@ router.put('/update/:truckId', function(req, res, next) {
 console.log(req.session.email);
 console.log(req.params.truckId);
   models.truck.update({
+      title: req.body.contents,
       contents: req.body.contents,
       state:req.body.state,
       imgURL: req.body.imgURL,

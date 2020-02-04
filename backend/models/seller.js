@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
   seller.associate = function(models) {
     seller.belongsTo(models.user);
     seller.hasMany(models.reply);
-    seller.belongsToMany(models.truck, {through: 'sellerTrucks'});
+    // seller.belongsToMany(models.truck, {through: 'sellerTrucks'});
   };
   return seller;
 };

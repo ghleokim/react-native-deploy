@@ -55,7 +55,8 @@ router.get('/getUser', async function(req, res, next) {
     attributes: ['name', 'email', 'isSeller']
   });
   console.log(result);
-  res.send({result, businessRegistrationNumber: req.session.businessRegistrationNumber});
+  let sid = req.session.sid.sid;
+  res.send({result, sid: sid, businessRegistrationNumber: req.session.businessRegistrationNumber});
 });
 
 // 로그인 POST
@@ -96,6 +97,7 @@ router.post("/login", async function(req, res, next) {
           req.session.businessRegistrationNumber = resultSeller.businessRegistrationNumber;
           req.session.truckId = resultSeller.truckId;
           req.session.sellerId = resultSeller.id;
+          req.session.sid = req.cookies;
         }
         res.json(req.session);
       })
