@@ -6,13 +6,12 @@ import { mainStoreContext } from '../store/MainStore';
 import { NewLoginForm } from '../components/auth/LoginForm';
 import { SignupForm } from '../components/auth/SignUpForm';
 import { loginCurrentPage, loginStoreContext } from '../store/LoginStore';
-import { CustomStyle } from '../static/CustomStyle'
+import { CustomStyle, CustomText } from '../static/CustomStyle'
 import { Colors } from '../static/CustomColor';
 import { RouteComponentProps } from 'react-router-dom';
 import { History, LocationState } from 'history'
 
-interface Props extends RouteComponentProps {
-}
+interface Props extends RouteComponentProps { }
 
 interface FormProps {
   history: History<LocationState>;
@@ -20,14 +19,12 @@ interface FormProps {
 }
 
 const FormRouter: React.FC<FormProps> = ({ history, location }) => {
-  console.log(location)
   return (
     location.pathname === '/login' ? <NewLoginForm history={history} /> : <SignupForm history={history} />
   )
 }
 
 export const RouteLogin: React.FC<Props> = observer(({ history, location, match }) => {
-
   const mainStore = useContext(mainStoreContext);
   const loginStore = useContext(loginStoreContext)
 
@@ -37,39 +34,32 @@ export const RouteLogin: React.FC<Props> = observer(({ history, location, match 
     } else {
       history.replace('/login')
     }
+  }
 
+  const LoginNavBar: React.FC = () => {
+    return (
+      <View style={{ flexDirection: 'row', backgroundColor: '#ffffff' }}>
+        <TouchableOpacity onPress={handleTapPage} style={[{ flex: 1, alignItems: 'center', paddingVertical: 10 },
+        location.pathname === '/login' ? { borderBottomColor: Colors.deepcoral, borderBottomWidth: 3 } : {}]}>
+          <Text style={[CustomText.title, { fontSize: 18 }]}>로그인</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleTapPage} style={[{ flex: 1, alignItems: 'center', paddingVertical: 10 },
+        location.pathname === '/signup' ? { borderBottomColor: Colors.deepcoral, borderBottomWidth: 3 } : {}]}>
+          <Text style={[CustomText.title, { fontSize: 18 }]}>회원가입</Text>
+        </TouchableOpacity>
+      </View>
+    )
   }
 
   return (
-    <View>
-      <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#ffffff' }}>
-        <TouchableOpacity onPress={handleTapPage} style={[{ flex: 1, alignItems: 'center', height: 50, paddingTop: 10 },
-        location.pathname === '/login' ? { borderBottomColor: Colors.deepcoral, borderBottomWidth: 3 } : {}]}>
-          <Text>login</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleTapPage} style={[{ flex: 1, alignItems: 'center', height: 50, paddingTop: 10 },
-        location.pathname === '/signup' ? { borderBottomColor: Colors.deepcoral, borderBottomWidth: 3 } : {}]}>
-          <Text>signup</Text>
-        </TouchableOpacity>
-      </View>
-      <View>
-        <Text style={styles.loginTitle}>{location.pathname === '/login' ? 'welcome back !' : 'Hello new user !'}</Text>
-        <FormRouter history={history} location={location} />
-      </View>
+    <View style={{ flex: 1 }}>
+      <LoginNavBar />
+      <FormRouter history={history} location={location} />
     </View>
   )
 })
 
 const localStyles = StyleSheet.create({
-  mainBanner: {
-    height: 100,
-    width: '100%',
-    backgroundColor: '#f3f3f3'
-  },
-  mainBannerImage: {
-    height: 100,
-    width: '100%',
-  },
   loginTitle: {
     fontSize: 24,
     fontWeight: '600',
@@ -78,4 +68,4 @@ const localStyles = StyleSheet.create({
   }
 })
 
-const styles = { ...CustomStyle, ...localStyles}
+const styles = { ...CustomStyle, ...localStyles }

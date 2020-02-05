@@ -2,15 +2,13 @@ import React, { useContext, useEffect } from 'react';
 import { View, TouchableOpacity, Text, Image, ScrollView } from "react-native";
 import { NaverMap, Marker } from 'react-naver-maps';
 import { observer } from 'mobx-react-lite';
-import { mainStoreContext } from '../store/MainStore';
-import { MapStoreContext } from '../store/MapStore';
+import { mainStoreContext } from '../../store/MainStore';
+import { MapStoreContext } from '../../store/MapStore';
 import axios from 'axios';
 
 export const Maps =  observer(({history}) => {
   const mainStore = useContext(mainStoreContext);
   const mapStore = useContext(MapStoreContext);
-
-  // const searchResultStore = useContext(SearchResultContext);
 
   const getMyLocation = () => {
     if (navigator.geolocation) { // GPS를 지원하면

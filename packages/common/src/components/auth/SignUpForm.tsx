@@ -1,7 +1,7 @@
 import React, { Component, useContext } from "react";
-import { View, Text, TouchableOpacity, TextInput, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, Image } from "react-native";
 import axios from 'axios';
-import { CustomStyle } from "../../static/CustomStyle";
+import { CustomStyle, CustomText } from "../../static/CustomStyle";
 import { mainStoreContext } from "../../store/MainStore";
 import { loginStoreContext } from "../../store/LoginStore";
 import { Colors } from "../../static/CustomColor";
@@ -12,7 +12,7 @@ interface Props {
   history: History<LocationState>;
 }
 
-export const SignupForm: React.FC<Props> = observer(({history}) => {
+export const SignupForm: React.FC<Props> = observer(({ history }) => {
   const mainStore = useContext(mainStoreContext);
   const loginStore = useContext(loginStoreContext);
 
@@ -56,52 +56,62 @@ export const SignupForm: React.FC<Props> = observer(({history}) => {
   }
 
   return (
-    <>
-      <View style={styles.inputContainer}>
-        <Text style={LocalStyles.caption}>이름</Text>
-
-        <TextInput
-          style={[styles.input, LocalStyles.form]}
-          underlineColorAndroid="transparent"
-          placeholder="Name"
-          placeholderTextColor="#9a73ef"
-          autoCapitalize="none"
-          onChangeText={handleName}
+    <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between' }}>
+      <View style={{ flex: 3 }}>
+        <Image
+          style={{ width: '100%', height: '100%' }}
+          source={require('@foodtruckmap/common/src/static/img/foodtruck.png')}
         />
+        <Text style={[CustomText.logo, { paddingVertical: '10%', paddingHorizontal: '10%', position: 'absolute', textAlign: 'center', color: '#ffffff' }]}><Text style={{backgroundColor: 'rgba(236, 76, 100, 0.7)'}}> 회원가입 후 {"\n"} 푸드트럭 정보를 찾아보세요 ! </Text></Text>
+        {/* <Text style={{position: 'absolute', bottom: 5, right: 10, color: '#ffffff', backgroundColor: 'rgba(230,76,76,0.8)'}}>Photo by REVOLT on Unsplash</Text> */}
       </View>
-      <View style={styles.inputContainer}>
-        <Text style={LocalStyles.caption}>이메일</Text>
+      <View style={{ flex: 2 }}>
+        <View style={styles.inputContainer}>
+          <Text style={LocalStyles.caption}>이름</Text>
 
-        <TextInput
-          style={[styles.input, LocalStyles.form]}
-          underlineColorAndroid="transparent"
-          placeholder="Email"
-          placeholderTextColor="#9a73ef"
-          autoCapitalize="none"
-          onChangeText={handleEmail}
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={LocalStyles.caption}>비밀번호</Text>
+          <TextInput
+            style={[styles.input, LocalStyles.form]}
+            underlineColorAndroid="transparent"
+            placeholder="Name"
+            placeholderTextColor="#9a73ef"
+            autoCapitalize="none"
+            onChangeText={handleName}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={LocalStyles.caption}>이메일</Text>
 
-        <TextInput
-          style={[styles.input, LocalStyles.form]}
-          underlineColorAndroid="transparent"
-          placeholder="Password"
-          placeholderTextColor="#9a73ef"
-          autoCapitalize="none"
-          onChangeText={handlePassword}
-        />
+          <TextInput
+            style={[styles.input, LocalStyles.form]}
+            underlineColorAndroid="transparent"
+            placeholder="Email"
+            placeholderTextColor="#9a73ef"
+            autoCapitalize="none"
+            onChangeText={handleEmail}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={LocalStyles.caption}>비밀번호</Text>
+
+          <TextInput
+            style={[styles.input, LocalStyles.form]}
+            underlineColorAndroid="transparent"
+            placeholder="Password"
+            placeholderTextColor="#9a73ef"
+            autoCapitalize="none"
+            onChangeText={handlePassword}
+          />
+        </View>
+        <View style={[styles.inputContainer, { paddingTop: 15, paddingBottom: 5 }]}>
+          <TouchableOpacity
+            style={[styles.buttons, LocalStyles.form]}
+            onPress={() => handleSignUp(loginStore.signupName, loginStore.signupEmail, loginStore.signupPass)}
+          >
+            <Text style={{ color: Colors.white, fontSize:16, fontWeight: '700' }}>회원가입</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.inputContainer}>
-        <TouchableOpacity
-          style={[styles.buttons, LocalStyles.form]}
-          onPress={() => handleSignUp(loginStore.signupName, loginStore.signupEmail, loginStore.signupPass)}
-        >
-          <Text style={{ color: Colors.white }}>Submit</Text>
-        </TouchableOpacity>
-      </View>
-    </>
+    </View>
   )
 })
 

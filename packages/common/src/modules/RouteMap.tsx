@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { observer } from 'mobx-react-lite';
-import { Maps } from '../components/Maps';
+import { Maps } from '../components/map/Maps';
 import { RouteComponentProps } from 'react-router-dom';
 
 interface Props extends RouteComponentProps {}
