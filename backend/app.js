@@ -33,7 +33,23 @@ var cors = require('cors');
 const session = require('express-session');
 
 var app = express();
-app.use(cors());
+require('dotenv').config();
+
+const origins = process.env.CORS_ORIGIN.split(',');
+
+const corsOptions = {
+  origin: function(origin, callback) {
+    if (origins.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 const models = require("./models/index.js");
 
 // localhost:8001/user/file_name.jpg
