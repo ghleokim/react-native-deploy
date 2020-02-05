@@ -51,15 +51,22 @@ router.get('/', function(req, res, next) {
 // sellerEmail 기반 삭제
 router.delete('/delete', async function (req, res, next) {
 
-    let resultUser = models.user.destroy({
-        where : {email: req.session.email}
-    });
+  let resultUser = await models.user.destroy({
+    where: { email: req.session.email }
+  });
 
-    let resultSeller = models.seller.destroy({
-        where: {userEmail: req.session.email}
-    });
+  let resultSeller = await models.seller.destroy({
+    where: { userEmail: req.session.email }
+  });
 
-    res.json(resultSeller);
+  let resultAuth = await models.authorities.destroy({
+    where: { userEmail: req.session.email }
+  });
+
+  console.log(resultUser);
+  console.log(resultSeller);
+  console.log(resultAuth);
+  res.json(resultSeller);
 
   });
 
