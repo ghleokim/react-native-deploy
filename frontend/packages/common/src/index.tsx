@@ -11,6 +11,11 @@ import { Routes } from './Routes';
 import { mainStoreContext } from './store/MainStore';
 import { CustomStyle } from './static/CustomStyle';
 import { Header } from './components/main/Header';
+import axios from 'axios';
+
+axios.defaults.headers.common['Content-Type'] = 'application/json';
+axios.defaults.headers.common['Accept'] = 'application/json';
+axios.defaults.withCredentials = true;
 
 export const App: React.FC = observer(() => {
   const mainStore = useContext(mainStoreContext);
@@ -18,6 +23,8 @@ export const App: React.FC = observer(() => {
   mainStore.screenWidth = Dimensions.get('window').width;
   mainStore.screenHeight = Dimensions.get('window').height;
   mainStore.scrollviewHeight = mainStore.screenHeight - mainStore.footerHeight - mainStore.headerHeight;
+
+  console.log(mainStore)
 
   const checkAuth = () => {
     const cookies = JSON.parse(localStorage.getItem('cookies'))

@@ -9,50 +9,49 @@ import { Colors } from '../static/CustomColor';
 import { BannerSwiper } from '../components/main/BannerSwiper'
 import { RouteComponentProps } from 'react-router-dom';
 
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps { }
 
-export const RouteMain: React.FC<Props> = observer(({history}) => {
+export const RouteMain: React.FC<Props> = observer(({ history }) => {
   const mainStore = useContext(mainStoreContext);
   const searchStore = useContext(searchStoreContext);
 
   const bannerHeight = mainStore.screenWidth / 2.6
-  console.log(`bannerheight`, bannerHeight)
 
   const handleSearchBar = (keyword: string) => {
     console.log(keyword === '' ? 'no text' : keyword)
     keyword === ''
-    ? null
-    : history.push(`/search/${keyword}`)
+      ? null
+      : history.push(`/search/${keyword}`)
   }
 
   const handleSearchButton = () => {
     searchStore.searchKeyword === undefined ? undefined : handleSearchBar(searchStore.searchKeyword)
   }
-  
+
   return (
     <View style={{ flex: 1, flexDirection: 'column' }}>
       <View>
         <BannerSwiper />
         <View style={styles.mainButtonWrapper}>
-          <TouchableOpacity style={styles.mainButton} onPress={() => {history.push('/map')}}><Text style={styles.sectionTitle}> 내 주변 푸드트럭 찾기 🚚 > </Text></TouchableOpacity>
+          <TouchableOpacity style={styles.mainButton} onPress={() => { history.push('/map') }}><Text style={styles.sectionTitle}> 내 주변 푸드트럭 찾기 🚚 </Text></TouchableOpacity>
         </View>
         <View style={[styles.inputContainer, { flex: 1, flexDirection: 'row' }]}>
           <TextInput
-            style={[styles.input, { flex: 4 }]}
+            style={[styles.input, { flex: 4, borderColor: '#ec585c' }]}
             underlineColorAndroid="transparent"
-            defaultValue = {searchStore.searchKeyword}
+            defaultValue={searchStore.searchKeyword}
             placeholder={searchStore.searchPlaceholder}
             autoCapitalize="none"
             onChangeText={keyword => searchStore.searchKeyword = keyword}
             onSubmitEditing={(e) => handleSearchBar(e.nativeEvent.text)}
             multiline={false}
           />
-          <TouchableOpacity onPress={handleSearchButton} style={[styles.buttons, { flex: 1, marginLeft: 5 }]}>
-            <Text style={{ color: Colors.white }}>검색</Text>
+          <TouchableOpacity onPress={handleSearchButton} style={[styles.buttons, { flex: 1, marginLeft: 5, backgroundColor: '#ec585c' }]}>
+            <Text style={{ color: Colors.white, fontWeight: '700' }}>검색</Text>
           </TouchableOpacity>
         </View>
       </View>
-      <View style={[styles.staticInfo, {flexGrow: 1}]}>
+      <View style={[styles.staticInfo, { flexGrow: 1 }]}>
         <Text style={styles.staticText}>
           <Text style={styles.staticTextLink} onPress={() => console.log('hello')}>팀 정보</Text> | <Text style={styles.staticTextLink} onPress={() => console.log('hello2')}>이용 약관</Text> | <Text style={styles.staticTextLink} onPress={() => console.log('hello3')}>개인정보처리방침</Text>
         </Text>
@@ -79,7 +78,8 @@ const LocalStyles = StyleSheet.create({
   },
   mainButton: {
     width: '100%',
-    borderColor: '#f34600',
+    borderColor: 'rgba(236, 76, 100, 0.7)',
+    backgroundColor: '#ec585c',
     borderWidth: 2,
     borderRadius: 10,
     alignItems: 'center',
@@ -87,8 +87,10 @@ const LocalStyles = StyleSheet.create({
     flex: 1
   },
   sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600'
+    fontSize: 22,
+    fontWeight: '600',
+    backgroundColor: 'rgba(200,200,200,0.2)',
+    color: '#ffffff'
   },
   staticInfo: {
     backgroundColor: '#e4e4e5',
