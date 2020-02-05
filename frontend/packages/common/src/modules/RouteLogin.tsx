@@ -6,48 +6,61 @@ import { mainStoreContext } from '../store/MainStore';
 import { NewLoginForm } from '../components/auth/LoginForm';
 import { SignupForm } from '../components/auth/SignUpForm';
 import { loginCurrentPage, loginStoreContext } from '../store/LoginStore';
+import { CustomStyle } from '../static/CustomStyle'
 import { Colors } from '../static/CustomColor';
+import { RouteComponentProps } from 'react-router-dom';
+import { History, LocationState } from 'history'
 
-interface RouterProps {
-  currentPage: loginCurrentPage;
+interface Props extends RouteComponentProps {
 }
 
-const FormRouter: React.FC<RouterProps> = ({ currentPage }) => {
+interface FormProps {
+  history: History<LocationState>;
+  location: any;
+}
+
+const FormRouter: React.FC<FormProps> = ({ history, location }) => {
+  console.log(location)
   return (
-    currentPage === 'login' ? <NewLoginForm /> : <SignupForm />
+    location.pathname === '/login' ? <NewLoginForm history={history} /> : <SignupForm history={history} />
   )
 }
 
-export const RouteLogin: React.FC = observer(() => {
+export const RouteLogin: React.FC<Props> = observer(({ history, location, match }) => {
+
   const mainStore = useContext(mainStoreContext);
   const loginStore = useContext(loginStoreContext)
-  const currentPage = mainStore.currentPage
 
   const handleTapPage = () => {
-    loginStore.loginCurrentPage === 'login' ?
-      loginStore.loginCurrentPage = 'signup' : loginStore.loginCurrentPage = 'login';
+    if (location.pathname === '/login') {
+      history.replace('/signup')
+    } else {
+      history.replace('/login')
+    }
+
   }
 
   return (
     <View>
-      <View style={{ flex: 1, flexDirection: 'row' }}>
+      <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#ffffff' }}>
         <TouchableOpacity onPress={handleTapPage} style={[{ flex: 1, alignItems: 'center', height: 50, paddingTop: 10 },
-        loginStore.loginCurrentPage === 'login' ? { borderBottomColor: Colors.deepcoral, borderBottomWidth: 3 } : {}]}>
+        location.pathname === '/login' ? { borderBottomColor: Colors.deepcoral, borderBottomWidth: 3 } : {}]}>
           <Text>login</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleTapPage} style={[{ flex: 1, alignItems: 'center', height: 50, paddingTop: 10 },
-        loginStore.loginCurrentPage === 'signup' ? { borderBottomColor: Colors.deepcoral, borderBottomWidth: 3 } : {}]}>
+        location.pathname === '/signup' ? { borderBottomColor: Colors.deepcoral, borderBottomWidth: 3 } : {}]}>
           <Text>signup</Text>
         </TouchableOpacity>
       </View>
-      <Text style={styles.loginTitle}>{loginStore.loginCurrentPage === 'login' ? 'welcome back !' : 'Hello new user !'}</Text>
-      <FormRouter currentPage={loginStore.loginCurrentPage} />
-      <View style={{minHeight: 10}}></View>
+      <View>
+        <Text style={styles.loginTitle}>{location.pathname === '/login' ? 'welcome back !' : 'Hello new user !'}</Text>
+        <FormRouter history={history} location={location} />
+      </View>
     </View>
   )
 })
 
-const styles = StyleSheet.create({
+const localStyles = StyleSheet.create({
   mainBanner: {
     height: 100,
     width: '100%',
@@ -64,3 +77,5 @@ const styles = StyleSheet.create({
     paddingTop: 16
   }
 })
+
+const styles = { ...CustomStyle, ...localStyles}

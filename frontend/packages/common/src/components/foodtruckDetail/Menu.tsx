@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-    View,
-    Text,
-    Image,
-    StyleSheet,
- } from "react-native";
+  View,
+  Text,
+  Image,
+  StyleSheet,
+} from "react-native";
+import { CustomText } from '../../static/CustomStyle';
 
 interface IProps {
   id: number,
@@ -14,21 +15,28 @@ interface IProps {
   imgURL?: string,
 }
 
-export default (props:IProps) => {
+export default (props: IProps) => {
 
   return (
     <View style={styles.menuContainer}>
-      <Image
-      defaultSource={{uri: `https://picsum.photos/id/${props.id}/200`}}
-      source={{uri: props.imgURL}}
-      style={{width: 50, height: 50}}
-     />  
-      <Text>이름: {props.name}</Text>
-      <Text>내용: {props.content}</Text>
-      <Text>가격: {props.price}</Text> 
+      <View style={{ alignSelf: 'center' }}>
+        <Image
+          defaultSource={{ uri: `https://picsum.photos/id/${props.id}/200` }}
+          source={{ uri: props.imgURL }}
+          style={{ width: 70, height: 70, borderRadius: 10 }}
+        />
+      </View>
+      <View style={{ marginLeft: 15, flexShrink: 1, alignSelf: 'center', width:'100%' }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Text style={[CustomText.title, { fontSize: 18 }]}>{props.name}</Text>
+          <View style={{ marginHorizontal: 10, flexGrow: 1, alignSelf: 'center',  borderStyle: 'dotted', borderColor: '#000000', borderWidth: 1 }}></View>
+          <Text style={[CustomText.title, { color: '#20a024', fontSize: 16 }]}>{props.price} 원</Text>
+        </View>
+        <Text style={[CustomText.body]}>{props.content}</Text>
+      </View>
     </View>
   );
-  
+
 };
 
 const styles = StyleSheet.create({
@@ -37,6 +45,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     borderStyle: "dashed",
     paddingVertical: 12,
-    paddingHorizontal: 24,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    flex: 1
   }
 })
