@@ -50,8 +50,15 @@ router.put('/update', async function(req, res, next){
         where: {
             id: req.body.replyId
         }
-    })
-    res.json(result);
+    });
+
+    let resultReply = await models.reply.findOne({
+        where: {
+            id: req.body.replyId
+        }
+    });
+
+    res.json(resultReply);
 });
 
 router.delete('/delete/:replyId', async function(req, res, next){

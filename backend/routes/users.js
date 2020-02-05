@@ -139,27 +139,23 @@ router.get("/logout", function(req, res, next) {
 })
 
 router.put('/update', async function(req, res, next) {
-  let result = await models.user.findOne({
-    where: {
-      email: req.session.email
-    }
-  });
-
-  models.user.update({
+  
+  let result = await models.user.update(
+    {
       name: req.body.userName
     }, {
       where: {
         email: req.session.email
       }
-    })
-    .then((result) => {
-      console.log(result);
-      res.json(result);
-    })
-    .catch((err) => {
-      console.error(err);
-      next(err);
-    });
+  });
+
+  let resultUser = await models.user.findOne({
+    where: {
+      email: req.session.email
+    }
+  });
+
+  res.json(resultUser);
 });
 
 // userEmail 기반 삭제
