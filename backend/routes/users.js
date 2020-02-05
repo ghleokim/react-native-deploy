@@ -84,6 +84,14 @@ router.post("/login", async function(req, res, next) {
     }
   })
 
+  let resultTruck = await models.truck.findOne({
+    where: {
+      email: body.userEmail
+    }
+  })
+  console.log("truckId : " + resultTruck.id)
+
+
   if (result == null) {
     res.status(401).send({
       code: 0,
@@ -106,8 +114,9 @@ router.post("/login", async function(req, res, next) {
         req.session.isSeller = result.isSeller;
         req.session.authority = resultAuth.authority;
         if (result.isSeller) {
+          console.log(JSON.stringify(resultSeller))
           req.session.businessRegistrationNumber = resultSeller.businessRegistrationNumber;
-          req.session.truckId = resultSeller.truckId;
+          req.session.truckId = resultTruck.id;
           req.session.sellerId = resultSeller.id;
         }
         res.json(req.session);
