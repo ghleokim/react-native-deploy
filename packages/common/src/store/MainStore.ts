@@ -1,14 +1,13 @@
 import { observable } from 'mobx';
 import { createContext } from 'react';
 
-export type currentPage = 'mainPage' | 'loginPage' | 'mapPage' | 'truckDetailPage' | 'searchList'
-
 class MainStore {
   // global setting
   @observable DEVELOP: boolean = true;
 
-  @observable proxy: string = 'http://54.180.141.50:8001';
-  @observable currentPage: currentPage = 'mainPage';
+  @observable proxy: string = 'http://54.180.141.50:8001'; //aws
+  // @observable proxy: string = 'http://70.12.247.106:8001'; //호준
+  // @observable proxy: string = 'http://70.12.246.0:8001'; //다혜
   @observable screenWidth: number = 0;
   @observable screenHeight: number = 0;
   @observable footerHeight: number = 0;

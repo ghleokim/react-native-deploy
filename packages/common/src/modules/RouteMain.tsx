@@ -1,18 +1,19 @@
 import * as React from 'react';
 import { useContext } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Button } from 'react-native';
 import { mainStoreContext } from '../store/MainStore';
 import { searchStoreContext } from '../store/SearchStore';
 import { observer } from 'mobx-react-lite';
 import { CustomStyle, CustomText } from '../static/CustomStyle';
 import { Colors } from '../static/CustomColor';
 import { BannerSwiper } from '../components/main/BannerSwiper'
-import { RouteList } from './RouteList';
+import { RouteComponentProps } from 'react-router-dom';
 
-export const RouteMain: React.FC = observer(() => {
+interface Props extends RouteComponentProps {}
+
+export const RouteMain: React.FC<Props> = observer(({history}) => {
   const mainStore = useContext(mainStoreContext);
   const searchStore = useContext(searchStoreContext);
-  const currentPage = mainStore.currentPage
 
   const bannerHeight = mainStore.screenWidth / 2.6
   console.log(`bannerheight`, bannerHeight)
@@ -21,7 +22,7 @@ export const RouteMain: React.FC = observer(() => {
     console.log(keyword === '' ? 'no text' : keyword)
     keyword === ''
     ? null
-    : mainStore.currentPage = 'searchList'
+    : history.push(`/search/${keyword}`)
   }
 
   const handleSearchButton = () => {
@@ -33,7 +34,7 @@ export const RouteMain: React.FC = observer(() => {
       <View>
         <BannerSwiper />
         <View style={styles.mainButtonWrapper}>
-          <TouchableOpacity style={styles.mainButton} onPress={() => { mainStore.currentPage = 'mapPage' }}><Text style={styles.sectionTitle}> 내 주변 푸드트럭 찾기 🚚 > </Text></TouchableOpacity>
+          <TouchableOpacity style={styles.mainButton} onPress={() => {history.push('/map')}}><Text style={styles.sectionTitle}> 내 주변 푸드트럭 찾기 🚚 > </Text></TouchableOpacity>
         </View>
         <View style={[styles.inputContainer, { flex: 1, flexDirection: 'row' }]}>
           <TextInput
@@ -51,7 +52,7 @@ export const RouteMain: React.FC = observer(() => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.staticInfo}>
+      <View style={[styles.staticInfo, {flexGrow: 1}]}>
         <Text style={styles.staticText}>
           <Text style={styles.staticTextLink} onPress={() => console.log('hello')}>팀 정보</Text> | <Text style={styles.staticTextLink} onPress={() => console.log('hello2')}>이용 약관</Text> | <Text style={styles.staticTextLink} onPress={() => console.log('hello3')}>개인정보처리방침</Text>
         </Text>

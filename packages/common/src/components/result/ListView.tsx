@@ -2,8 +2,8 @@ import * as React from 'react'
 import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { CustomText, CustomStyle } from '../../static/CustomStyle'
 import { COLOR_DARKGRAY, Colors } from '../../static/CustomColor'
-
 import { truckStatus, searchResultContext } from '../../store/SearchStore'
+import { History, LocationState } from 'history';
 
 interface Props {
 	id: number,
@@ -14,15 +14,12 @@ interface Props {
 	latitude?: number,
 	longitude?: number,
 	destination?: string,
+	history: History<LocationState>,
 }
 
-export const ListView: React.FC<Props> = ({ id, imageUri, title, contents, currentStatus }) => {
-	const searchResultStore = React.useContext(searchResultContext)
-
+export const ListView: React.FC<Props> = ({ history, id, imageUri, title, contents, currentStatus }) => {
 	const handleItemSelect = (id) => {
-		searchResultStore.isSelected = true;
-		searchResultStore.selectedItem = id;
-		console.log(searchResultStore.isSelected)
+		history.push(`/trucks/${id}`)
 	}
 	
 	const isOpen = () => { return true } // this has to be removed // ? currentStatus === 'open' }

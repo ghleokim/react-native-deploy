@@ -7,11 +7,15 @@ import {
   Dimensions,
 } from 'react-native';
 import { observer } from 'mobx-react-lite';
-import { Router } from './Router';
+import { Routes } from './Routes';
 import { mainStoreContext } from './store/MainStore';
 import { CustomStyle } from './static/CustomStyle';
-import { Navbar } from './components/main/Navbar';
 import { Header } from './components/main/Header';
+import axios from 'axios';
+
+axios.defaults.headers.common['Content-Type'] = 'application/json';
+axios.defaults.headers.common['Accept'] = 'application/json';
+axios.defaults.withCredentials = true;
 
 export const App: React.FC = observer(() => {
   const mainStore = useContext(mainStoreContext);
@@ -20,15 +24,24 @@ export const App: React.FC = observer(() => {
   mainStore.screenHeight = Dimensions.get('window').height;
   mainStore.scrollviewHeight = mainStore.screenHeight - mainStore.footerHeight - mainStore.headerHeight;
 
-  console.log(mainStore)
+  const checkAuth = () => {
+    const cookies = JSON.parse(localStorage.getItem('cookies'))
+    if (cookies) {
+      const expires = Date.parse(cookies.expires)
+      console.log('expires: ', expires, 'now: ', Date.now())
+      if (expires < Date.now()) {
+        return true
+      }
+    } else return false;
+  }
+
+  mainStore.isLoggedIn = checkAuth();
+  console.log(mainStore.isLoggedIn)
+
   return (
     <View style={{ height: mainStore.screenHeight, flex: 1 }}>
       <Header />
-      <ScrollView style={{ height: mainStore.scrollviewHeight, marginTop: mainStore.headerHeight, marginBottom: mainStore.footerHeight }} contentContainerStyle={{flex: 1, flexDirection: 'column', alignItems: 'stretch'}}>
-        <Router />
-        <View style={{ backgroundColor: '#e4e4e5', flexGrow: 1 }}></View>
-      </ScrollView>
-      <Navbar />
+      <Routes height={mainStore.scrollviewHeight} headerHeight={mainStore.headerHeight} footerHeight={mainStore.footerHeight}/>
     </View>
   )
 })

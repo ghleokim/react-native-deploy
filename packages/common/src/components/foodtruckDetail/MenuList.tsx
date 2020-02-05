@@ -56,10 +56,14 @@ const styles = StyleSheet.create({
     borderRightWidth: 2,
     borderLeftWidth: 1,
     borderBottomWidth: 4,
+    borderTopWidth: 1,
     borderLeftColor: '#e6e6e8',
     borderRightColor: '#d6d6d8',
     borderBottomColor: '#86878b',
-    paddingBottom: 20
+    borderTopColor: '#f6f6f8',
+    paddingTop: 10,
+    paddingBottom: 20,
+    borderRadius: 5,
   },
   menuListTitle: {
     alignSelf: 'center',

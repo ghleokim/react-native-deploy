@@ -1,19 +1,17 @@
 import * as React from 'react';
 import { useContext } from 'react';
-import { StyleSheet, Text, View, Button, Dimensions, TouchableOpacity } from 'react-native';
-import { mainStoreContext } from '../store/MainStore';
+import { StyleSheet, View } from 'react-native';
 import { observer } from 'mobx-react-lite';
-import { Maps } from '../components/Maps';
+import { Maps } from '../components/map/Maps';
+import { RouteComponentProps } from 'react-router-dom';
 
-export const RouteMap: React.FC = observer(() => {
-  const mainStore = useContext(mainStoreContext);
-  const currentPage = mainStore.currentPage
+interface Props extends RouteComponentProps {}
+
+export const RouteMap: React.FC<Props> = observer(({history}) => {
 
   return (
     <View>
-      <Text style={styles.sectionTitle}>{currentPage}</Text>
-      {/* put content here */}
-      <Maps />
+      <Maps history={history} />
     </View>
   )
 })

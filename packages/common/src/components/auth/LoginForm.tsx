@@ -6,8 +6,13 @@ import { mainStoreContext } from "../../store/MainStore";
 import { loginStoreContext } from "../../store/LoginStore";
 import { CustomStyle } from "../../static/CustomStyle";
 import { Colors } from "../../static/CustomColor";
+import { History, LocationState } from 'history';
 
-export const NewLoginForm: React.FC = observer(() => {
+interface Props {
+  history: History<LocationState>;
+}
+
+export const NewLoginForm: React.FC<Props> = observer(({history}) => {
   const mainStore = useContext(mainStoreContext);
   const loginStore = useContext(loginStoreContext);
 
@@ -21,14 +26,11 @@ export const NewLoginForm: React.FC = observer(() => {
   }
 
   const handleLogin = (email: string, pass: string) => {
-    axios({
-      url: mainStore.proxy + '/users/login/',
-      method: 'post',
-      data: {
+    axios.post(`${mainStore.proxy}/users/login`,{
         userEmail: loginStore.userEmail,
         userPassword: loginStore.pass
-      }
-    }).then((response) => {
+      })
+      .then((response) => {
       console.log(response);
       // 현재 내부 state에서 필요한 값을 유지하도록 구현하였다. 라우팅할 때 쓰일 수 있을 듯.
       mainStore.isSeller = response.data.isSeller;
@@ -40,7 +42,13 @@ export const NewLoginForm: React.FC = observer(() => {
       // if success 추가해야됨
       if (response.status === 200) {
         mainStore.isLoggedIn = true;
+        if (response.data.isSeller === true){
+          mainStore.isSeller = true;
+        }
+
         alert(response.statusText)
+
+        history.push('/')
       }
     })
       .catch((error) => {
