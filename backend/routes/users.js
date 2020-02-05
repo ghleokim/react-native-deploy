@@ -89,7 +89,6 @@ router.post("/login", async function(req, res, next) {
       email: body.userEmail
     }
   })
-  console.log("truckId : " + resultTruck.id)
 
 
   if (result == null) {
