@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "test",
-    "password": "test",
-    "database": "test",
-    "host": "54.180.141.50",
+    "username": "root",
+     "password": "dbadmin",
+     "database": "foodseeker",
+     "host": "127.0.0.1",
      "dialect": "mysql",
      "operatorsAliases": false
   },

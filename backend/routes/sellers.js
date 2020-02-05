@@ -13,7 +13,7 @@ router.post("/sign_up", async function(req, res, next) {
   let inputPassword = body.sellerPassword;
   let salt = Math.round((new Date().valueOf() * Math.random())) + "";
   let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
-
+  
   let resultUser = await models.user.create({
     name: body.sellerName,
     email: body.sellerEmail,
@@ -21,6 +21,12 @@ router.post("/sign_up", async function(req, res, next) {
     salt: salt,
     isSeller: 1 // true
   });
+
+  let resultAuth = await models.authorities.create({
+    authority: "ROLE_USER",
+    userEmail: body.sellerEmail,
+  });
+  console.log(resultAuth);
 
   console.log("user 회원가입");
 

@@ -21,14 +21,19 @@ router.post("/sign_up", async function(req, res, next) {
     let salt = Math.round((new Date().valueOf() * Math.random())) + "";
     let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
 
-    let result = models.user.create({
+    let result = await models.user.create({
       name: body.userName,
       email: body.userEmail,
       password: hashPassword,
       salt: salt,
       isSeller: 0 // false
+    });
 
-    })
+    let resultAuth = await models.authorities.create({
+      authority: "ROLE_USER",
+      userEmail: body.userEmail,
+    });
+    console.log(resultAuth);
 
     res.redirect("/users/sign_up");
   } else {
@@ -55,8 +60,8 @@ router.get('/getUser', async function(req, res, next) {
     attributes: ['name', 'email', 'isSeller']
   });
   console.log(result);
-  let sid = req.session.sid.sid;
-  res.send({result, sid: sid, businessRegistrationNumber: req.session.businessRegistrationNumber});
+  res.send({result, authority: req.session.authority, 
+    businessRegistrationNumber: req.session.businessRegistrationNumber});
 });
 
 // 로그인 POST
@@ -73,6 +78,12 @@ router.post("/login", async function(req, res, next) {
       userEmail: body.userEmail
     }
   });
+  let resultAuth = await models.authorities.findOne({
+    where:{
+      userEmail: body.userEmail
+    }
+  })
+
   if (result == null) {
     res.status(401).send({
       code: 0,
@@ -93,11 +104,11 @@ router.post("/login", async function(req, res, next) {
         req.session.email = body.userEmail;
         req.session.name = result.name;
         req.session.isSeller = result.isSeller;
+        req.session.authority = resultAuth.authority;
         if (result.isSeller) {
           req.session.businessRegistrationNumber = resultSeller.businessRegistrationNumber;
           req.session.truckId = resultSeller.truckId;
           req.session.sellerId = resultSeller.id;
-          req.session.sid = req.cookies;
         }
         res.json(req.session);
       })
