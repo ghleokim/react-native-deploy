@@ -165,10 +165,9 @@ router.post('/', async function(req, res, next) {
     res.json(resultTruck);
 });
 
-router.put('/update/:truckId', function(req, res, next) {
-console.log(req.session.email);
-console.log(req.params.truckId);
-  models.truck.update({
+router.put('/update/:truckId', async function(req, res, next) {
+
+  let result = await models.truck.update({
       title: req.body.title,
       contents: req.body.contents,
       state:req.body.state,
@@ -181,15 +180,15 @@ console.log(req.params.truckId);
         email: req.session.email,
         id: req.params.truckId
       }
-    })
-    .then((result) => {
-      console.log(result);
-      res.json(result);
-    })
-    .catch((err) => {
-      console.log(err);
-      next(err);
     });
+    
+    let resultTruck = await models.truck.findOne({
+      where: {
+        id: req.params.truckId
+      }
+    });
+
+    res.json(resultTruck);
 });
 
 router.delete('/delete/:truckId', function (req, res, next) {
@@ -217,10 +216,9 @@ router.put("/update/state/:truckId", async function(req, res, next) {
         email: req.session.email,
         id: req.params.truckId
       }
-    }
-  );
-  console.log(result);
-  res.json(result);
+    });
+
+  res.json(req.body.state);
 });
 
 module.exports = router;

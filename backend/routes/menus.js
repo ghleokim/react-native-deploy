@@ -55,25 +55,28 @@ router.post('/:truckId', function(req, res, next) {
     });
 });
 
-router.put('/:truckId/:name', function(req, res, next) {
-  models.menu.update({
+router.put('/:truckId/:id', async function(req, res, next) {
+  console.log("come");
+  let result = await models.menu.update({
       price: req.body.price,
       name: req.body.name,
       content: req.body.content
     }, {
       where: {
         truckId: req.params.truckId,
-        name: req.params.name
+        id: req.params.id
       }
-    })
-    .then((result) => {
-      console.log(result);
-      res.json(result);
-    })
-    .catch((err) => {
-      console.log(err);
-      next(err);
     });
+    
+    let resultMenu = await models.menu.findOne({
+      where: {
+        truckId: req.params.truckId,
+        id: req.params.id
+      }
+    });
+
+    console.log(resultMenu);
+    res.json(resultMenu);
 });
 
 router.delete('/:truckId/:id', function(req, res, next) {
