@@ -4,9 +4,12 @@ import {
   Text,
   FlatList,
   StyleSheet,
+  TouchableOpacity,
 } from "react-native";
 import { CustomText } from '../../static/CustomStyle';
 import Review from './Review';
+import { Colors } from '../../static/CustomColor';
+import { ReviewPost } from './ReviewPost';
 
 interface IReview {
   id: number,
@@ -30,20 +33,26 @@ export default (props: IProps) => {
         <View style={styles.menuListTitle}>
           <Text style={[CustomText.textCenter, CustomText.titleHN, { fontSize: 22 }]}>리뷰</Text>
         </View>
-        <FlatList<IReview>
-          data={props.reviewList}
-          renderItem={({ item }) =>
-            <Review
-              id={item.id}
-              content={item.content}
-              startRating={item.startRating}
-              createdAt={item.createdAt}
-              updatedAt={item.updatedAt}
-              truckId={item.truckId}
-              userEmail={item.userEmail}
-            />}
-          keyExtractor={item => item.userEmail}
-        />
+        <ReviewPost />
+        {props.reviewList.length === 0 ?
+          <View style={{paddingHorizontal: 20, paddingTop: 10,}}>
+            <Text style={CustomText.title}>✏ 리뷰가 없어요. 리뷰를 작성해주세요! ✏</Text>
+          </View>
+          : <FlatList<IReview>
+            data={props.reviewList}
+            renderItem={({ item }) =>
+              <Review
+                id={item.id}
+                content={item.content}
+                startRating={item.startRating}
+                createdAt={item.createdAt}
+                updatedAt={item.updatedAt}
+                truckId={item.truckId}
+                userEmail={item.userEmail}
+              />}
+            keyExtractor={item => item.userEmail}
+          />
+        }
       </View>
     </View>
   );

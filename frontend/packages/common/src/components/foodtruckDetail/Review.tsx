@@ -31,7 +31,7 @@ export default (props: IProps) => {
   return (
     <View style={styles.menuContainer}>
       <View style={styles.reviewContainer}>
-        <Text style={{alignSelf: 'flex-end'}}>{formatDate(new Date(Date.parse(props.createdAt)))}  <Text style={CustomText.italic}>{(props.userEmail).split('@')[0]}</Text></Text>
+        <Text style={{alignSelf: 'flex-end'}}>{formatDate(new Date(Date.parse(props.createdAt)))}  <Text style={CustomText.italic}>{props.userEmail === null ? '': (props.userEmail).split('@')[0]}</Text></Text>
         <Text style={[CustomText.title, {fontSize: 16}]}>{props.content}</Text>
       </View>
     </View>
