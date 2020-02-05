@@ -155,21 +155,18 @@ router.put('/update', async function(req, res, next) {
 });
 
 // userEmail 기반 삭제
-router.delete('/delete', function(req, res, next) {
-  models.user.destroy({
-      where: {
-        email: req.session.email
-      }
-    })
-    .then((result) => {
-      console.log(result);
-      res.json(result);
-      // res.redirect('/');
-    })
-    .catch((err) => {
-      console.error(err);
-      next(err);
-    });
+router.delete("/delete", async function(req, res, next) {
+  let result = await models.user.destroy({
+    where: {
+      email: req.session.email
+    }
+  });
+
+  let resultAuth = await models.authorities.destroy({
+    where : {userEmail: req.session.email}
+  })
+
+  res.json(result);
 });
 
 module.exports = router;
