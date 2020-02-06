@@ -6,6 +6,7 @@ import {
   TextInput,
   StyleSheet,
   Button,
+  TouchableOpacity,
 } from "react-native";
 
 import MenuList from './MenuList';
@@ -26,7 +27,8 @@ interface IState {
   state: string,
   menus: [],
 }
-import { CustomStyle } from "../../static/CustomStyle";
+import { CustomStyle, CustomText } from "../../static/CustomStyle";
+import EditBtn from '../EditBtn';
 
 const LocalStyles = StyleSheet.create({
   form: {
@@ -51,29 +53,25 @@ const LocalStyles = StyleSheet.create({
   }
 });
 
-const styles = { ...CustomStyle, ...LocalStyles }
 
 export default () => {
   const [data, setData] = useState({ id: '', imgURL: '', title: '', contents: '', latitude: 0, longitude: 0, state: '', menus: [] });
   const [isEditing, setIsEditing] = useState({ id: false, imgURL: false, title: false, contents: false, latitude: false, longitude: false, state: false, menus: [] });
-  const [editText] = useState({ id: '', imgURL: '', title: '', contents: '', latitude: 0, longitude: 0, state: '', menus: [] })
+  const [editText, setEditText] = useState({ id: '', imgURL: '', title: '', contents: '', latitude: 0, longitude: 0, state: '', menus: [] })
 
   const mainStore = useContext(mainStoreContext)
 
   useEffect(() => {
-
-    axios.get(`${mainStore.proxy}/trucks/1`)
+    axios.get('/trucks/1')
       .then((res) => {
-        console.log(res.data);
         setData(res.data);
-        console.log(data);
+        setEditText(res.data);
       })
   }, []);
 
   const editComponent = (target: string) => {
     return (
       <View>
-
         {isEditing[target]
           ? <View>
             <TextInput
@@ -95,14 +93,73 @@ export default () => {
     )
   }
 
+  const EditButton = () => {
+    return (
+      <Image
+        style={{ width: 20, height: 20 }}
+        source={require('@foodtruckmap/common/src/static/icon_processed/edit_marker.png')} />
+    )
+  }
+
+  const editTitleComponent = (target: string) => {
+    return (
+      <View>
+        {isEditing[target]
+          ? <View style={{ paddingHorizontal: '10%'}}>
+            <TextInput
+              style={[CustomText.titleHN, CustomText.textCenter, { fontSize: 24, borderBottomWidth: 2, borderBottomColor: '#303030' }]}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+              defaultValue={data[target]}
+              onChangeText={text => onChangeText(target, text)}
+            />
+            <View style={{ flex: 1, flexDirection: 'row' }}>
+              <TouchableOpacity style={[styles.menuButton, { backgroundColor: '#4177c9', }]} onPress={() => submit(target)}><Text style={{ textAlign: 'center', color: '#FFFFFF', fontWeight: '700' }}>등록</Text></TouchableOpacity>
+              <TouchableOpacity style={[styles.menuButton, { backgroundColor: '#798391', }]} onPress={() => cancel(target)}><Text style={{ textAlign: 'center', color: '#FFFFFF', fontWeight: '700' }}>취소</Text></TouchableOpacity>
+            </View>
+          </View>
+          : <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={[CustomText.titleHN, { fontSize: 24 }]}>{data.title}</Text>
+            <TouchableOpacity onPress={() => getdd(target)}><EditButton /></TouchableOpacity>
+          </View>
+        }
+      </View>
+    )
+  }
+
+  const editContentComponent = (target: string) => {
+    return (
+      <View>
+        {isEditing[target]
+          ? <View>
+            <TextInput
+              style={[CustomText.italic, CustomText.body, CustomText.textCenter, { fontSize: 16, borderBottomWidth: 2, borderBottomColor: '#303030', paddingVertical: 5 }]}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+              defaultValue={data[target]}
+              onChangeText={text => onChangeText(target, text)}
+            />
+            <View style={{ flex: 1, flexDirection: 'row' }}>
+              <TouchableOpacity style={[styles.menuButton, { backgroundColor: '#4177c9', }]} onPress={() => submit(target)}><Text style={{ textAlign: 'center', color: '#FFFFFF', fontWeight: '700' }}>등록</Text></TouchableOpacity>
+              <TouchableOpacity style={[styles.menuButton, { backgroundColor: '#798391', }]} onPress={() => cancel(target)}><Text style={{ textAlign: 'center', color: '#FFFFFF', fontWeight: '700' }}>취소</Text></TouchableOpacity>
+            </View>
+          </View>
+          : <View>
+            <Text style={[CustomText.italic, CustomText.body, CustomText.textCenter, { fontSize: 16, paddingVertical: 5 }]}>{data.contents}</Text>
+            <View style={{ flex: 1, flexDirection: 'row' }}>
+              <TouchableOpacity style={[styles.menuButton, { backgroundColor: '#4177c9', }]} onPress={() => getdd(target)}><Text style={{ textAlign: 'center', color: '#FFFFFF', fontWeight: '700' }}>수정</Text></TouchableOpacity>
+            </View>
+          </View>
+        }
+      </View>
+    )
+  }
+
   const onChangeText = (target: string, text: string) => {
     editText[target] = text;
   }
 
   const submit = (target: string) => {
-    console.log("data: " + data[target])
-    console.log("editText: " + editText[target])
-
     let requestDto = {
       title: data.title,
       contents: data.contents,
@@ -112,21 +169,17 @@ export default () => {
     };
 
     requestDto[target] = editText[target];
-    console.log(requestDto);
 
-    axios.put(`${mainStore.proxy}/trucks/update/1`, requestDto)
+    axios.put('/trucks/update/1', requestDto)
       .then((res) => {
-        console.log(res.data);
+        setData(res.data);
       })
     getdd(target);
   }
 
   const cancel = (target: string) => {
-    console.log("before editText : " + editText[target]);
     editText[target] = data[target];
-    console.log("after editText : " + editText[target]);
     getdd(target);
-    console.log(isEditing)
   }
 
   const getdd = (target: string) => {
@@ -135,31 +188,67 @@ export default () => {
     setIsEditing(result);
   }
 
+  const handleMenuSubmit = (menuId, requestDto) => {
+    axios.put(`/menus/${menuId}`, requestDto)
+      .then((res) => {
+        const updatedMenu = res.data;
+        const newMenus = data.menus.map(menu => menu.id === updatedMenu.id ? updatedMenu : menu);
+        setData({ ...data, menus: newMenus })
+      })
+  }
+
   return (
-    <View>
+    <View style={{ flex: 1 }}>
+      <Image
+        style={{ width: '100%', height: 150, marginBottom: -30 }}
+        source={{ uri: data.imgURL ? data.imgURL : '' }}
+        defaultSource={{ uri: `https://picsum.photos/id/${data.id ? data.id : 0}/200` }}
+      />
+      <View style={{ paddingBottom: 10, backgroundColor: '#edaa11', width: '70%', alignSelf: 'center', borderRadius: 9, marginBottom: 5 }}>
+        <View style={{ width: '100%', backgroundColor: '#f2be46', paddingHorizontal: 15, paddingVertical: 8, borderRadius: 9, alignItems: 'center' }}>
+          {editTitleComponent('title')}
+        </View>
+      </View>
+
+      <View style={{ paddingHorizontal: '5%' }}>
+        {editContentComponent('contents')}
+      </View>
+
+      <Line></Line>
+
+      <MenuList menulist={data.menus} handleMenuSubmit={handleMenuSubmit}></MenuList>
+
       <SellerState></SellerState>
-      <Line></Line>
-      <View>
-        <Image
-          style={{ width: 50, height: 50 }}
-          source={{ uri: data.imgURL }}
-        />
-        <Text style={LocalStyles.title}>푸드트럭 이름</Text>
-        {editComponent('title')}
-      </View>
-
-      <Line></Line>
-
-      <View>
-        <Text style={LocalStyles.title}>소개글</Text>
-        {editComponent('contents')}
-      </View>
-
-      <Line></Line>
-
-      <MenuList menulist={data.menus}></MenuList>
-
-      <Line></Line>
     </View>
   )
 }
+
+const localStyle = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  title: {
+    alignSelf: 'center',
+    marginVertical: 20,
+  },
+  line: {
+    borderBottomWidth: 1,
+    borderColor: '#eeeeee',
+    width: '95%',
+    margin: 'auto',
+  },
+  intro: {
+    fontSize: 10
+  },
+  truckContentsContainer: {
+    paddingBottom: 10,
+  },
+  menuButton: {
+    flex: 1,
+    marginTop: 5,
+    paddingVertical: 3,
+    borderRadius: 6,
+  },
+})
+
+const styles = { ...CustomText, ...CustomStyle, ...localStyle }

@@ -19,14 +19,8 @@ export const Header: React.FC = observer(() => {
 
   // test for dev
   const devTest = () => {
-    const instance = axios.create({
-      httpsAgent: new https.Agent({
-        rejectUnauthorized: false
-      })
-    })
-
-    instance({ url: mainStore.proxy + '/', method: 'get' })
-      .then((response) => { console.log(response); if(response){console.log(response); alert(JSON.stringify(response.data))} })
+    axios.get('/')
+      .then((response) => { console.log(response); alert(JSON.stringify(response.data)) })
       .catch((error) => { console.log(error.response); alert(JSON.stringify(error.response.data)) })
   }
 

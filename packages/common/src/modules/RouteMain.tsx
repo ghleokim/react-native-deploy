@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Button } from 'react-native';
 import { mainStoreContext } from '../store/MainStore';
 import { searchStoreContext } from '../store/SearchStore';
@@ -9,11 +9,15 @@ import { Colors } from '../static/CustomColor';
 import { BannerSwiper } from '../components/main/BannerSwiper'
 import { RouteComponentProps } from 'react-router-dom';
 
-interface Props extends RouteComponentProps { }
+import { BannerStoreContext } from '../store/BannerStore';
 
-export const RouteMain: React.FC<Props> = observer(({ history }) => {
+interface Props extends RouteComponentProps {}
+
+export const RouteMain: React.FC<Props> = observer(({history}) => {
+  const [modalState, setModalState] = useState({active: false})
   const mainStore = useContext(mainStoreContext);
   const searchStore = useContext(searchStoreContext);
+  const BannerStore = useContext(BannerStoreContext);
 
   const bannerHeight = mainStore.screenWidth / 2.6
 
@@ -28,10 +32,31 @@ export const RouteMain: React.FC<Props> = observer(({ history }) => {
     searchStore.searchKeyword === undefined ? undefined : handleSearchBar(searchStore.searchKeyword)
   }
 
+  const changeModalState = () => {
+    BannerStore.active = !BannerStore.active;
+  }
+
+  const getNoticeModal = () => {
+    console.log(BannerStore.pageIndex + " page ");
+    return (
+      BannerStore.active === true ?
+      <View style={{position: 'absolute', width: '100%', height: '100%', backgroundColor: '#ffffff', zIndex: 2}}>
+
+        <TouchableOpacity style={{height: '100%', width: '100%'}} onPress = {changeModalState}>
+          <Image style={[{height: '100%', width: '100%',resizeMode:'contain'}]} source={require(`@foodtruckmap/common/src/static/bannerDetail/banner${BannerStore.pageIndex}_detail.jpg`)} />
+          </TouchableOpacity>
+      </View>
+      : <></>
+    )
+  }
+
   return (
     <View style={{ flex: 1, flexDirection: 'column' }}>
       <View>
-        <BannerSwiper />
+        <TouchableOpacity onPress = {changeModalState}>
+          <BannerSwiper />
+        </TouchableOpacity>
+
         <View style={styles.mainButtonWrapper}>
           <TouchableOpacity style={styles.mainButton} onPress={() => { history.push('/map') }}><Text style={styles.sectionTitle}> 내 주변 푸드트럭 찾기 🚚 </Text></TouchableOpacity>
         </View>
@@ -57,6 +82,7 @@ export const RouteMain: React.FC<Props> = observer(({ history }) => {
         </Text>
         <Text style={styles.staticText}>foodtruck-map</Text>
       </View>
+      {getNoticeModal()}
     </View>
   )
 })

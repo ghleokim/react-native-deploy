@@ -23,7 +23,7 @@ export const SearchList: React.FC<Props> = ({ history, isDefault, searchKeyword,
   const fetchData = async () => {
     const result = await axios(
       // 검색어가 들어오면 검색, 없으면 기본 내용 찾아오기
-      searchKeyword ? `${mainStore.proxy}/trucks/search/${searchKeyword}` : `${mainStore.proxy}/trucks/`
+      searchKeyword ? `/trucks/search/${searchKeyword}` : `/trucks/`
     )
     setTrucks(result.data)
   }

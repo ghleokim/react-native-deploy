@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   Image,
   View,
@@ -6,8 +6,9 @@ import {
   TextInput,
   StyleSheet,
   Button,
+  TouchableOpacity,
 } from "react-native";
-import { CustomStyle } from "../../static/CustomStyle";
+import { CustomStyle, CustomText } from "../../static/CustomStyle";
 
 const LocalStyles = StyleSheet.create({
   form: {
@@ -29,7 +30,22 @@ const LocalStyles = StyleSheet.create({
     fontSize: 13,
     marginVertical: 5,
     marginLeft: 10
-  }
+  },
+  menuContainer: {
+    borderBottomColor: '#969698',
+    borderBottomWidth: 2,
+    borderStyle: "dashed",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    flex: 1
+  },
+  menuButton: {
+    flex: 1,
+    marginTop: 5,
+    paddingVertical: 3,
+    borderRadius: 6,
+  },
 });
 
 const styles = { ...CustomStyle, ...LocalStyles }
@@ -40,95 +56,111 @@ interface IProps {
   price: number,
   content: string,
   imgURL: string,
+  isSoldOut: boolean
+  handleMenuSubmit: any,
 }
 
 export default (props:IProps) => {
+
   const [editText] = useState({
-    id: '', 
-    truckId: '', 
-    price: '', 
-    name: '', 
-    content: '', 
-    isSoldOut: '',
+    price: props.price, 
+    name: props.name, 
+    content: props.content, 
+    isSoldOut: props.isSoldOut,
   })
 
-  const [isEditing, setIsEditing] = useState({
-    id: false, 
-    truckId: false, 
-    price: false, 
-    name: false, 
-    content: false, 
-    isSoldOut: false,
-  });
+  const [isEditing, setIsEditing] = useState(false);
 
   const onChangeText = (target: string, text: string) => {
     editText[target] = text;
   }
   
-  const submit = (target: string) => {
-    console.log("data: " + editText['name'])
-    console.log("editText: " + editText[target])
-  
-    // axios.put(`${mainStore.proxy}/trucks/update`)
-    // .then((res) => {
-    //   console.log(res.data);
-    //   setData(res.data);
-    //   console.log(data);
-    // })
-  
-    isEditing[target] = false;
+  const submit = () => {
+    let requestDto = {
+      name: editText.name,
+      content: editText.content,
+      price: editText.price,
+    }
+    props.handleMenuSubmit(props.id, requestDto);
+    setIsEditing(false);
   }
 
-  
-  const cancel = (target: string) => {
-    console.log("before editText : " + editText[target]);
-    editText[target] = props[target];
-    console.log("after editText : " + editText[target]);
-    getdd(target);
+  const cancel = () => {
+    setIsEditing(false);
   }
 
-  const editComponent = (target: string) => {
+  const nonEditingComponent = () => {
     return (
       <View>
-      {isEditing[target]
-        ? <View>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Text style={[CustomText.title, { fontSize: 18 }]}>{props.name}</Text>
+          <View style={{ marginHorizontal: 10, flexGrow: 1, alignSelf: 'center',  borderStyle: 'dotted', borderColor: '#000000', borderWidth: 1 }}></View>
+          <Text style={[CustomText.title, { color: '#20a024', fontSize: 16 }]}>{props.price} 원</Text>
+        </View>
+        <View>
+          <Text style={[CustomText.body]}>{props.content}</Text>
+        </View>
+        <TouchableOpacity style={[styles.menuButton, {backgroundColor: '#4177c9',}]} onPress={() => setIsEditing(true)}><Text style={{textAlign: 'center', color: '#FFFFFF', fontWeight: '700'}}>수정</Text></TouchableOpacity>
+      </View>
+    )
+    }
+
+  const editingComponent = () => {
+    return (
+        <View style={{ marginLeft: 15, flexShrink: 1, alignSelf: 'center', width:'100%' }}>
+          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+            <Text style={{fontWeight: '700', marginRight: 5}}>메뉴</Text>
             <TextInput
-              style={[styles.input, LocalStyles.form]}
+              style={{ borderColor: '#303030', borderBottomWidth: 2, paddingVertical: 5, paddingHorizontal: 6 }}
               underlineColorAndroid="transparent"
               autoCapitalize="none"
-              defaultValue={props[target]}
-              onChangeText={text => onChangeText(target, text)}
+              defaultValue={props.name}
+              onChangeText={text => onChangeText('name', text)}
             />
-            <Button title="완료" onPress={()=> submit(target)}></Button>
-            <Button title="취소" onPress={()=> cancel(target)}></Button>
           </View>
-        : <View>
-        <Text style={[styles.input, LocalStyles.form]}>{props[target]}</Text>
-          <Button title="수정" onPress={()=> getdd(target)}></Button>
+          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+            <Text style={{fontWeight: '700', marginRight: 5}}>가격</Text>
+            <TextInput
+              style={{ borderColor: '#303030', borderBottomWidth: 2, paddingVertical: 5, paddingHorizontal: 6 }}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+              defaultValue={String(props.price)}
+              onChangeText={text => onChangeText('price', text)}
+            />
+          </View>
+          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+            <Text style={{fontWeight: '700', marginRight: 5}}>내용</Text>
+            <TextInput
+              style={{ borderColor: '#303030', borderBottomWidth: 2, paddingVertical: 5, paddingHorizontal: 6 }}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+              defaultValue={props.content}
+              onChangeText={text => onChangeText('content', text)}
+            />
+          </View>
+          <View style={{flex: 1, flexDirection: 'row'}}>
+            <TouchableOpacity style={[styles.menuButton, {backgroundColor: '#4177c9',}]} onPress={() => submit()}><Text style={{textAlign: 'center', color: '#FFFFFF', fontWeight: '700'}}>등록</Text></TouchableOpacity>
+            <TouchableOpacity style={[styles.menuButton, {backgroundColor: '#798391',}]} onPress={() => cancel()}><Text style={{textAlign: 'center', color: '#FFFFFF', fontWeight: '700'}}>취소</Text></TouchableOpacity>
+          </View>
         </View>
-      }
-      </View>
     )
   }
 
-  const getdd = (target:string) => {
-    const result = {...isEditing};
-    result[target] = !result[target];
-    setIsEditing(result);
-  }
-
   return (
-    <View>
-      <Image
-      style={{width: 50, height: 50}}
-      source={{uri: props.imgURL}}
-     />  
-      <Text>이름: {props.name}</Text>
-      {editComponent('name')}
-      <Text>내용: {props.content}</Text>
-      {editComponent('content')}
-      <Text>가격: {props.price}</Text>
-      {editComponent('price')}
+    <View style={styles.menuContainer}>
+      <View style={{ alignSelf: 'center' }}>
+        <Image
+          defaultSource={{ uri: `https://picsum.photos/id/${props.id}/200` }}
+          source={{ uri: props.imgURL }}
+          style={{ width: 70, height: 70, borderRadius: 10 }}
+        />
+      </View>
+      <View style={{ marginLeft: 15, flexShrink: 1, alignSelf: 'center', width:'100%' }}>
+        {isEditing
+          ? editingComponent()
+          : nonEditingComponent()
+        }
+      </View>
     </View>
   );
   

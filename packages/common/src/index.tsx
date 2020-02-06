@@ -13,37 +13,31 @@ import { CustomStyle } from './static/CustomStyle';
 import { Header } from './components/main/Header';
 import axios from 'axios';
 
+const AWS = 'http://54.180.141.50:8001';
+const LOCAL = 'http://localhost:8001';
+const HODUN = 'http://70.12.247.106:8001';
+
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 axios.defaults.headers.common['Accept'] = 'application/json';
 axios.defaults.withCredentials = true;
+axios.defaults.baseURL=AWS;
 
 export const App: React.FC = observer(() => {
   const mainStore = useContext(mainStoreContext);
-  
+
   mainStore.screenWidth = Dimensions.get('window').width;
   mainStore.screenHeight = Dimensions.get('window').height;
   mainStore.scrollviewHeight = mainStore.screenHeight - mainStore.footerHeight - mainStore.headerHeight;
 
   console.log(mainStore)
-
-  const checkAuth = () => {
-    const cookies = JSON.parse(localStorage.getItem('cookies'))
-    if (cookies) {
-      const expires = Date.parse(cookies.expires)
-      console.log('expires: ', expires, 'now: ', Date.now())
-      if (expires < Date.now()) {
-        return true
-      }
-    } else return false;
-  }
-
-  mainStore.isLoggedIn = checkAuth();
-  console.log(mainStore.isLoggedIn)
+  console.log(`isloggedin ${mainStore.isLoggedIn} isSeller ${mainStore.isSeller}`)
+  console.log(`screenheight ${mainStore.screenHeight} scrollviewheight ${mainStore.scrollviewHeight}`)
+  console.log(`proxy ${AWS}`)
 
   return (
     <View style={{ height: mainStore.screenHeight, flex: 1 }}>
       <Header />
-      <Routes height={mainStore.scrollviewHeight} headerHeight={mainStore.headerHeight} footerHeight={mainStore.footerHeight}/>
+      <Routes height={mainStore.scrollviewHeight} headerHeight={mainStore.headerHeight} footerHeight={mainStore.footerHeight} />
     </View>
   )
 })
