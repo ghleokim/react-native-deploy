@@ -93,15 +93,13 @@ export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await axios(
-        `${mainStore.proxy}/trucks/${targetId}`,
+      const result = await axios(`/trucks/${targetId}`,
       );
       console.log(JSON.stringify(result.data));
       setData(result.data)
     };
     const fetchReview = async () => {
-      const result = await axios(
-        `${mainStore.proxy}/reviews/all/${targetId}`,
+      const result = await axios(`/reviews/all/${targetId}`,
       );
       console.log(JSON.stringify(result.data))
       setReview(result.data)

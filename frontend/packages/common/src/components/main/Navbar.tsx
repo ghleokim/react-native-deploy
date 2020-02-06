@@ -12,6 +12,20 @@ interface Props extends RouteComponentProps {}
 export const Navbar: React.FC<Props> = observer(({ history }) => {
   const mainStore = useContext(mainStoreContext);
 
+  const checkAuth = () => {
+    const isSeller = localStorage.getItem('isSeller') === 'true' ? true : false
+    const cookies = JSON.parse(localStorage.getItem('cookies'))
+    if (cookies) {
+      const expires = Date.parse(cookies.expires)
+      console.log('expires: ', expires, 'now: ', Date.now())
+      if (expires > Date.now()) {
+        return [true, isSeller]
+      } else return [false, false]
+    } else return [false, false]
+  }
+
+  [mainStore.isLoggedIn, mainStore.isSeller] = checkAuth();
+
   const AuthButton = () => {
     if (mainStore.isLoggedIn === false) {
       return <TouchableOpacity onPress={() => history.push('/login')} style={styles.navButton}>

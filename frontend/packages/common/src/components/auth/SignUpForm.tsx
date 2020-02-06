@@ -29,15 +29,12 @@ export const SignupForm: React.FC<Props> = observer(({ history }) => {
   }
 
   const handleSignUp = (name: string, email: string, pass: string) => {
-    axios({
-      url: mainStore.proxy + '/users/sign_up/',
-      method: 'post',
-      data: {
+    axios.post('/users/sign_up/',{
         userName: name,
         userEmail: email,
         userPassword: pass
-      }
-    }).then((response) => {
+      })
+      .then((response) => {
       console.log(response);
       // 현재 내부 state에서 필요한 값을 유지하도록 구현하였다. 라우팅할 때 쓰일 수 있을 듯.
       loginStore.responsedata = response.data

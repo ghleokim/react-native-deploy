@@ -15,28 +15,26 @@ interface Props extends RouteComponentProps {}
 export const RouteMypage : React.FC<Props> = observer(({history}) => {
   const mainStore = React.useContext(mainStoreContext)
   console.log(mainStore.isSeller)
-  
   const handleLogout = () => {
-    axios({
-    url: mainStore.proxy + '/users/logout',
-  }).then((response)=>{
-    if (response.data === true) {
-      mainStore.isLoggedIn = false;
-      mainStore.isSeller = false;
-      localStorage.removeItem('cookies')
-      history.replace('/')
+    axios.get('/users/logout')
+      .then((response)=>{
+        if (response.data === true) {
+          mainStore.isLoggedIn = false;
+          mainStore.isSeller = false;
+          localStorage.removeItem('cookies')
+          history.replace('/')
+        }
+      }).catch((err)=> {
+        console.log(err)
+      })
     }
-  }).catch((err)=> {
-    console.log(err)
-  })
-}
 
   return (
-    <View>
+    <View style={{flex: 1}}>
        <TouchableOpacity onPress={()=>{handleLogout()}} style={[styles.buttons, { position: 'absolute', zIndex: 10, alignSelf:'flex-end', flex: 1, width: '20%'}]}>
-            <Text style={{ color: Colors.white }}>로그아웃</Text>
+          <Text style={{ color: Colors.white }}>로그아웃</Text>
        </TouchableOpacity>
-      {mainStore.isSeller === false ? <SellerMain /> : <Mypage />}
+      {mainStore.isSeller === true ? <SellerMain /> : <Mypage />}
     </View>
   )
 })
