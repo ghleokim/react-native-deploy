@@ -47,9 +47,16 @@ router.put('/update', async function(req, res, next){
         where :{
             id: req.body.reviewId,
         }
-    })
+    });
+    
+    let resultReview = await models.review.findOne({
+        where: {
+            id : req.body.reviewId
+        }
+    });
+
     console.log(result);
-    res.json(result);
+    res.json(resultReview);
 });
 
 // 그 밑에 달린 댓글들도 다 삭제

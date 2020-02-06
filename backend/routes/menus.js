@@ -61,7 +61,7 @@ router.put('/:menuId', function(req, res, next) {
   const TRUCK_ID = req.session.truckId;
   const MENU_ID = req.params.menuId;
 
-  models.menu.update({
+  let result = await models.menu.update({
       price: req.body.price,
       name: req.body.name,
       content: req.body.content
@@ -70,15 +70,17 @@ router.put('/:menuId', function(req, res, next) {
         truckId: TRUCK_ID,
         id: MENU_ID
       }
-    })
-    .then((result) => {
-      console.log(result);
-      res.json(result);
-    })
-    .catch((err) => {
-      console.log(err);
-      next(err);
     });
+    
+    let resultMenu = await models.menu.findOne({
+      where: {
+        truckId: req.params.truckId,
+        id: req.params.id
+      }
+    });
+
+    console.log(resultMenu);
+    res.json(resultMenu);
 });
 
 router.delete('/:menuId', function(req, res, next) {
