@@ -207,18 +207,40 @@ router.delete('/delete/:truckId', function (req, res, next) {
   res.json(resultSeller);
 })
 
-router.put("/update/state/:truckId", async function(req, res, next) {
+router.put("/:truckId/state", async function(req, res, next) {
+  if (req.params.truckId != req.session.truckId) {
+    let error = new Error('푸드트럭 수정 권한이 없습니다.');
+    error.status = 403;
+    next(error);
+  }
+
+  const STATE = req.body.state;
+  const LONGITUDE = req.body.longitude || 0;
+  const LATITUDE = req.body.latitude || 0;
+  if (STATE === undefined) {
+    let error = new Error('Request body에 state가 없습니다.');
+    error.status = 401;
+    next(error);
+  }
+
   let result = await models.truck.update(
     {
-      state: req.body.state
+      state: STATE,
+      longitude: LONGITUDE,
+      latitude: LATITUDE
     }, {
       where: {
-        email: req.session.email,
         id: req.params.truckId
-      }
+      },
     });
 
-  res.json(req.body.state);
+    const responseDto = await models.truck.findOne({
+          where: {
+            id: req.params.truckId,
+          },
+          attributes: ['state', 'longitude', 'latitude']
+      })
+    res.json(responseDto);
 });
 
 module.exports = router;
