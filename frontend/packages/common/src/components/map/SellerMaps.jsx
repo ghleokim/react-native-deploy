@@ -8,7 +8,7 @@ import { mainStoreContext } from '../../store/MainStore';
 
 export const SellerMaps = observer(({emitFunc}) => {
   const sellerMapStore = useContext(SellerMapStoreContext);
-  const mainStore = useContext(mainStoreContext);w
+  const mainStore = useContext(mainStoreContext);
 
   const handleZoomChanged = (zoom) => {
     sellerMapStore.zoom = zoom;
