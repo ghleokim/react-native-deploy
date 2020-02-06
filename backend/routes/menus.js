@@ -57,11 +57,11 @@ router.post('/', function(req, res, next) {
     });
 });
 
-router.put('/:menuId', function(req, res, next) {
+router.put('/:menuId', async function(req, res, next) {
   const TRUCK_ID = req.session.truckId;
   const MENU_ID = req.params.menuId;
 
-  let result = await models.menu.update({
+  await models.menu.update({
       price: req.body.price,
       name: req.body.name,
       content: req.body.content
@@ -71,11 +71,10 @@ router.put('/:menuId', function(req, res, next) {
         id: MENU_ID
       }
     });
-    
-    let resultMenu = await models.menu.findOne({
+  let resultMenu = await models.menu.findOne({
       where: {
-        truckId: req.params.truckId,
-        id: req.params.id
+        truckId: TRUCK_ID,
+        id: MENU_ID
       }
     });
 
