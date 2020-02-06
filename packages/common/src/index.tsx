@@ -13,7 +13,7 @@ import { CustomStyle } from './static/CustomStyle';
 import { Header } from './components/main/Header';
 import axios from 'axios';
 
-const HTTPS_AWS = 'https://food-truck.shop/api';
+const HTTPS_AWS='https://food-truck.shop/api'
 const AWS = 'http://54.180.141.50:8001';
 const LOCAL = 'http://localhost:8001';
 const HODUN = 'http://70.12.247.106:8001';
