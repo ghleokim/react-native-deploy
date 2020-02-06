@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const models = require("../models");
 const sequelize = require("sequelize");
+
 // select all menu
 router.get('/', function(req, res, next) {
-  // res.send('all trucks');
   models.menu.findAll()
     .then((menus) => {
       console.log(menus);
@@ -15,14 +15,15 @@ router.get('/', function(req, res, next) {
       next(err);
     })
 });
-router.get('/:truckId/:name', function(req, res, next) {
-  const TRUCK_ID = req.params.truckId;
-  const foodName = req.params.name;
+
+router.get('/:menuId', function(req, res, next) {
+  const TRUCK_ID = req.session.truckId;
+  const MENU_ID = req.params.menuId;
 
   models.menu.findOne({
       where: {
         truckId: TRUCK_ID,
-        name: foodName
+        id: MENU_ID
       }
     })
     .then((result) => {
@@ -36,8 +37,9 @@ router.get('/:truckId/:name', function(req, res, next) {
 });
 
 // insert menu
-router.post('/:truckId', function(req, res, next) {
-  const TRUCK_ID = req.params.truckId
+router.post('/', function(req, res, next) {
+  const TRUCK_ID = req.session.truckId
+
   models.menu.create({
       truckId: TRUCK_ID,
       price: req.body.price,
@@ -55,15 +57,18 @@ router.post('/:truckId', function(req, res, next) {
     });
 });
 
-router.put('/:truckId/:name', function(req, res, next) {
+router.put('/:menuId', function(req, res, next) {
+  const TRUCK_ID = req.session.truckId;
+  const MENU_ID = req.params.menuId;
+
   models.menu.update({
       price: req.body.price,
       name: req.body.name,
       content: req.body.content
     }, {
       where: {
-        truckId: req.params.truckId,
-        name: req.params.name
+        truckId: TRUCK_ID,
+        id: MENU_ID
       }
     })
     .then((result) => {
@@ -76,11 +81,14 @@ router.put('/:truckId/:name', function(req, res, next) {
     });
 });
 
-router.delete('/:truckId/:id', function(req, res, next) {
+router.delete('/:menuId', function(req, res, next) {
+  const TRUCK_ID = req.session.truckId;
+  const MENU_ID = req.params.menuId;
+
   models.menu.destroy({
       where: {
-        truckId: req.params.truckId,
-        id: req.params.id
+        truckId: TRUCK_ID,
+        id: MENU_ID
       }
     })
     .then((result) => {
