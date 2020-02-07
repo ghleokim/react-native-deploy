@@ -8,6 +8,9 @@ export const Colors = {
   red: '#D91E1E',
   white: '#F2F2F2',
   gray: '#E0E0E0',
+  darkGray: '#57595d',
   black: '#0E0E0E',
-  header: `rgb(${COLOR_HEADER})` //'#FDFBF8'
+  header: `rgb(${COLOR_HEADER})`, //'#FDFBF8'
+  success: '#4177c9',
+  cancel: '#798391'
 }

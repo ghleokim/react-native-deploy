@@ -1,25 +1,43 @@
 import * as React from 'react';
-import {} from 'react';
+import { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Colors } from '../../static/CustomColor';
-import { CustomStyle } from '../../static/CustomStyle';
+import { CustomStyle, CustomText } from '../../static/CustomStyle';
+import axios from 'axios';
+import { MyPageInfo } from './MyPageInfo';
+import { MyPageTrucks } from './MyPageTrucks';
 
-const dummy = {
-  userEmail: 'test@a.kr',
-  name: '김건호',
-  following: [1,2,3,4],
-  
+interface MyInfo {
+  name: String,
+  email: String,
+  isSeller: Boolean,
 }
 
 export const Mypage : React.FC = () => {
+  const [userInfo, setUserInfo] = useState<MyInfo>({
+    name: '', email: '', isSeller: false
+  })
+  
+  useEffect(()=>{
+    axios.get('/users/getUser')
+    .then((response)=>{   
+      console.log(response)
+      setUserInfo(response.data.result)
+    })
+  }, [])
 
   return (
-    <View>
-      <Text>{dummy.name}</Text>
+    <View style={styles.pageContainer}>
+      <MyPageInfo myInfo={userInfo} />
+      <MyPageTrucks myInfo={userInfo} />
     </View>
   )
 }
 
-const LocalStyles = StyleSheet.create({})
+const LocalStyles = StyleSheet.create({
+  pageContainer: {
+    flex: 1
+  }
+})
 
 const styles = { ...CustomStyle, ...LocalStyles }
