@@ -47,14 +47,14 @@ export const MyPageTrucks : React.FC<Props> = ({myInfo}) => {
       axios.get('/sellers/myTrucks')
       .then((response)=>{
         console.log('myTrucks: ', response, 'myInfo', myInfo)
-        setData({myTruck: response.data.map(item=>{return {...item.truck, id: item.id}}), following: []})
+        setData({myTruck: response.data, following: []})
       })   
      } else {
        axios.get('/follows/followList')
       .then(
         (response)=>{
           console.log('following', response)
-          setData({myTruck: [], following: response.data.map(item=>{return {...item.truck, id: item.id}})})
+          setData({myTruck: [], following: response.data})
         }
       )}
   },[])

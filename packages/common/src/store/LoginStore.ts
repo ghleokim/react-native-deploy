@@ -15,6 +15,7 @@ class LoginStore {
   // Signup info
   @observable signupEmail: string = '';
   @observable signupPass: string = '';
+  @observable signupPass2: string = '';
   @observable signupName: string = '';
 }
 
