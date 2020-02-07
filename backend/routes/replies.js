@@ -44,21 +44,32 @@ router.get('/searchReply/:replyId', async function(req, res ,next){
 });
 
 router.put('/update', async function(req, res, next){
+
     let result = await models.reply.update({
         content: req.body.content,
     }, {
         where: {
-            id: req.body.replyId
+            id: req.body.replyId,
+            userEmail: req.session.email
         }
     });
-
-    let resultReply = await models.reply.findOne({
+    console.log("******");
+    console.log(result);
+    if (result == 0) {
+      res.status(403).send({
+        code: 0,
+        message: "본인이 작성한 글만 수정 가능합니다."
+      });
+    } 
+    else {
+      let resultReply = await models.reply.findOne({
         where: {
-            id: req.body.replyId
+          id: req.body.replyId
         }
-    });
+      });
 
-    res.json(resultReply);
+      res.json(resultReply);
+    }
 });
 
 router.delete('/delete/:replyId', async function(req, res, next){
