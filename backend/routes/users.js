@@ -10,20 +10,51 @@ router.get('/sign_up', function(req, res, next) {
 
 // 회원가입 POST
 router.post("/sign_up", async function(req, res, next) {
-  let body = req.body;
+  const USER_NAME = req.body.userName;
+  const USER_EMAIL = req.body.userEmail;
+  const USER_PASSWORD = req.body.userPassword;
+
+  if (USER_NAME == undefined) {
+    res.status(403).send({
+      code: 1001,
+      message: "유저 이름이 존재하지 않습니다."
+    });
+  }
+
+  if (USER_NAME == undefined) {
+    res.status(403).send({
+      code: 1002,
+      message: "유저 이메일이 존재하지 않습니다."
+    });
+  }
+
+  if (USER_NAME == undefined) {
+    res.status(403).send({
+      code: 1003,
+      message: "유저 비밀번호가 존재하지 않습니다."
+    });
+  }
+
   let haveEmail = await models.user.findOne({
     where: {
-      email: body.userEmail
+      email: USER_EMAIL
     }
   });
-  if (haveEmail == null) {
-    let inputPassword = body.userPassword;
-    let salt = Math.round((new Date().valueOf() * Math.random())) + "";
-    let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
+
+  if (haveEmail != null) {
+    res.status(403).send({
+        code: 1004,
+        message: "이미 존재하는 이메일입니다."
+    });
+  }
+
+  let inputPassword = USER_PASSWORD;
+  let salt = Math.round((new Date().valueOf() * Math.random())) + "";
+  let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
 
     let result = await models.user.create({
-      name: body.userName,
-      email: body.userEmail,
+      name: USER_NAME,
+      email: USER_EMAIL,
       password: hashPassword,
       salt: salt,
       isSeller: 0 // false
@@ -31,17 +62,12 @@ router.post("/sign_up", async function(req, res, next) {
 
     let resultAuth = await models.authorities.create({
       authority: "ROLE_USER",
-      userEmail: body.userEmail,
+      userEmail: USER_EMAIL,
     });
-    console.log(resultAuth);
 
-    res.redirect("/users/sign_up");
-  } else {
-    res.status(401).send({
-      code: 0,
-      message: "이미 존재하는 이메일입니다."
-    });
-  }
+    res.send({
+      message: "회원가입 완료"
+  });
 });
 
 router.get('/login', function(req, res, next) {
@@ -90,6 +116,14 @@ router.post("/login", async function(req, res, next) {
     }
   })
 
+  let truckIdList = []
+  if (result.isSeller) {
+    const truckIdListObj = await models.truck.findAll({
+      where: { email: body.userEmail },
+      attributes: ['id']
+    });
+    truckIdList = truckIdListObj.map(x => x.id);
+  }
 
   if (result == null) {
     res.status(401).send({
@@ -118,7 +152,14 @@ router.post("/login", async function(req, res, next) {
           req.session.truckId = resultTruck.id;
           req.session.sellerId = resultSeller.id;
         }
-        res.json(req.session);
+
+      let responseBody = {...req.session};
+      responseBody.isSeller = {
+        status: req.session.isSeller,
+        truckIdList
+      }
+
+      res.json(responseBody);
       })
     } else {
       res.status(401).send({
