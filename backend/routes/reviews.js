@@ -46,17 +46,25 @@ router.put('/update', async function(req, res, next){
     }, {
         where :{
             id: req.body.reviewId,
+            userEmail: req.session.email
         }
     });
     
-    let resultReview = await models.review.findOne({
+    if (result == 0) {
+      res.status(403).send({
+        code: 0,
+        message: "본인이 작성한 글만 수정 가능합니다."
+      });
+    } 
+    else {
+      let resultReview = await models.review.findOne({
         where: {
-            id : req.body.reviewId
+          id: req.body.reviewId
         }
-    });
+      });
+      res.json(resultReview);
+    }
 
-    console.log(result);
-    res.json(resultReview);
 });
 
 // 그 밑에 달린 댓글들도 다 삭제
