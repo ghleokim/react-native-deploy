@@ -54,7 +54,7 @@ export const MyPageTrucks : React.FC<Props> = ({myInfo}) => {
       .then(
         (response)=>{
           console.log('following', response)
-          setData({myTruck: [], following: response.data})
+          setData({myTruck: [], following: response.data.map(element=>{return {...element.truck, id: element.truckId}})})
         }
       )}
   },[])
@@ -94,8 +94,7 @@ export const MyPageTrucks : React.FC<Props> = ({myInfo}) => {
 
   return (
   <View style={styles.myinfoContainer}>
-    {myInfo.isSeller ? sellerTruck() : <></>}
-    {customerTruck()}
+    {myInfo.isSeller ? sellerTruck() : customerTruck()}
   </View>
 )
 }

@@ -17,9 +17,10 @@ export const NewLoginForm: React.FC<Props> = observer(({ history }) => {
   const loginStore = useContext(loginStoreContext);
   let [canSubmit, setCanSubmit] = useState(false);
 
+  const reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[a-zA-Z_-]{2,}){1,2}$/;
+
   const handleEmail = (email: string) => {
     loginStore.userEmail = email;
-    const reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[a-zA-Z_-]{2,}){1,2}$/;
 
     setCanSubmit(
       loginStore.userEmail != '' && 
@@ -31,7 +32,11 @@ export const NewLoginForm: React.FC<Props> = observer(({ history }) => {
   // security handling required.
   const handlePassword = (pass: string) => {
     loginStore.pass = pass;
-    setCanSubmit(loginStore.userEmail != '' && loginStore.pass != '')
+    setCanSubmit(
+      loginStore.userEmail != '' && 
+      loginStore.pass != '' &&
+      reg_email.test(loginStore.userEmail)
+      )
   }
 
   const handleLogin = (email: string, pass: string) => {
@@ -102,6 +107,7 @@ export const NewLoginForm: React.FC<Props> = observer(({ history }) => {
             placeholder="Password"
             placeholderTextColor="#9a73ef"
             autoCapitalize="none"
+            secureTextEntry={true}
             onChangeText={handlePassword}
           />
         </View>
