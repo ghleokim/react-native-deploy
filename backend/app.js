@@ -52,9 +52,9 @@ app.use(cors(corsOptions));
 
 const models = require("./models/index.js");
 
-// localhost:8001/user/file_name.jpg
+// localhost:8001/api/user/file_name.jpg
 // 위 경로로 사용자가 이미지를 불러올수 있다.
-app.use('/user', express.static('uploads'));
+app.use('/api/user', express.static('uploads'));
 
 models.sequelize.sync().then( () => {
   console.log(" DB 연결 성공");
@@ -82,23 +82,23 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/sellers', sellersRouter);
-app.use('/trucks', trucksRouter);
-app.use('/menus', menusRouter);
-app.use('/reviews', reviewsRouter);
-app.use('/replies', repliesRouter);
-app.use('/follows', followsRouter);
-app.use('/likes', likesRouter);
-app.get('/upload', function(req, res, next){
+app.use('/api', indexRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/sellers', sellersRouter);
+app.use('/api/trucks', trucksRouter);
+app.use('/api/menus', menusRouter);
+app.use('/api/reviews', reviewsRouter);
+app.use('/api/replies', repliesRouter);
+app.use('/api/follows', followsRouter);
+app.use('/api/likes', likesRouter);
+app.get('/api/upload', function(req, res, next){
   console.log("upload router");
   res.render('upload');
 });
 
 // single(' ? ') -> user input name과 같아야 함
 // upload.single('userfile'),
-app.post('/upload', upload.single('userfile'), function(req, res, next){
+app.post('/api/upload', upload.single('userfile'), function(req, res, next){
   console.log(req.file);
   res.send("img post"+ req.file.filename);
 });
