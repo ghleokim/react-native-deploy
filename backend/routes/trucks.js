@@ -95,13 +95,9 @@ router.get('/:truckId', async function(req, res, next) {
 });
 
 router.get('/search/:searchKeyword', function(req, res, next) {
-  console.log("query", req.query);
-
-  const searchKeyword = req.params.searchKeyword
-  const userLatitude = req.query.latitude;
-  const userLongitude = req.query.longitude;
-  //const userLatitude = 40;
-  //const userLongitude = 100;
+  const searchKeyword = req.params.searchKeyword.trim()
+  const userLatitude = req.query.latitude.trim();
+  const userLongitude = req.query.longitude.trim();
   models.truck.findAll({
       attributes: ['id', 'title', 'contents', 'imgURL', 'latitude', 'longitude', 'state'],
       where: {

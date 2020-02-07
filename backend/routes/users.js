@@ -10,9 +10,9 @@ router.get('/sign_up', function(req, res, next) {
 
 // 회원가입 POST
 router.post("/sign_up", async function(req, res, next) {
-  const USER_NAME = req.body.userName;
-  const USER_EMAIL = req.body.userEmail;
-  const USER_PASSWORD = req.body.userPassword;
+  const USER_NAME = req.body.userName.trim();
+  const USER_EMAIL = req.body.userEmail.trim();
+  const USER_PASSWORD = req.body.userPassword.trim();
 
   if (USER_NAME == undefined) {
     res.status(403).send({
@@ -92,34 +92,34 @@ router.get('/getUser', async function(req, res, next) {
 
 // 로그인 POST
 router.post("/login", async function(req, res, next) {
-  let body = req.body;
+  const USER_EMAIL = req.body.userEmail.trim();
 
   let result = await models.user.findOne({
     where: {
-      email: body.userEmail
+      email: USER_EMAIL
     }
   });
   let resultSeller = await models.seller.findOne({
     where: {
-      userEmail: body.userEmail
+      userEmail: USER_EMAIL
     }
   });
   let resultAuth = await models.authorities.findOne({
     where:{
-      userEmail: body.userEmail
+      userEmail: USER_EMAIL
     }
   })
 
   let resultTruck = await models.truck.findOne({
     where: {
-      email: body.userEmail
+      email: USER_EMAIL
     }
   })
 
   let truckIdList = []
-  if (result.isSeller) {
+  if (!!result && result.isSeller) {
     const truckIdListObj = await models.truck.findAll({
-      where: { email: body.userEmail },
+      where: { email: USER_EMAIL },
       attributes: ['id']
     });
     truckIdList = truckIdListObj.map(x => x.id);
@@ -132,7 +132,7 @@ router.post("/login", async function(req, res, next) {
     });
   } else {
     let dbPassword = result.dataValues.password;
-    let inputPassword = body.userPassword;
+    let inputPassword = USER_PASSWORD;
     let salt = result.dataValues.salt;
     let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
     console.log(dbPassword);
@@ -142,7 +142,7 @@ router.post("/login", async function(req, res, next) {
 
       // 세션 설정
       req.session.save(function() {
-        req.session.email = body.userEmail;
+        req.session.email = USER_EMAIL;
         req.session.name = result.name;
         req.session.isSeller = result.isSeller;
         req.session.authority = resultAuth.authority;
@@ -183,9 +183,11 @@ router.get("/logout", function(req, res, next) {
 
 router.put('/update', async function(req, res, next) {
   
+  const USER_NAME = req.body.userName;
+
   let result = await models.user.update(
     {
-      name: req.body.userName
+      name: USER_NAME
     }, {
       where: {
         email: req.session.email
