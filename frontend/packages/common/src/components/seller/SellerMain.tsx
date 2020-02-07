@@ -62,7 +62,7 @@ export default () => {
   const mainStore = useContext(mainStoreContext)
 
   useEffect(() => {
-    axios.get('/trucks/1')
+    axios.get(`/trucks/${mainStore.sellerTruckId === undefined ? '1' : mainStore.sellerTruckId}`)
       .then((res) => {
         setData(res.data.result);
         setEditText(res.data.result);

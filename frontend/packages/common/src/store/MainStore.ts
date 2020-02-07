@@ -14,6 +14,7 @@ class MainStore {
   // userinfo
   @observable isLoggedIn: boolean = false;
   @observable isSeller: boolean = false;
+  @observable sellerTruckId: number = 0;
 
   // bannerinfo
   @observable bannerPage: number = 1;

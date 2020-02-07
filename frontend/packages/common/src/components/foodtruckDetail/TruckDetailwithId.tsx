@@ -9,17 +9,21 @@ import {
 import MenuList from './MenuList';
 import Line from '../Line'
 import axios from 'axios'
-import { mainStoreContext } from '../../store/MainStore';
 import { CustomStyle, CustomText } from '../../static/CustomStyle';
 import ReviewList from './ReviewList';
 import TruckInfo from './TruckInfo';
+import { Colors } from '../../static/CustomColor';
 
 interface IState {
   id: Number,
   imgURL?: string,
   title: string,
   contents: string,
-  menus: []
+  menus: [],
+}
+
+interface IFollow {
+  isFollow: Boolean
 }
 
 interface IReview {
@@ -37,14 +41,17 @@ interface Props {
 }
 
 export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
-  const mainStore = useContext(mainStoreContext)
   const [state, setState] = useState({
     nav: 'menu',
   })
 
   const [data, setData] = useState<IState>({
-    id: 0, imgURL: '', title: '', contents: '', menus: []
+    id: 0, imgURL: '', title: '', contents: '', menus: [] })
+
+  const [follow, setFollow] = useState<IFollow>({
+    isFollow: true
   })
+
   const [review, setReview] = useState<IReview[]>([{
     id: 0, content: '', startRating: 1, createdAt: '', updatedAt: '', truckId: 0, userEmail: ''
   }])
@@ -88,20 +95,36 @@ export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
             : <ReviewList reviewList={review} />}
       </View>
     )
+  }
 
+  const clickedFollowButton = () => {
+    console.log("clickedFollowButton", data);
+
+    // follow 상태를 바꾸는 api 전송
+    axios.post(`/follows/follow/`, {
+      truckId: targetId
+    }).then((response) => {
+      console.log("follow response : ", response.data);
+      console.log("follow state : ", response.data.isFollow);
+      setFollow({isFollow: response.data.isFollow})
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   }
 
   useEffect(() => {
     const fetchData = async () => {
       const result = await axios(`/trucks/${targetId}`,
       );
-      console.log(JSON.stringify(result.data));
+      console.log("result: ", JSON.stringify(result.data.result))
       setData(result.data.result)
+      setFollow({isFollow: result.data.isFollow})
     };
     const fetchReview = async () => {
       const result = await axios(`/reviews/all/${targetId}`,
       );
-      console.log(JSON.stringify(result.data))
+      console.log("Review: ", JSON.stringify(result.data))
       setReview(result.data)
     }
     fetchData();
@@ -115,6 +138,14 @@ export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
         source={{ uri: data.imgURL ? data.imgURL : '' }}
         defaultSource={{ uri: `https://picsum.photos/id/${data.id ? data.id : 0}/200` }}
       />
+      <TouchableOpacity
+        style={{ position: 'absolute', right: 10, top: 50, alignSelf: 'center', paddingTop: 8, paddingBottom: 8, marginBottom: 5, height: 30, width: 30, borderRadius: 15, borderColor: '#FFFFFF', borderWidth: 1.2, alignItems: 'center', justifyContent: 'center', backgroundColor: follow.isFollow === true ? '#ec585c': '#c0c0c0' }}
+        onPress={() => clickedFollowButton()} >
+        <Image
+        style={{ tintColor: '#ffffff', width: 21, height: 21 }}
+        source={require('@foodtruckmap/common/src/static/icon_processed/noun_Heart_1015352.png')} />
+        
+      </TouchableOpacity>
       <View style={{ paddingBottom: 10, backgroundColor: '#edaa11', width: '70%', alignSelf: 'center', borderRadius: 9, marginBottom: 5 }}>
         <View style={{ width: '100%', backgroundColor: '#f2be46', paddingHorizontal: 15, paddingVertical: 8, borderRadius: 9, alignItems: 'center' }}>
           <Text style={[styles.titleHN, { fontSize: 24 }]}>{data.title}</Text>

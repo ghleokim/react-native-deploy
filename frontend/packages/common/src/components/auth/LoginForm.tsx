@@ -45,6 +45,7 @@ export const NewLoginForm: React.FC<Props> = observer(({ history }) => {
           mainStore.isLoggedIn = true;
           if (response.data.isSeller === true) {
             mainStore.isSeller = true;
+            mainStore.sellerTruckId = response.data.truckId;
           }
 
           alert(response.statusText)

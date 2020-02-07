@@ -26,7 +26,7 @@ export const MyPageInfo : React.FC<Props> = ({myInfo}) => {
         <Text style={{...CustomText.body, color: Colors.darkGray}}>내 이메일 주소 </Text>
         <Text>{myInfo.email}</Text>
       </View>
-      <TouchableOpacity style={{...styles.mediumButton, borderRadius: 10, backgroundColor: Colors.success}}>
+      <TouchableOpacity style={{...styles.mediumButton, borderRadius: 10, backgroundColor: Colors.success}} onPressOut={()=>alert('현재 지원되지 않는 기능입니다.')}>
         <Text style={{...CustomText.body, color: Colors.white, alignSelf: 'center', paddingVertical: 10, fontSize: 16}}>내 정보 수정하기</Text>
       </TouchableOpacity>
     </View>
