@@ -4,22 +4,33 @@ const models = require("../models");
 const sequelize = require("sequelize");
 
 router.post("/follow", async function(req, res, next) {
-  let result = await models.userTrucks.create({
-    truckId: req.body.truckId,
-    userEmail: req.session.email
-  });
-  res.json(result);
-});
 
-router.delete("/unFollow", async function(req, res, next) {
-  let result = await models.userTrucks.destroy({
+  let resultUser = await models.userTrucks.findOne({
     where: {
       truckId: req.body.truckId,
       userEmail: req.session.email
     }
   });
-  res.json(result);
+
+
+  if(!resultUser){
+    let result = await models.userTrucks.create({
+      truckId: req.body.truckId,
+      userEmail: req.session.email
+    });
+    res.send({result, isFollow: true});
+  }
+  else{
+    let result = await models.userTrucks.destroy({
+      where: {
+        truckId: req.body.truckId,
+        userEmail: req.session.email
+      }
+    });
+    res.send({result, isFollow: false});
+  }
 });
+
 
 router.get("/followList", async function(req, res, next){
     let result = await models.userTrucks.findAll({

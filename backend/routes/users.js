@@ -149,7 +149,9 @@ router.post("/login", async function(req, res, next) {
         if (result.isSeller) {
           console.log(JSON.stringify(resultSeller))
           req.session.businessRegistrationNumber = resultSeller.businessRegistrationNumber;
-          req.session.truckId = resultTruck.id;
+          if(resultTruck){
+            req.session.truckId = resultTruck.id;
+          }
           req.session.sellerId = resultSeller.id;
         }
 

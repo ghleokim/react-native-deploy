@@ -70,8 +70,28 @@ router.get('/:truckId', async function(req, res, next) {
     },
     attributes: ['email', 'title','contents','imgURL','latitude','longitude','state']
   });
+
+  var isFollow = false;
+  var userEmail = null;
+  if(req.session.email){
+    userEmail = req.session.email;
+  }
+
+  let resultFollow = await models.userTrucks.findOne({
+    where: {
+      truckId: req.params.truckId,
+      userEmail: userEmail,
+    }
+  });
+
+  if(resultFollow){
+    var isFollow = true;
+  }
+
+  console.log(isFollow);
   console.log(result);
-  res.send(result);
+  
+  res.send({result, isFollow: isFollow});
 });
 
 router.get('/search/:searchKeyword', function(req, res, next) {
