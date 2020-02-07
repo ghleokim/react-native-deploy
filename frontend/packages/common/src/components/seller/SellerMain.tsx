@@ -64,8 +64,8 @@ export default () => {
   useEffect(() => {
     axios.get('/trucks/1')
       .then((res) => {
-        setData(res.data);
-        setEditText(res.data);
+        setData(res.data.result);
+        setEditText(res.data.result);
       })
   }, []);
 
@@ -172,7 +172,7 @@ export default () => {
 
     axios.put('/trucks/update/1', requestDto)
       .then((res) => {
-        setData(res.data);
+        setData({ ...data , ...res.data });
       })
     getdd(target);
   }

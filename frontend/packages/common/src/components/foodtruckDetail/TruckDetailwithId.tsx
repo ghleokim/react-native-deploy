@@ -96,7 +96,7 @@ export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
       const result = await axios(`/trucks/${targetId}`,
       );
       console.log(JSON.stringify(result.data));
-      setData(result.data)
+      setData(result.data.result)
     };
     const fetchReview = async () => {
       const result = await axios(`/reviews/all/${targetId}`,

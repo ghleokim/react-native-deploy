@@ -2,15 +2,12 @@ import React, { useContext } from 'react';
 import {
   StyleSheet,
   View,
-  Text,
-  ScrollView,
   Dimensions,
 } from 'react-native';
 import { observer } from 'mobx-react-lite';
 import { Routes } from './Routes';
 import { mainStoreContext } from './store/MainStore';
 import { CustomStyle } from './static/CustomStyle';
-import { Header } from './components/main/Header';
 import axios from 'axios';
 
 const HTTPS_AWS='https://food-truck.shop/api'
@@ -37,7 +34,6 @@ export const App: React.FC = observer(() => {
 
   return (
     <View style={{ height: mainStore.screenHeight, flex: 1 }}>
-      <Header />
       <Routes height={mainStore.scrollviewHeight} headerHeight={mainStore.headerHeight} footerHeight={mainStore.footerHeight} />
     </View>
   )

@@ -12,8 +12,9 @@ import axios from 'axios'
 
 interface Props extends RouteComponentProps {}
 
-export const RouteMypage : React.FC<Props> = observer(({history}) => {
+export const RouteSellerMain : React.FC<Props> = observer(({history}) => {
   const mainStore = React.useContext(mainStoreContext)
+  console.log(mainStore.isSeller)
   const handleLogout = () => {
     axios.get('/users/logout')
       .then((response)=>{
@@ -33,7 +34,7 @@ export const RouteMypage : React.FC<Props> = observer(({history}) => {
        <TouchableOpacity onPress={()=>{handleLogout()}} style={[styles.buttons, { position: 'absolute', zIndex: 10, alignSelf:'flex-end', flex: 1, width: '20%'}]}>
           <Text style={{ color: Colors.white }}>로그아웃</Text>
        </TouchableOpacity>
-      <Mypage />
+      {mainStore.isSeller === true ? <SellerMain /> : <></>}
     </View>
   )
 })

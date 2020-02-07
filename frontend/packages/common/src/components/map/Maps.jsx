@@ -36,7 +36,7 @@ export const Maps =  observer(({history}) => {
   // 위치값을 전달해주어야 함.
   const getMarkersFromLocation = () => {
     axios({
-      url: mainStore.proxy + '/trucks/boundary/?'
+      url: '/trucks/boundary/?'
         + 'startLatitude=' + mapStore.bounds._sw._lat
         + '&startLongitude=' + mapStore.bounds._sw._lng
         + '&endLatitude=' + mapStore.bounds._ne._lat
