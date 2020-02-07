@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { useState, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { Colors } from '../../static/CustomColor';
 import { CustomStyle, CustomText } from '../../static/CustomStyle';
 import axios from 'axios'
 import { mainStoreContext } from '../../store/MainStore';
+import { MyPageTruckItem } from './MyPageTruckItem';
 
 interface TruckData {
   myTruck: Object,
@@ -21,10 +22,22 @@ interface Props {
   myInfo: MyInfo
 }
 
+interface TruckProps {
+  title: string,
+  imgURL?: string,
+  state: String,
+  id: number,
+}
+
+interface IData {
+  myTruck: TruckProps[],
+  following: TruckProps[],
+}
+
 export const MyPageTrucks : React.FC<Props> = ({myInfo}) => {
   const mainStore = useContext(mainStoreContext)
-  const [data, setData] = useState({
-    myTruck: {}, following: {}
+  const [data, setData] = useState<IData>({
+    myTruck: [], following: []
   })
 
   console.log(myInfo)
@@ -34,37 +47,55 @@ export const MyPageTrucks : React.FC<Props> = ({myInfo}) => {
       axios.get('/sellers/myTrucks')
       .then((response)=>{
         console.log('myTrucks: ', response, 'myInfo', myInfo)
-        setData({myTruck: response.data, following: {}})
+        setData({myTruck: response.data.map(item=>{return {...item.truck, id: item.id}}), following: []})
       })   
      } else {
        axios.get('/follows/followList')
       .then(
         (response)=>{
           console.log('following', response)
-          setData({myTruck: {}, following: response.data})
+          setData({myTruck: [], following: response.data.map(item=>{return {...item.truck, id: item.id}})})
         }
       )}
   },[])
 
   const sellerTruck = () => {
     return <View>
-      <Text style={[CustomText.titleHN, {fontSize: 22}]}>내 트럭 보기</Text>
-      <Text>this is seller's truck info</Text>
-      <Text>{JSON.stringify(data.myTruck)}</Text>
+      <Text style={[CustomText.titleHN, {marginBottom: 10, fontSize: 22}]}>내 트럭 보기</Text>
+      { data.myTruck.length === 0 ? 
+        <Text>내 푸드트럭이 없습니다. 등록해주세요! </Text>
+      : <FlatList<TruckProps>
+        data={data.myTruck}
+        renderItem={({item}) =>
+          <MyPageTruckItem truck={item} />
+        }
+        keyExtractor={item=>item.title}
+      />
+      }
     </View>
   }
 
   const customerTruck = () => {
     return <View>
-      <Text style={[CustomText.titleHN, {fontSize: 22}]}>내가 팔로우 중인 트럭</Text>
-      <Text> this is customer's following truck info</Text>
-      <Text>{JSON.stringify(data.following)}</Text>
+      <Text style={[CustomText.titleHN, {marginBottom: 10, fontSize: 22}]}>내가 팔로우 중인 트럭</Text>
+      <Text>팔로우 { data.following.length } 개</Text>
+      { data.following.length === 0 ? 
+        <Text>팔로우중인 트럭이 없습니다. </Text>
+      : <FlatList<TruckProps>
+        data={data.following}
+        renderItem={({item}) =>
+          <MyPageTruckItem truck={item} />
+        }
+        keyExtractor={item=>item.id.toString()}
+      />
+  }
     </View>
   }
 
   return (
   <View style={styles.myinfoContainer}>
-    {myInfo.isSeller ? sellerTruck() : customerTruck()}
+    {myInfo.isSeller ? sellerTruck() : <></>}
+    {customerTruck()}
   </View>
 )
 }

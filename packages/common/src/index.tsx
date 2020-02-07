@@ -30,7 +30,7 @@ export const App: React.FC = observer(() => {
   console.log(mainStore)
   console.log(`isloggedin ${mainStore.isLoggedIn} isSeller ${mainStore.isSeller}`)
   console.log(`screenheight ${mainStore.screenHeight} scrollviewheight ${mainStore.scrollviewHeight}`)
-  console.log(`proxy ${AWS}`)
+  console.log(`proxy ${axios.defaults.baseURL}`)
 
   return (
     <View style={{ height: mainStore.screenHeight, flex: 1 }}>
