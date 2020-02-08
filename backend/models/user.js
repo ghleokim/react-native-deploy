@@ -31,5 +31,12 @@ module.exports = (sequelize, DataTypes) => {
   //   collate: 'utf8_general_ci',
   // }
   );
+  user.associate = function(models) {
+    user.hasMany(models.review);
+    user.hasMany(models.reply);
+    user.hasMany(models.truckUsers);
+    user.hasMany(models.userTrucks);
+  };
+
   return user;
 };

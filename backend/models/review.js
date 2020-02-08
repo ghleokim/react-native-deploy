@@ -4,12 +4,22 @@ module.exports = (sequelize, DataTypes) => {
     content: {
       type: DataTypes.TEXT,
     },
-    startLating: {
-      type: DataTypes.FLOAT,
+    startRating: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
   }, {});
   review.associate = function(models) {
-    // associations can be defined here
+    review.belongsTo(models.truck, {
+      foreignKey:"truckId"
+    });
+
+    review.belongsTo(models.user, {
+      foreignKey:"userEmail"
+    });
+
+    review.hasMany(models.reply);
+
   };
   return review;
 };

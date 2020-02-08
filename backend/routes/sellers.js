@@ -13,8 +13,8 @@ router.post("/sign_up", async function(req, res, next) {
   let inputPassword = body.sellerPassword;
   let salt = Math.round((new Date().valueOf() * Math.random())) + "";
   let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
-
-  let resultUser = models.user.create({
+  
+  let resultUser = await models.user.create({
     name: body.sellerName,
     email: body.sellerEmail,
     password: hashPassword,
@@ -22,10 +22,16 @@ router.post("/sign_up", async function(req, res, next) {
     isSeller: 1 // true
   });
 
+  let resultAuth = await models.authorities.create({
+    authority: "ROLE_USER",
+    userEmail: body.sellerEmail,
+  });
+  console.log(resultAuth);
+
   console.log("user 회원가입");
 
 
-  let resultSeller = models.seller.create({
+  let resultSeller = await models.seller.create({
     userEmail: body.sellerEmail, // fk (user의 pk)
     businessRegistrationNumber: body.sellerBusinessRegistrationNumber,
   });
@@ -45,15 +51,22 @@ router.get('/', function(req, res, next) {
 // sellerEmail 기반 삭제
 router.delete('/delete', async function (req, res, next) {
 
-    let resultUser = models.user.destroy({
-        where : {email: req.session.email}
-    });
+  let resultUser = await models.user.destroy({
+    where: { email: req.session.email }
+  });
 
-    let resultSeller = models.seller.destroy({
-        where: {userEmail: req.session.email}
-    });
+  let resultSeller = await models.seller.destroy({
+    where: { userEmail: req.session.email }
+  });
 
-    res.json(resultSeller);
+  let resultAuth = await models.authorities.destroy({
+    where: { userEmail: req.session.email }
+  });
+
+  console.log(resultUser);
+  console.log(resultSeller);
+  console.log(resultAuth);
+  res.json(resultSeller);
 
   });
 
@@ -77,7 +90,7 @@ router.delete('/delete', async function (req, res, next) {
       });
 
   });
-  
+
 router.get('/login', function (req, res, next) {
     let session = req.session;
     console.log(session);
@@ -116,6 +129,14 @@ router.post("/login", async function(req, res, next) {
     console.log("비밀번호 불일치");
     res.redirect("/sellers/login");
   }
+});
+
+router.get('/myTrucks', async function(req, res, next){
+  let result = await models.truck.findAll({
+    where: { email: req.session.email },
+  });
+  console.log(result);
+  res.json(result);
 });
 
 // 로그아웃
