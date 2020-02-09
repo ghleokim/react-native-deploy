@@ -27,11 +27,29 @@ var trucksRouter = require('./routes/trucks');
 var menusRouter = require('./routes/menus');
 var reviewsRouter = require('./routes/reviews');
 var repliesRouter = require('./routes/replies');
+var followsRouter = require('./routes/follows');
+var likesRouter = require('./routes/likes');
 var cors = require('cors');
 const session = require('express-session');
 
 var app = express();
-app.use(cors());
+require('dotenv').config();
+
+const origins = process.env.CORS_ORIGIN.split(',');
+
+const corsOptions = {
+  origin: function(origin, callback) {
+    if (origins.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 const models = require("./models/index.js");
 
 // localhost:8001/user/file_name.jpg
@@ -71,6 +89,8 @@ app.use('/trucks', trucksRouter);
 app.use('/menus', menusRouter);
 app.use('/reviews', reviewsRouter);
 app.use('/replies', repliesRouter);
+app.use('/follows', followsRouter);
+app.use('/likes', likesRouter);
 app.get('/upload', function(req, res, next){
   console.log("upload router");
   res.render('upload');
