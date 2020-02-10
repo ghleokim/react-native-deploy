@@ -1,10 +1,10 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const models = require("../models");
 const crypto = require("crypto");
 
 // 회원가입 GET
-router.get('/sign_up', function(req, res, next) {
+router.get("/sign_up", function(req, res, next) {
   res.render("user/sign_up");
 });
 
@@ -43,50 +43,56 @@ router.post("/sign_up", async function(req, res, next) {
 
   if (haveEmail != null) {
     res.status(403).send({
-        code: 1004,
-        message: "이미 존재하는 이메일입니다."
+      code: 1004,
+      message: "이미 존재하는 이메일입니다."
     });
   }
 
-  let salt = Math.round((new Date().valueOf() * Math.random())) + "";
-  let hashPassword = crypto.createHash("sha512").update(USER_PASSWORD + salt).digest("hex");
+  let salt = Math.round(new Date().valueOf() * Math.random()) + "";
+  let hashPassword = crypto
+    .createHash("sha512")
+    .update(USER_PASSWORD + salt)
+    .digest("hex");
 
-    let result = await models.user.create({
-      name: USER_NAME,
-      email: USER_EMAIL,
-      password: hashPassword,
-      salt: salt,
-      isSeller: 0 // false
-    });
+  let result = await models.user.create({
+    name: USER_NAME,
+    email: USER_EMAIL,
+    password: hashPassword,
+    salt: salt,
+    isSeller: 0 // false
+  });
 
-    let resultAuth = await models.authorities.create({
-      authority: "ROLE_USER",
-      userEmail: USER_EMAIL,
-    });
+  let resultAuth = await models.authorities.create({
+    authority: "ROLE_USER",
+    userEmail: USER_EMAIL
+  });
 
-    res.send({
-      message: "회원가입 완료"
+  res.send({
+    message: "회원가입 완료"
   });
 });
 
-router.get('/login', function(req, res, next) {
+router.get("/login", function(req, res, next) {
   let session = req.session;
   console.log(session);
   res.render("user/login", {
-    session : session
+    session: session
   });
 });
 
-router.get('/getUser', async function(req, res, next) {
+router.get("/getUser", async function(req, res, next) {
   let result = await models.user.findOne({
     where: {
       email: req.session.email
     },
-    attributes: ['name', 'email', 'isSeller']
+    attributes: ["name", "email", "isSeller"]
   });
   console.log(result);
-  res.send({result, authority: req.session.authority, 
-    businessRegistrationNumber: req.session.businessRegistrationNumber});
+  res.send({
+    result,
+    authority: req.session.authority,
+    businessRegistrationNumber: req.session.businessRegistrationNumber
+  });
 });
 
 // 로그인 POST
@@ -105,22 +111,22 @@ router.post("/login", async function(req, res, next) {
     }
   });
   let resultAuth = await models.authorities.findOne({
-    where:{
+    where: {
       userEmail: USER_EMAIL
     }
-  })
+  });
 
   let resultTruck = await models.truck.findOne({
     where: {
       email: USER_EMAIL
     }
-  })
+  });
 
-  let truckIdList = []
+  let truckIdList = [];
   if (!!result && result.isSeller) {
     const truckIdListObj = await models.truck.findAll({
       where: { email: USER_EMAIL },
-      attributes: ['id']
+      attributes: ["id"]
     });
     truckIdList = truckIdListObj.map(x => x.id);
   }
@@ -133,12 +139,14 @@ router.post("/login", async function(req, res, next) {
   } else {
     let dbPassword = result.dataValues.password;
     let salt = result.dataValues.salt;
-    let hashPassword = crypto.createHash("sha512").update(USER_PASSWORD + salt).digest("hex");
+    let hashPassword = crypto
+      .createHash("sha512")
+      .update(USER_PASSWORD + salt)
+      .digest("hex");
     console.log(dbPassword);
     console.log(USER_PASSWORD);
     console.log(hashPassword);
     if (dbPassword === hashPassword) {
-
       // 세션 설정
       req.session.save(function() {
         req.session.email = USER_EMAIL;
@@ -146,22 +154,23 @@ router.post("/login", async function(req, res, next) {
         req.session.isSeller = result.isSeller;
         req.session.authority = resultAuth.authority;
         if (result.isSeller) {
-          console.log(JSON.stringify(resultSeller))
-          req.session.businessRegistrationNumber = resultSeller.businessRegistrationNumber;
-          if(resultTruck){
+          console.log(JSON.stringify(resultSeller));
+          req.session.businessRegistrationNumber =
+            resultSeller.businessRegistrationNumber;
+          if (resultTruck) {
             req.session.truckId = resultTruck.id;
           }
           req.session.sellerId = resultSeller.id;
         }
 
-      let responseBody = {...req.session};
-      responseBody.isSeller = {
-        status: req.session.isSeller,
-        truckIdList
-      }
+        let responseBody = { ...req.session };
+        responseBody.isSeller = {
+          status: req.session.isSeller,
+          truckIdList
+        };
 
-      res.json(responseBody);
-      })
+        res.json(responseBody);
+      });
     } else {
       res.status(401).send({
         code: 0,
@@ -174,24 +183,24 @@ router.post("/login", async function(req, res, next) {
 // 로그아웃
 router.get("/logout", function(req, res, next) {
   req.session.destroy();
-  res.clearCookie('sid');
+  res.clearCookie("sid");
 
   // res.redirect("/users/login")
   res.send(true);
-})
+});
 
-router.put('/update', async function(req, res, next) {
-  
+router.put("/update", async function(req, res, next) {
   const USER_NAME = req.body.userName;
-
   let result = await models.user.update(
     {
       name: USER_NAME
-    }, {
+    },
+    {
       where: {
         email: req.session.email
       }
-  });
+    }
+  );
 
   let resultUser = await models.user.findOne({
     where: {
@@ -211,8 +220,8 @@ router.delete("/delete", async function(req, res, next) {
   });
 
   let resultAuth = await models.authorities.destroy({
-    where : {userEmail: req.session.email}
-  })
+    where: { userEmail: req.session.email }
+  });
 
   res.json(result);
 });
