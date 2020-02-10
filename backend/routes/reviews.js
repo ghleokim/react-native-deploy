@@ -8,16 +8,14 @@ router.get('/', function (req, res, next) {
 
 // 그 트럭에 대한 모든 리뷰
 router.get('/all/:truckId', async function(req, res, next){
-    let result = await models.review.findAll(
-      {
+    let result = await models.review.findAll({
         where: {
             truckId : req.params.truckId
         },
         include: {
           model: models.reply,
         }
-      }
-    )
+    })
     console.log(result);
     res.json(result);
 });
