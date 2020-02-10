@@ -4,7 +4,6 @@ const models = require("../models");
 const sequelize = require("sequelize");
 
 router.post("/follow", async function(req, res, next) {
-
   let resultUser = await models.userTrucks.findOne({
     where: {
       truckId: req.body.truckId,
@@ -12,41 +11,45 @@ router.post("/follow", async function(req, res, next) {
     }
   });
 
-
-  if(!resultUser){
+  if (!resultUser) {
     let result = await models.userTrucks.create({
       truckId: req.body.truckId,
       userEmail: req.session.email
     });
-    res.send({result, isFollow: true});
-  }
-  else{
+    res.send({ result, isFollow: true });
+  } else {
     let result = await models.userTrucks.destroy({
       where: {
         truckId: req.body.truckId,
         userEmail: req.session.email
       }
     });
-    res.send({result, isFollow: false});
+    res.send({ result, isFollow: false });
   }
 });
 
-
-router.get("/followList", async function(req, res, next){
-    let result = await models.userTrucks.findAll({
-        where: {
-            userEmail: req.session.email
-        },
-        include: [
-            {
-                model: models.truck,
-                attributes: ['title','contents','imgURL','latitude','longitude','state'],
-                where : {}
-            }
-        ]
-    });
-    console.log(result);
-    res.json(result);
+router.get("/followList", async function(req, res, next) {
+  let result = await models.userTrucks.findAll({
+    where: {
+      userEmail: req.session.email
+    },
+    include: [
+      {
+        model: models.truck,
+        attributes: [
+          "title",
+          "contents",
+          "imgURL",
+          "latitude",
+          "longitude",
+          "state"
+        ],
+        where: {}
+      }
+    ]
+  });
+  console.log(result);
+  res.json(result);
 });
 
 module.exports = router;
