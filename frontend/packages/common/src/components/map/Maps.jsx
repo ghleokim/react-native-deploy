@@ -141,9 +141,9 @@ export const Maps =  observer(({history}) => {
         defaultDistance.x /= 2;
       }
       else {
-        defaultZoom--;
-        defaultDistance.y *= 2;
-        defaultDistance.x *= 2;
+        defaultZoom -= 2;
+        defaultDistance.y *= 4;
+        defaultDistance.x *= 4;
         break;
       }
     }
