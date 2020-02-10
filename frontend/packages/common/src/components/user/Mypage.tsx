@@ -6,6 +6,7 @@ import { CustomStyle, CustomText } from '../../static/CustomStyle';
 import axios from 'axios';
 import { MyPageInfo } from './MyPageInfo';
 import { MyPageTrucks } from './MyPageTrucks';
+import { History, LocationState } from 'history';
 
 interface MyInfo {
   name: String,
@@ -13,7 +14,11 @@ interface MyInfo {
   isSeller: Boolean,
 }
 
-export const Mypage : React.FC = () => {
+interface Props {
+  history: History<LocationState>
+}
+
+export const Mypage : React.FC<Props> = ({history}) => {
   const [userInfo, setUserInfo] = useState<MyInfo>({
     name: '', email: '', isSeller: false
   })
@@ -29,7 +34,7 @@ export const Mypage : React.FC = () => {
   return (
     <View style={styles.pageContainer}>
       <MyPageInfo myInfo={userInfo} />
-      <MyPageTrucks myInfo={userInfo} />
+      <MyPageTrucks history={history} myInfo={userInfo} />
     </View>
   )
 }
