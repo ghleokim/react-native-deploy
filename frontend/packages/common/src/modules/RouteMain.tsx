@@ -23,6 +23,7 @@ export const RouteMain: React.FC<Props> = observer(({history}) => {
 
   const handleSearchBar = (keyword: string) => {
     console.log(keyword === '' ? 'no text' : keyword)
+    keyword = keyword.trim()
     keyword === ''
       ? null
       : history.push(`/search/${keyword}`)

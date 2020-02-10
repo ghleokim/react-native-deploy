@@ -22,7 +22,9 @@ interface IReview {
 }
 
 interface IProps {
-  reviewList: IReview[]
+  reviewList: IReview[],
+  truckId: number,
+  onDelete: Function,
 }
 
 export default (props: IProps) => {
@@ -33,7 +35,7 @@ export default (props: IProps) => {
         <View style={styles.menuListTitle}>
           <Text style={[CustomText.textCenter, CustomText.titleHN, { fontSize: 22 }]}>리뷰</Text>
         </View>
-        <ReviewPost />
+        <ReviewPost truckId={props.truckId}/>
         {props.reviewList.length === 0 ?
           <View style={{paddingHorizontal: 20, paddingTop: 10,}}>
             <Text style={CustomText.title}>✏ 리뷰가 없어요. 리뷰를 작성해주세요! ✏</Text>
@@ -49,8 +51,9 @@ export default (props: IProps) => {
                 updatedAt={item.updatedAt}
                 truckId={item.truckId}
                 userEmail={item.userEmail}
+                onDelete={props.onDelete}
               />}
-            keyExtractor={item => item.userEmail}
+            keyExtractor={item => `${item.userEmail}${item.id}`}
           />
         }
       </View>
