@@ -6,6 +6,7 @@ import { CustomStyle, CustomText } from '../../static/CustomStyle';
 import axios from 'axios'
 import { mainStoreContext } from '../../store/MainStore';
 import { MyPageTruckItem } from './MyPageTruckItem';
+import { History, LocationState } from 'history';
 
 interface TruckData {
   myTruck: Object,
@@ -19,7 +20,8 @@ interface MyInfo {
 }
 
 interface Props {
-  myInfo: MyInfo
+  history: History<LocationState>
+  myInfo: MyInfo, 
 }
 
 interface TruckProps {
@@ -34,7 +36,7 @@ interface IData {
   following: TruckProps[],
 }
 
-export const MyPageTrucks : React.FC<Props> = ({myInfo}) => {
+export const MyPageTrucks : React.FC<Props> = ({history, myInfo}) => {
   const mainStore = useContext(mainStoreContext)
   const [data, setData] = useState<IData>({
     myTruck: [], following: []
@@ -67,7 +69,7 @@ export const MyPageTrucks : React.FC<Props> = ({myInfo}) => {
       : <FlatList<TruckProps>
         data={data.myTruck}
         renderItem={({item}) =>
-          <MyPageTruckItem truck={item} />
+          <MyPageTruckItem truck={item} history={history}/>
         }
         keyExtractor={item=>item.title}
       />
@@ -84,7 +86,7 @@ export const MyPageTrucks : React.FC<Props> = ({myInfo}) => {
       : <FlatList<TruckProps>
         data={data.following}
         renderItem={({item}) =>
-          <MyPageTruckItem truck={item} />
+          <MyPageTruckItem truck={item} history={history}/>
         }
         keyExtractor={item=>item.id.toString()}
       />

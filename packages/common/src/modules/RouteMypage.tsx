@@ -41,7 +41,7 @@ export const RouteMypage : React.FC<Props> = observer(({history}) => {
       <TouchableOpacity onPress={()=>{handleLogout()}} style={[styles.buttons, { position: 'absolute', zIndex: 10, alignSelf:'flex-end', flex: 1, paddingHorizontal: 10, top: 20, right: '10%'}]}>
         <Text style={{ color: Colors.white }}>로그아웃</Text>
       </TouchableOpacity>
-      <Mypage />
+      <Mypage history={history}/>
     </View>
   )
 })
