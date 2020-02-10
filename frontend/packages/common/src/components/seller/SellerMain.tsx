@@ -60,8 +60,6 @@ export default () => {
   const [isEditing, setIsEditing] = useState({ id: false, imgURL: false, title: false, contents: false, latitude: false, longitude: false, state: false, menus: [] });
   const [editText, setEditText] = useState({ id: '', imgURL: '', title: '', contents: '', latitude: 0, longitude: 0, state: ''})
 
-  const mainStore = useContext(mainStoreContext)
-
   const myTruckId = localStorage.getItem('truckId')
 
   useEffect(() => {
@@ -173,6 +171,11 @@ export default () => {
     setData({ ...data, menus: newMenus })
   }
 
+  const handleDeleteMenu = (deletedMenuId) => {
+    const newMenus = data.menus.filter(menu => menu.id !== deletedMenuId)
+    setData({ ...data, menus: newMenus })
+  }
+
   const handleAddMenuSubmit = (requestDto) => {
     axios.post('/menus', requestDto)
       .then((res) => {
@@ -201,7 +204,7 @@ export default () => {
 
       <Line></Line>
 
-      <MenuList menulist={data.menus} handleUpdateMenu={handleUpdateMenu} handleAddMenuSubmit={handleAddMenuSubmit} ></MenuList>
+      <MenuList menulist={data.menus} handleUpdateMenu={handleUpdateMenu} handleDeleteMenu={handleDeleteMenu} handleAddMenuSubmit={handleAddMenuSubmit} ></MenuList>
 
       <SellerState></SellerState>
     </View>

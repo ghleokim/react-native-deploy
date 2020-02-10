@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { CustomStyle, CustomText } from "../../static/CustomStyle";
+import { Colors } from "../../static/CustomColor";
 import MenuForm from './MenuForm'
 import axios from 'axios'
 
@@ -42,9 +43,14 @@ const LocalStyles = StyleSheet.create({
     flexDirection: 'row',
     flex: 1
   },
+  menuButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
   menuButton: {
-    flex: 1,
+    flex: 0.3,
     marginTop: 5,
+    marginHorizontal: 4,
     paddingVertical: 3,
     borderRadius: 6,
   },
@@ -58,8 +64,9 @@ interface IProps {
   price: number,
   content: string,
   imgURL: string,
-  isSoldOut: boolean
-  handleUpdateMenu: any,
+  isSoldOut: boolean,
+  handleUpdateMenu: Function,
+  handleDeleteMenu: Function,
 }
 
 export default (props:IProps) => {
@@ -73,7 +80,25 @@ export default (props:IProps) => {
         props.handleUpdateMenu(updatedMenu);
         setIsEditing(false);
       })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
 
+  const handleEditMenuBtnClick = () => {
+    setIsEditing(true);
+  }
+
+  const handleDeleteMenuBtnClick = () => {
+    const DELETE_MENU_ID = props.id;
+    axios.delete(`/menus/${DELETE_MENU_ID}`)
+      .then((res) => {
+        props.handleDeleteMenu(DELETE_MENU_ID);
+        setIsEditing(false);
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
   const handleUpdateMenuCancel = () => {
@@ -83,9 +108,8 @@ export default (props:IProps) => {
   return (
     <View style={styles.menuContainer}>
       {isEditing
-          ? <MenuForm id={props.id} name={props.name} price={props.price} content={props.content} imgURL={props.imgURL} isSoldOut={props.isSoldOut} handleMenuSubmit={handleUpdateMenuSubmit} handleMenuCancel={handleUpdateMenuCancel}></MenuForm>
-          : <>
-
+        ? <MenuForm id={props.id} name={props.name} price={props.price} content={props.content} imgURL={props.imgURL} isSoldOut={props.isSoldOut} handleMenuSubmit={handleUpdateMenuSubmit} handleMenuCancel={handleUpdateMenuCancel}></MenuForm>
+        : <>
           <View style={{ alignSelf: 'center' }}>
             <Image
               defaultSource={{ uri: `https://picsum.photos/id/${props.id}/200` }}
@@ -93,25 +117,26 @@ export default (props:IProps) => {
               style={{ width: 70, height: 70, borderRadius: 10 }}
             />
           </View>
-    
+  
           <View style={{ marginLeft: 15, flexShrink: 1, alignSelf: 'center', width:'100%' }}>
-  
-          <View>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={[CustomText.title, { fontSize: 18 }]}>{props.name}</Text>
-            <View style={{ marginHorizontal: 10, flexGrow: 1, alignSelf: 'center',  borderStyle: 'dotted', borderColor: '#000000', borderWidth: 1 }}></View>
-            <Text style={[CustomText.title, { color: '#20a024', fontSize: 16 }]}>{props.price} 원</Text>
+            <View>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Text style={[CustomText.title, { fontSize: 18 }]}>{props.name}</Text>
+                <View style={{ marginHorizontal: 10, flexGrow: 1, alignSelf: 'center',  borderStyle: 'dotted', borderColor: '#000000', borderWidth: 1 }}></View>
+                <Text style={[CustomText.title, { color: '#20a024', fontSize: 16 }]}>{props.id} 원</Text>
+              </View>
+            <View>
+              <Text style={[CustomText.body]}>{props.content}</Text>
+            </View>
+            <View style={styles.menuButtonContainer}>
+            <TouchableOpacity style={[styles.menuButton, {backgroundColor: Colors.navy,}]} onPress={() => handleEditMenuBtnClick()}><Text style={{textAlign: 'center', color: '#FFFFFF', fontWeight: '700'}}>수정</Text></TouchableOpacity>
+            <TouchableOpacity style={[styles.menuButton, {backgroundColor: Colors.coral,}]} onPress={() => handleDeleteMenuBtnClick()}><Text style={{textAlign: 'center', color: '#FFFFFF', fontWeight: '700'}}>삭제</Text></TouchableOpacity>
+            </View>
+            </View>
           </View>
-          <View>
-            <Text style={[CustomText.body]}>{props.content}</Text>
-          </View>
-          <TouchableOpacity style={[styles.menuButton, {backgroundColor: '#4177c9',}]} onPress={() => setIsEditing(true)}><Text style={{textAlign: 'center', color: '#FFFFFF', fontWeight: '700'}}>수정</Text></TouchableOpacity>
-        </View>
-        </View>
-  
-          </>
-        }
-        </View>
+        </>
+      }
+    </View>
   );
   
 };
