@@ -128,7 +128,7 @@ export default (props: IProps) => {
             style={styles.textInput}
             underlineColorAndroid="transparent"
             autoCapitalize="none"
-            defaultValue={editText.price}
+            defaultValue={String(editText.price)}
             onChangeText={text => onChangeText('price', text)}
           />
         </View>
