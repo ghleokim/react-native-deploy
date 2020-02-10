@@ -24,6 +24,7 @@ interface IReview {
 interface IProps {
   reviewList: IReview[],
   truckId: number,
+  onDelete: Function,
 }
 
 export default (props: IProps) => {
@@ -50,8 +51,9 @@ export default (props: IProps) => {
                 updatedAt={item.updatedAt}
                 truckId={item.truckId}
                 userEmail={item.userEmail}
+                onDelete={props.onDelete}
               />}
-            keyExtractor={item => item.userEmail}
+            keyExtractor={item => `${item.userEmail}${item.id}`}
           />
         }
       </View>
