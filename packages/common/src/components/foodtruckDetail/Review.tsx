@@ -9,15 +9,10 @@ import {
 import { CustomText } from '../../static/CustomStyle';
 import Line from '../Line';
 import axios from 'axios';
+import { IReview } from './TruckInterface';
+import { ReviewReply } from './ReviewReply';
 
-interface IProps {
-  id: number,
-  content: string,
-  startRating: number,
-  createdAt: string,
-  updatedAt: string,
-  truckId: number,
-  userEmail: string
+interface IProps extends IReview{
   onDelete: Function,
 }
 
@@ -67,6 +62,7 @@ export default (props: IProps) => {
         </View>
         <Text style={[CustomText.title, { fontSize: 16 }]}>{props.content}</Text>
       </View>
+      <ReviewReply replies={props.replies}/>
     </View>
   );
 
@@ -79,7 +75,7 @@ const styles = StyleSheet.create({
     borderStyle: "dashed",
     paddingVertical: 12,
     paddingHorizontal: 16,
-    flexDirection: 'row',
+    flexDirection: 'column',
     flex: 1
   },
   reviewContainer: {
