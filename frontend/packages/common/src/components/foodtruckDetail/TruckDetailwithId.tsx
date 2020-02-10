@@ -15,7 +15,7 @@ import TruckInfo from './TruckInfo';
 import { Colors } from '../../static/CustomColor';
 
 interface IState {
-  id: Number,
+  id: number,
   imgURL?: string,
   title: string,
   contents: string,
@@ -88,11 +88,12 @@ export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
   }
 
   const DetailNavContents: React.FC = () => {
+    console.log('navcontent', data)
     return (
       <View style={{paddingTop: 10}}>
         {state.nav === 'menu' ? <MenuList menulist={data.menus} />
           : state.nav === 'info' ? <TruckInfo data={data} />
-            : <ReviewList reviewList={review} />}
+            : <ReviewList reviewList={review.sort((a,b)=> Date.parse(b.updatedAt) - Date.parse(a.updatedAt))} truckId={targetId} />}
       </View>
     )
   }

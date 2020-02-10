@@ -5,18 +5,33 @@ import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
+  Image,
 } from "react-native";
+import axios from 'axios';
 
-export const ReviewPost: React.FC = () => {
+interface Props {
+  truckId: number;
+}
+
+export const ReviewPost: React.FC<Props> = ({truckId}) => {
   const [write, setWrite] = useState(false)
-  const [content, setContent] = useState({ text: '' })
+  const [content, setContent] = useState({ content: '', startRating: 1 })
 
   const onChangeText = (text) => {
-    content.text = text
+    content.content = text
   }
 
   const handleReviewPost = () => {
-    console.log(content.text)
+    if (!!content.content) {
+    axios.post('/reviews/create', {...content, truckId: truckId})
+    .then(response=>{
+      console.log(response)
+      location.reload()
+    })
+    .catch(err=>console.log(err))
+    } else {
+      alert('리뷰 내용을 입력해주세요.')
+    }
   }
 
   const ReviewWrite = () => {
@@ -32,7 +47,14 @@ export const ReviewPost: React.FC = () => {
   const ReviewInput: React.FC = () => {
     return (
       <View>
-        <TextInput onChangeText={(text) => onChangeText(text)} onSubmitEditing={handleReviewPost} style={styles.reviewInput} defaultValue={content.text} />
+        <View style={{ flexDirection: 'row', alignContent: 'center', alignSelf: 'center', paddingVertical: 10}}>
+          <TouchableOpacity onPress={()=>setContent({...content, startRating: 1})}><Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 35, width: 35, tintColor: content.startRating > 0 ? '#feb246' : '#c0c0c0'}}/></TouchableOpacity>
+          <TouchableOpacity onPress={()=>setContent({...content, startRating: 2})}><Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 35, width: 35, tintColor: content.startRating > 1 ? '#feb246' : '#c0c0c0'}}/></TouchableOpacity>
+          <TouchableOpacity onPress={()=>setContent({...content, startRating: 3})}><Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 35, width: 35, tintColor: content.startRating > 2 ? '#feb246' : '#c0c0c0'}}/></TouchableOpacity>
+          <TouchableOpacity onPress={()=>setContent({...content, startRating: 4})}><Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 35, width: 35, tintColor: content.startRating > 3 ? '#feb246' : '#c0c0c0'}}/></TouchableOpacity>
+          <TouchableOpacity onPress={()=>setContent({...content, startRating: 5})}><Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 35, width: 35, tintColor: content.startRating > 4 ? '#feb246' : '#c0c0c0'}}/></TouchableOpacity>
+        </View>
+        <TextInput onChangeText={(text) => onChangeText(text)} onSubmitEditing={handleReviewPost} style={styles.reviewInput} defaultValue={content.content} />
         <View style={{alignSelf: 'flex-end', flexDirection: 'row'}}>
           <TouchableOpacity onPress={handleReviewPost} style={{paddingHorizontal: 10}}>
             <Text style={{ textDecorationLine: 'underline', color: '#303030' }}>리뷰 등록하기</Text>
