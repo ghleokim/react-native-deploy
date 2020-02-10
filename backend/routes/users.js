@@ -91,7 +91,6 @@ router.get('/getUser', async function(req, res, next) {
 
 // 로그인 POST
 router.post("/login", async function(req, res, next) {
-  console.log(1)
   const USER_EMAIL = req.body.userEmail.trim();
   const USER_PASSWORD = req.body.userPassword.trim();
 
