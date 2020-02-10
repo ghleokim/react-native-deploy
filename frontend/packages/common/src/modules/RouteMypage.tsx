@@ -21,6 +21,14 @@ export const RouteMypage : React.FC<Props> = observer(({history}) => {
           mainStore.isLoggedIn = false;
           mainStore.isSeller = false;
           localStorage.removeItem('cookies')
+          localStorage.removeItem('userEmail')
+          if (localStorage.getItem('isSeller') === 'true') {
+            localStorage.removeItem('isSeller')
+            localStorage.removeItem('truckId')
+            localStorage.removeItem('truckIdList')
+          } else {
+            localStorage.removeItem('isSeller')
+          }
           history.replace('/')
         }
       }).catch((err)=> {
