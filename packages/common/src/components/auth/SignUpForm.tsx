@@ -107,7 +107,17 @@ export const SignupForm: React.FC<Props> = observer(({ history }) => {
     if (loginStore.signupPass !== loginStore.signupPass2) {
       return;
     }
-    
+
+    if (loginStore.signupPass.includes(" ")) {
+      alert("비밀번호에 공백은 허용하지 않습니다.")
+      return;
+    }
+
+    if (loginStore.signupName.includes(" ")) {
+      alert("닉네임에 공백은 허용하지 않습니다.")
+      return;
+    }
+
     canSubmit = false;
     axios.post('/users/sign_up',{
         userName: name,
