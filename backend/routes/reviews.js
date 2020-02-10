@@ -19,6 +19,13 @@ router.get('/all/:truckId', async function(req, res, next){
 
 // 글쓰기
 router.post('/create', async function(req, res, next){
+    if(req.session == null){
+        res.status(401).send({
+            code: 0,
+            message: "로그인 후 작성해주세요."
+          });
+    }
+
     let result = await models.review.create({
         content: req.body.content,
         startRating: req.body.startRating,
@@ -69,19 +76,33 @@ router.put('/update', async function(req, res, next){
 
 // 그 밑에 달린 댓글들도 다 삭제
 router.delete('/delete/:reviewId', async function(req, res, next){
-    let resultReplies = await models.reply.destroy({
+    let findReview = await models.review.findOne({
         where: {
-            reviewId: req.params.reviewId
+            userEmail: req.session.email,
+            id: req.params.reviewId
         }
     });
 
-    let resultReview = await models.review.destroy({
-        where :{
-            id: req.params.reviewId,
+    if (findReview == null) {
+      res.status(401).send({
+        code: 0,
+        message: "본인이 작성한 리뷰만 삭제가능합니다."
+      });
+    } 
+    else {
+      let resultReplies = await models.reply.destroy({
+        where: {
+          reviewId: req.params.reviewId
         }
-    });
-    res.json(resultReview);
-    //res.redirect('/');
+      });
+
+      let resultReview = await models.review.destroy({
+        where: {
+          id: req.params.reviewId
+        }
+      });
+      res.json(resultReview);
+    }
 });
 
 
