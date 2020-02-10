@@ -58,7 +58,7 @@ const LocalStyles = StyleSheet.create({
 export default () => {
   const [data, setData] = useState({ id: '', imgURL: '', title: '', contents: '', latitude: 0, longitude: 0, state: '', menus: [] });
   const [isEditing, setIsEditing] = useState({ id: false, imgURL: false, title: false, contents: false, latitude: false, longitude: false, state: false, menus: [] });
-  const [editText, setEditText] = useState({ id: '', imgURL: '', title: '', contents: '', latitude: 0, longitude: 0, state: '', menus: [] })
+  const [editText, setEditText] = useState({ id: '', imgURL: '', title: '', contents: '', latitude: 0, longitude: 0, state: ''})
 
   const mainStore = useContext(mainStoreContext)
 
@@ -71,30 +71,6 @@ export default () => {
         setEditText(res.data.result);
       })
   }, []);
-
-  const editComponent = (target: string) => {
-    return (
-      <View>
-        {isEditing[target]
-          ? <View>
-            <TextInput
-              style={[styles.input, LocalStyles.form]}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
-              defaultValue={data[target]}
-              onChangeText={text => onChangeText(target, text)}
-            />
-            <Button title="완료" onPress={() => submit(target)}></Button>
-            <Button title="취소" onPress={() => cancel(target)}></Button>
-          </View>
-          : <View>
-            <Text style={[styles.input, LocalStyles.form]}>{data[target]}</Text>
-            <Button title="수정" onPress={() => getdd(target)}></Button>
-          </View>
-        }
-      </View>
-    )
-  }
 
   const EditButton = () => {
     return (
@@ -152,6 +128,7 @@ export default () => {
             <View style={{ flex: 1, flexDirection: 'row' }}>
               <TouchableOpacity style={[styles.menuButton, { backgroundColor: '#4177c9', }]} onPress={() => getdd(target)}><Text style={{ textAlign: 'center', color: '#FFFFFF', fontWeight: '700' }}>수정</Text></TouchableOpacity>
             </View>
+
           </View>
         }
       </View>
@@ -191,12 +168,17 @@ export default () => {
     setIsEditing(result);
   }
 
-  const handleMenuSubmit = (menuId, requestDto) => {
-    axios.put(`/menus/${menuId}`, requestDto)
+  const handleUpdateMenu = (updatedMenu) => {
+    const newMenus = data.menus.map(menu => menu.id === updatedMenu.id ? updatedMenu : menu);
+    setData({ ...data, menus: newMenus })
+  }
+
+  const handleAddMenuSubmit = (requestDto) => {
+    axios.post('/menus', requestDto)
       .then((res) => {
-        const updatedMenu = res.data;
-        const newMenus = data.menus.map(menu => menu.id === updatedMenu.id ? updatedMenu : menu);
-        setData({ ...data, menus: newMenus })
+        console.log(res.data)
+        const addedMenu = res.data;
+        setData({ ...data, menus: [...data.menus, addedMenu] })
       })
   }
 
@@ -219,7 +201,7 @@ export default () => {
 
       <Line></Line>
 
-      <MenuList menulist={data.menus} handleMenuSubmit={handleMenuSubmit}></MenuList>
+      <MenuList menulist={data.menus} handleUpdateMenu={handleUpdateMenu} handleAddMenuSubmit={handleAddMenuSubmit} ></MenuList>
 
       <SellerState></SellerState>
     </View>
