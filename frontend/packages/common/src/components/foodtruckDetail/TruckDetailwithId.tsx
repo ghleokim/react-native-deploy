@@ -26,6 +26,16 @@ interface IFollow {
   isFollow: Boolean
 }
 
+interface IReply {
+  id: number,
+  content: string,
+  createdAt: string,
+  updatedAt: string,
+  reviewId: number,
+  userEmail?: string,
+  sellerId?: number,
+}
+
 interface IReview {
   id: number,
   content: string,
@@ -33,7 +43,8 @@ interface IReview {
   createdAt: string,
   updatedAt: string,
   truckId: number,
-  userEmail: string
+  userEmail: string,
+  replies: IReply[],
 }
 
 interface Props {
@@ -53,7 +64,7 @@ export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
   })
 
   const [review, setReview] = useState<IReview[]>([{
-    id: 0, content: '', startRating: 1, createdAt: '', updatedAt: '', truckId: 0, userEmail: ''
+    id: 0, content: '', startRating: 1, createdAt: '', updatedAt: '', truckId: 0, userEmail: '', replies: [],
   }])
 
   const DetailNavBar: React.FC = () => {
@@ -124,14 +135,14 @@ export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
     const fetchData = async () => {
       const result = await axios(`/trucks/${targetId}`,
       );
-      console.log("result: ", JSON.stringify(result.data.result))
+      console.log("result: ", result.data.result)
       setData(result.data.result)
       setFollow({isFollow: result.data.isFollow})
     };
     const fetchReview = async () => {
       const result = await axios(`/reviews/all/${targetId}`,
       );
-      console.log("Review: ", JSON.stringify(result.data))
+      console.log("Review: ", result.data)
       setReview(result.data)
     }
     fetchData();
