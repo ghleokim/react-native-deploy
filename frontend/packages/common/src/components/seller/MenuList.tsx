@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import Menu from './Menu'
 import { CustomText } from '../../static/CustomStyle';
+import MenuForm from './MenuForm'
 
 interface IMenu {
   id: number,
@@ -21,13 +22,25 @@ interface IMenu {
 
 interface IProps {
   menulist: IMenu[],
-  handleMenuSubmit: any
+  handleUpdateMenu: any,
+  handleAddMenuSubmit: any,
 }
 
 export default (props: IProps) => {
 
-  const handleMenuSubmit = (menuId, requestDto) => {
-    props.handleMenuSubmit(menuId, requestDto);
+  const [isMenuAdding, setIsMenuAdding] = useState(false);
+
+  const handleUpdateMenu = (requestDto, menuId) => {
+    props.handleUpdateMenu (requestDto, menuId);
+  }
+
+  const handleAddMenuSubmit = (requestDto) => {
+    props.handleAddMenuSubmit(requestDto);
+    setIsMenuAdding(false);
+  }
+
+  const handleAddMenuCancel = () => {
+    setIsMenuAdding(false);
   }
 
   return (
@@ -40,7 +53,7 @@ export default (props: IProps) => {
           data={props.menulist}
           renderItem={({ item }) =>
             <Menu
-              handleMenuSubmit={handleMenuSubmit}
+            handleUpdateMenu={handleUpdateMenu}
               name={item.name}
               price={item.price}
               id={item.id}
@@ -50,16 +63,32 @@ export default (props: IProps) => {
             />}
           keyExtractor={item => item.name}
         />
+        {isMenuAdding 
+          ? 
+          <View style={styles.menuContainer}>
+            <MenuForm handleMenuSubmit={handleAddMenuSubmit} handleMenuCancel={handleAddMenuCancel}></MenuForm>
+          </View>
+        : <Button title="메뉴 추가" onPress={() => setIsMenuAdding(true)}></Button>
+        }
+        
       </View>
     </View>
   );
-
 };
 
 const styles = StyleSheet.create({
   menuListContainer: {
     paddingHorizontal: 12,
     paddingBottom: 20
+  },
+  menuContainer: {
+    borderBottomColor: '#969698',
+    borderBottomWidth: 2,
+    borderStyle: "dashed",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    flex: 1
   },
   menuListContentContainer: {
     borderRightWidth: 2,
