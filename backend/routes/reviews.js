@@ -15,7 +15,6 @@ router.get('/all/:truckId', async function(req, res, next){
         },
         include: {
           model: models.reply,
-          limit: 1
         }
       }
     )
