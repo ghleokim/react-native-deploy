@@ -48,9 +48,8 @@ router.post("/sign_up", async function(req, res, next) {
     });
   }
 
-  let inputPassword = USER_PASSWORD;
   let salt = Math.round((new Date().valueOf() * Math.random())) + "";
-  let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
+  let hashPassword = crypto.createHash("sha512").update(USER_PASSWORD + salt).digest("hex");
 
     let result = await models.user.create({
       name: USER_NAME,
@@ -93,6 +92,7 @@ router.get('/getUser', async function(req, res, next) {
 // 로그인 POST
 router.post("/login", async function(req, res, next) {
   const USER_EMAIL = req.body.userEmail.trim();
+  const USER_PASSWORD = req.body.userPassword.trim();
 
   let result = await models.user.findOne({
     where: {
@@ -132,11 +132,10 @@ router.post("/login", async function(req, res, next) {
     });
   } else {
     let dbPassword = result.dataValues.password;
-    let inputPassword = USER_PASSWORD;
     let salt = result.dataValues.salt;
-    let hashPassword = crypto.createHash("sha512").update(inputPassword + salt).digest("hex");
+    let hashPassword = crypto.createHash("sha512").update(USER_PASSWORD + salt).digest("hex");
     console.log(dbPassword);
-    console.log(inputPassword);
+    console.log(USER_PASSWORD);
     console.log(hashPassword);
     if (dbPassword === hashPassword) {
 
