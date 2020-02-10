@@ -35,6 +35,7 @@ export const Maps =  observer(({history}) => {
 
   // 위치값을 전달해주어야 함.
   const getMarkersFromLocation = () => {
+    mapStore.selectedId = -1;
     axios({
       url: '/trucks/boundary/?'
         + 'startLatitude=' + mapStore.bounds._sw._lat
@@ -67,10 +68,12 @@ export const Maps =  observer(({history}) => {
   const handleCenter = (center) => {
     mapStore.center = center;
     console.log("mapStore.center : ", mapStore.center);
+    if(mapStore.stat != -1 && mapStore.listState === false) getMarkersFromLocation();
     mapStore.stat = -1;
   }
 
   const newOverlay = () => {
+    if(mapStore.selectedId === -1) return;
     console.log("mapStore.stat : ", mapStore.stat);
     console.log("markers data : ", mapStore.markerData);
     return <View style={{position: 'absolute', 
@@ -89,9 +92,12 @@ export const Maps =  observer(({history}) => {
   const make_markers = mapStore.markers.map((element, index) => {
     return <Marker key={index}
         position={{lat:element.latitude, lng:element.longitude}}
+        visible={mapStore.selectedId === -1 ? true : mapStore.selectedId === element.id - 1 ? true : false }
+        // 마커의 크기를 바꾸는 것은 별로.
         onClick={(e) => {
           mapStore.markerData = e;
           mapStore.stat = index;
+          mapStore.selectedId = element.id - 1;
           console.log("e : ", e);
         }}
       />
@@ -125,26 +131,26 @@ export const Maps =  observer(({history}) => {
       let minLng = focusCenter._lng - defaultDistance.x / 2;
       let maxLng = focusCenter._lng + defaultDistance.x / 2;
 
-      if(minLat > mapStore.userCenter.lat || maxLat < mapStore.userCenter.lat || 
-        minLng > mapStore.userCenter.lng || maxLng < mapStore.userCenter.lng || 
-        minLat > el.latitude || maxLat < el.latitude || 
-        minLng > el.longitude || maxLng < el.longitude 
+      if(minLat < mapStore.userCenter.lat && maxLat > mapStore.userCenter.lat && 
+        minLng < mapStore.userCenter.lng && maxLng > mapStore.userCenter.lng && 
+        minLat < el.latitude && maxLat > el.latitude && 
+        minLng < el.longitude && maxLng > el.longitude 
       ) {
+        defaultZoom++;
+        defaultDistance.y /= 2;
+        defaultDistance.x /= 2;
+      }
+      else {
         defaultZoom--;
         defaultDistance.y *= 2;
         defaultDistance.x *= 2;
         break;
       }
-      else {
-        defaultZoom++;
-        defaultDistance.y /= 2;
-        defaultDistance.x /= 2;
-      }
     }
 
     handleCenter(focusCenter);
     mapStore.zoom = defaultZoom;
-    mapStore.selectedId = el.id;
+    mapStore.selectedId = el.id - 1;
   }
 
   // 라우팅 소스 작성
@@ -156,9 +162,9 @@ export const Maps =  observer(({history}) => {
     console.log("element : ", element);
     return (
       <TouchableOpacity
-        style={{ flexDirection: 'row' }}
+        style={{ flexDirection: 'row', backgroundColor: mapStore.selectedId != element.id - 1 ? '#ffffff' : '#F25E6B'}}
         key={index} 
-        onPress={() => mapStore.selectedId != element.id ? handleListMarkerTrace(element) : handleRouteDetail(element)}>
+        onPress={() => mapStore.selectedId != element.id - 1 ? handleListMarkerTrace(element) : handleRouteDetail(element)}>
         <Image
           style={{ borderRadius: 30, width: 60, height: 60 }}
           source={{ uri: element.imgURL }} />
@@ -196,7 +202,7 @@ export const Maps =  observer(({history}) => {
 
         <Marker // 내 위치를 띄우는 마커
           position={mapStore.userCenter}
-          visible={mapStore.myPosState}
+          icon={require("@foodtruckmap/common/src/static/img/myPos_24.png")}
           />
         
         { make_markers }
@@ -219,6 +225,7 @@ export const Maps =  observer(({history}) => {
 
         <Marker // 내 위치를 띄우는 마커
           position={mapStore.userCenter}
+          icon={require("@foodtruckmap/common/src/static/img/myPos_24.png")}
           />
         
         { make_markers }
