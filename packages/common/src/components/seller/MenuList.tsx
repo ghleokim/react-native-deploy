@@ -23,7 +23,8 @@ interface IMenu {
 interface IProps {
   menulist: IMenu[],
   handleUpdateMenu: any,
-  handleAddMenuSubmit: any,
+  handleAddMenuSubmit: Function,
+  handleDeleteMenu: Function,
 }
 
 export default (props: IProps) => {
@@ -31,7 +32,11 @@ export default (props: IProps) => {
   const [isMenuAdding, setIsMenuAdding] = useState(false);
 
   const handleUpdateMenu = (requestDto, menuId) => {
-    props.handleUpdateMenu (requestDto, menuId);
+    props.handleUpdateMenu(requestDto, menuId);
+  }
+
+  const handleDeleteMenu = (deletedMenuId) => {
+    props.handleDeleteMenu(deletedMenuId);
   }
 
   const handleAddMenuSubmit = (requestDto) => {
@@ -53,7 +58,8 @@ export default (props: IProps) => {
           data={props.menulist}
           renderItem={({ item }) =>
             <Menu
-            handleUpdateMenu={handleUpdateMenu}
+              handleUpdateMenu={handleUpdateMenu}
+              handleDeleteMenu={handleDeleteMenu}
               name={item.name}
               price={item.price}
               id={item.id}
