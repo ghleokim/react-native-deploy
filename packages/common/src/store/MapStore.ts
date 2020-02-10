@@ -7,9 +7,7 @@ class MapStore {
     lat: 37.3595704,
     lng: 127.105399
   }
-  @observable.ref markers = [
-      {}
-  ]
+  @observable.ref markers = []
   @observable.ref markerData = {}
   @observable.ref userCenter = {
   }
@@ -21,7 +19,7 @@ class MapStore {
   @observable mapHeight = "400px"
 
   @observable myPosState:boolean = false;
-  @observable listState = false
+  @observable listState = false;
   @observable selectedId: number = -1;
   
   //test
