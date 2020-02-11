@@ -5,10 +5,41 @@ import { observer } from 'mobx-react-lite';
 import { mainStoreContext } from '../../store/MainStore';
 import { MapStoreContext } from '../../store/MapStore';
 import axios from 'axios';
+import { CustomText } from '../../static/CustomStyle';
+import { Colors } from '../../static/CustomColor';
 
 export const Maps =  observer(({history}) => {
   const mainStore = useContext(mainStoreContext);
   const mapStore = useContext(MapStoreContext);
+  console.log(mapStore)
+
+  const getDistance = (point1, point2)=> {
+    const toRadians = (value) => value * Math.PI / 180
+    const R = 6371e3; // metres
+    const lat1 = point1.latitude
+    const lon1 = point1.longitude
+    const lat2 = point2.latitude
+    const lon2 = point2.longitude
+
+    const φ1 = toRadians(lat1);
+    const φ2 = toRadians(lat2);
+    const Δφ = toRadians(lat2-lat1);
+    const Δλ = toRadians(lon2-lon1);
+    console.log(point1, point2)
+
+    const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+              Math.cos(φ1) * Math.cos(φ2) *
+              Math.sin(Δλ/2) * Math.sin(Δλ/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+    const result = Math.floor(R * c)
+
+    if (result > 1000) {
+      return `${Math.floor(result/10) / 100} km` 
+    } else {
+      return `${result} m`
+    }
+  }
 
   const getMyLocation = () => {
     if (navigator.geolocation) { // GPS를 지원하면
@@ -44,7 +75,9 @@ export const Maps =  observer(({history}) => {
         + '&endLongitude=' + mapStore.bounds._ne._lng,
       method: 'get'
     }).then((response) => {
-      mapStore.markers = response.data ? response.data : [];
+      const incoming= { data: [] }
+      if (response.data) {incoming.data = response.data.map((element)=>{element.state = element.state.toLowerCase(); return element})}
+      mapStore.markers = incoming.data === undefined ? [] : incoming.data;
       console.log("mapStore.markers : ", mapStore.markers);
       if(mapStore.markers.length === 0) alert("결과가 없습니다.");
     })
@@ -81,11 +114,11 @@ export const Maps =  observer(({history}) => {
     mapStore.markerData.domEvent.clientX : mapStore.markerData.domEvent.clientX - 150, 
       top: mapStore.markerData.domEvent.clientY - 20 + 150 <= mapStore.mapHeight ? 
       mapStore.markerData.domEvent.clientY - 20 : mapStore.markerData.domEvent.clientY - 200, 
-      width: 150, height: 150, zIndex: 1, backgroundColor:'#ffffff'}}>
-      <Image style={{height:50, width: 50}}
-        source={require('@foodtruckmap/common/src/static/icon_processed/noun_User_1485759.png')} />
-      <Text>{mapStore.markers[mapStore.stat].title}</Text>
-      <button style={{width: 100,  }} onClick={() => handleRouteDetail(mapStore.markers[mapStore.stat])}>상세페이지로</button>
+      width: 'auto', height: 50, zIndex: 1, backgroundColor:'#ffffff',
+      borderColor: '#2c200d', borderRadius: 10, borderWidth: 2, paddingHorizontal: 10, justifyContent: 'center'
+      }}>
+      <Text style={{fontWeight: '700'}}>{mapStore.markers[mapStore.stat].title}</Text>
+      <TouchableOpacity style={{width: 100}} onPress={() => handleRouteDetail(mapStore.markers[mapStore.stat])}><Text style={{color: '#606060'}}>상세보기</Text></TouchableOpacity>
       </View>
   }
 
@@ -159,18 +192,32 @@ export const Maps =  observer(({history}) => {
   }
 
   const makeList = mapStore.markers.map((element, index) => {
-    console.log("element : ", element);
+    // console.log("element : ", element);
     return (
       <TouchableOpacity
-        style={{ flexDirection: 'row', backgroundColor: mapStore.selectedId != element.id - 1 ? '#ffffff' : '#F25E6B'}}
+        style={[ {
+          borderBottomColor: `rgba(186,186,186, 0.5)`,
+          borderBottomWidth: 1,
+        }, {
+          flexDirection: 'row',
+          backgroundColor: mapStore.selectedId != element.id - 1 ? '#ffffff' : '#f0e2cc'
+        }]}
         key={index} 
-        onPress={() => mapStore.selectedId != element.id - 1 ? handleListMarkerTrace(element) : handleRouteDetail(element)}>
-        <Image
-          style={{ borderRadius: 30, width: 60, height: 60 }}
-          source={{ uri: element.imgURL }} />
-        <View>
-          <Text>{element.title}</Text>
-          <Text>{element.contents}</Text>
+        onPress={() => mapStore.selectedId !== element.id - 1 ? handleListMarkerTrace(element) : handleRouteDetail(element)}>
+        <View style={[ element.state === 'open' ? {backgroundColor: 'rgba(255,255,255,0)', zIndex: -1} : {backgroundColor: 'rgba(255,255,255,0.5)', zIndex: 2} , {position: 'absolute', width: '100%', height: '100%'}]}></View>
+        <View style={{ flex: 1, flexDirection: 'row', paddingHorizontal: '6%', paddingVertical: '3%'}}>
+          <View style={{ flex: 1 }}>
+            <Image
+              style={{ borderRadius: 30, width: 60, height: 60 }}
+              source={{ uri: element.imgURL }}
+              defaultSource={{uri: `https://picsum.photos/id/${element.id}/200`}}
+              />
+          </View>
+          <View style={{ flex: 3, justifyContent: 'center' }}>
+            <Text style={[CustomText.title, { color: Colors.black, paddingVertical: 2 }]}>{element.title} <Text style={[CustomText.body,  { paddingHorizontal:3, borderRadius: 5, backgroundColor: '#008000', color: Colors.white, paddingBottom: 3}]}>{element.state}</Text></Text>
+            <Text style={[CustomText.body,  { color: Colors.black }]}>{element.contents}</Text>
+            <Text style={[CustomText.body,  { color: Colors.deepcoral, fontWeight: '700' }]}>{getDistance({latitude: mapStore.userCenter.lat, longitude: mapStore.userCenter.lng}, {latitude: element.latitude, longitude: element.longitude})}</Text>
+          </View>
         </View>
       </TouchableOpacity>
     )
@@ -203,6 +250,7 @@ export const Maps =  observer(({history}) => {
         <Marker // 내 위치를 띄우는 마커
           position={mapStore.userCenter}
           icon={require("@foodtruckmap/common/src/static/img/myPos_24.png")}
+          zIndex={10}
           />
         
         { make_markers }
@@ -226,6 +274,7 @@ export const Maps =  observer(({history}) => {
         <Marker // 내 위치를 띄우는 마커
           position={mapStore.userCenter}
           icon={require("@foodtruckmap/common/src/static/img/myPos_24.png")}
+          zIndex={10}
           />
         
         { make_markers }
