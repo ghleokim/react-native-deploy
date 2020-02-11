@@ -274,9 +274,12 @@ export const Maps =  observer(({history}) => {
 
         { mapStore.stat != -1 && newOverlay() }
 
-        {mapStore.listState == true &&  // 리스트의 조건부 렌더링
-          showListView()
-        }
+        {mapStore.listState == true && (mapStore.markers.length ? showListView()
+          : <View>
+              <Text
+                style={{ flexDirection: 'row', backgroundColor: '#ffffff', }}>아 데이터가 없네 젠장</Text>
+            </View>
+        )}
       </View>
   )
 })
