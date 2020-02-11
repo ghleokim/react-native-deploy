@@ -51,17 +51,12 @@ export const Maps =  observer(({history}) => {
             _lng: position.coords.longitude
           };
           mapStore.center = mapStore.userCenter;
+          console.log("mapStore", mapStore);
           console.log("mapStore.userCenter : ", mapStore.userCenter);
-          const bounds = {
-            _sw: {
-              _lat: position.coords.latitude - 0.0161,
-              _lng: position.coords.longitude - 0.02764,
-            },
-            _ne: {
-              _lat: position.coords.latitude + 0.0161,
-              _lng: position.coords.longitude + 0.02764,
-            },
-          }
+          const bounds = new naver.maps.LatLngBounds(
+            new naver.maps.LatLng(position.coords.latitude - 0.0161, position.coords.longitude - 0.02764),
+            new naver.maps.LatLng(position.coords.latitude + 0.0161, position.coords.longitude + 0.02764)
+          )
           mapStore.bounds = bounds
           console.log(mapStore.bounds)
 
@@ -225,6 +220,24 @@ export const Maps =  observer(({history}) => {
   }
 
   const makeList = mapStore.markers.map((element, index) => {
+    const getState = (state) => {
+      if (state === 'open') {
+        return {message:'영업중', color: '#008000'}
+      } else if (state === 'prepare') {
+        return {message:'영업 준비중', color: '#e0c000'}
+      } else {
+        return {message:'영업 종료', color: '#608080'}
+      }
+    }
+
+    const StateButton = ({state}) => {
+      const {message, color} = getState(state)
+
+      return <Text style={[CustomText.body, { paddingHorizontal:3, borderRadius: 5, backgroundColor: color, color: Colors.white, paddingBottom: 3}]}>
+        {message}
+        </Text>
+    }
+
     // console.log("element : ", element);
     return (
       <TouchableOpacity
@@ -247,7 +260,7 @@ export const Maps =  observer(({history}) => {
               />
           </View>
           <View style={{ flex: 3, justifyContent: 'center' }}>
-            <Text style={[CustomText.title, { color: Colors.black, paddingVertical: 2 }]}>{element.title} <Text style={[CustomText.body,  { paddingHorizontal:3, borderRadius: 5, backgroundColor: '#008000', color: Colors.white, paddingBottom: 3}]}>{element.state}</Text></Text>
+            <Text style={[CustomText.title, { color: Colors.black, paddingVertical: 2 }]}>{element.title} <StateButton state={element.state}/></Text>
             <Text style={[CustomText.body,  { color: Colors.black }]}>{element.contents}</Text>
             <Text style={[CustomText.body,  { color: Colors.deepcoral, fontWeight: '700' }]}>{getDistance({latitude: mapStore.userCenter.lat, longitude: mapStore.userCenter.lng}, {latitude: element.latitude, longitude: element.longitude})}</Text>
           </View>
