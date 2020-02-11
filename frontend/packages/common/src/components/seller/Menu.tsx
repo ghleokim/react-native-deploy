@@ -122,7 +122,7 @@ export default (props:IProps) => {
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Text style={[CustomText.title, { fontSize: 18 }]}>{props.name}</Text>
                 <View style={{ marginHorizontal: 10, flexGrow: 1, alignSelf: 'center',  borderStyle: 'dotted', borderColor: '#000000', borderWidth: 1 }}></View>
-                <Text style={[CustomText.title, { color: '#20a024', fontSize: 16 }]}>{props.id} 원</Text>
+                <Text style={[CustomText.title, { color: '#20a024', fontSize: 16 }]}>{props.price} 원</Text>
               </View>
             <View>
               <Text style={[CustomText.body]}>{props.content}</Text>
