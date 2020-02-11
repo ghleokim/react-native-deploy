@@ -50,21 +50,15 @@ export const NewLoginForm: React.FC<Props> = observer(({ history }) => {
         userPassword: loginStore.pass
       })
       .then((response) => {
-        console.log('login success: response', response);
+        console.log(response);
         // 현재 내부 state에서 필요한 값을 유지하도록 구현하였다. 라우팅할 때 쓰일 수 있을 듯.
         mainStore.isSeller = response.data.isSeller.status;
         console.log('isSeller:', mainStore.isSeller)
 
         // session 로컬 스토리지에 저장하기
         localStorage.setItem('cookies', JSON.stringify(response.data.cookie))
-        localStorage.setItem('userEmail', response.data.email)
-        if (response.data.isSeller.status === true) {
-          localStorage.setItem('isSeller', 'true')
-          localStorage.setItem('truckIdList', response.data.isSeller.truckIdList)
-          localStorage.setItem('truckId', response.data.truckId)
-        } else {
-          localStorage.setItem('isSeller', 'false')
-        }
+        localStorage.setItem('isSeller', response.data.isSeller.status)
+        localStorage.setItem('truckId', response.data.truckId)
 
         // if success 추가해야됨
         if (response.status === 200) {
