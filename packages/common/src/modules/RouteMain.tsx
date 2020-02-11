@@ -54,9 +54,9 @@ export const RouteMain: React.FC<Props> = observer(({history}) => {
   return (
     <View style={{ flex: 1, flexDirection: 'column' }}>
       <View>
-        <TouchableOpacity onPress = {changeModalState}>
+        {/* <TouchableOpacity onPress = {changeModalState}> */}
           <BannerSwiper />
-        </TouchableOpacity>
+        {/* </TouchableOpacity> */}
 
         <View style={styles.mainButtonWrapper}>
           <TouchableOpacity style={styles.mainButton} onPress={() => { history.push('/map') }}><Text style={styles.sectionTitle}> 내 주변 푸드트럭 찾기 🚚 </Text></TouchableOpacity>
