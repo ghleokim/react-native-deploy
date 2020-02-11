@@ -10,16 +10,7 @@ import { CustomText } from '../../static/CustomStyle';
 import Review from './Review';
 import { Colors } from '../../static/CustomColor';
 import { ReviewPost } from './ReviewPost';
-
-interface IReview {
-  id: number,
-  content: string,
-  startRating: number,
-  createdAt: string,
-  updatedAt: string,
-  truckId: number,
-  userEmail: string
-}
+import { IReview, IReply } from './TruckInterface';
 
 interface IProps {
   reviewList: IReview[],
@@ -51,6 +42,7 @@ export default (props: IProps) => {
                 updatedAt={item.updatedAt}
                 truckId={item.truckId}
                 userEmail={item.userEmail}
+                replies={item.replies}
                 onDelete={props.onDelete}
               />}
             keyExtractor={item => `${item.userEmail}${item.id}`}

@@ -32,8 +32,14 @@ export const App: React.FC = observer(() => {
   console.log(`screenheight ${mainStore.screenHeight} scrollviewheight ${mainStore.scrollviewHeight}`)
   console.log(`proxy ${axios.defaults.baseURL}`)
 
+  const getDimension = () => {
+    mainStore.screenWidth = Dimensions.get('window').width;
+    mainStore.screenHeight = Dimensions.get('window').height;
+    mainStore.scrollviewHeight = mainStore.screenHeight - mainStore.footerHeight - mainStore.headerHeight;
+  }
+
   return (
-    <View style={{ height: mainStore.screenHeight, flex: 1 }}>
+    <View style={{ height: mainStore.screenHeight, flex: 1 }} onLayout={()=>getDimension()}>
       <Routes height={mainStore.scrollviewHeight} headerHeight={mainStore.headerHeight} footerHeight={mainStore.footerHeight} />
     </View>
   )
