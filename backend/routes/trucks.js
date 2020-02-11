@@ -119,8 +119,8 @@ router.get("/:truckId", async function(req, res, next) {
 
 router.get("/search/:searchKeyword", function(req, res, next) {
   const searchKeyword = req.params.searchKeyword.trim();
-  const userLatitude = req.query.latitude.trim();
-  const userLongitude = req.query.longitude.trim();
+  const userLatitude = req.query.latitude;
+  const userLongitude = req.query.longitude;
   models.truck
     .findAll({
       attributes: [
