@@ -19,6 +19,7 @@ interface IProps {
 }
 
 export default (props: IProps) => {
+  const userEmail = localStorage.getItem('userEmail')
 
   return (
     <View style={styles.menuListContainer}>
@@ -26,7 +27,7 @@ export default (props: IProps) => {
         <View style={styles.menuListTitle}>
           <Text style={[CustomText.textCenter, CustomText.titleHN, { fontSize: 22 }]}>리뷰</Text>
         </View>
-        <ReviewPost truckId={props.truckId}/>
+        { !!userEmail ? <ReviewPost truckId={props.truckId}/> : <></>}
         {props.reviewList.length === 0 ?
           <View style={{paddingHorizontal: 20, paddingTop: 10,}}>
             <Text style={CustomText.title}>✏ 리뷰가 없어요. 리뷰를 작성해주세요! ✏</Text>
