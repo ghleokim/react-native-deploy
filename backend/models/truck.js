@@ -28,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
     truck.hasMany(models.review,{onDelete: 'cascade'});
     truck.hasMany(models.truckUsers,{onDelete: 'cascade'});
     truck.hasMany(models.userTrucks,{onDelete: 'cascade'});
+    truck.belongsTo(models.sellers, {
+      foreignKey: "email",
+      onDelete: "cascade"
+    });
   };
   
   return truck;
