@@ -32,6 +32,7 @@ var repliesRouter = require('./routes/replies');
 var followsRouter = require('./routes/follows');
 var likesRouter = require('./routes/likes');
 var reportsRouter = require('./routes/reports');
+var adminsRouter = require('./routes/admins');
 var cors = require('cors');
 const session = require('express-session');
 
@@ -95,6 +96,7 @@ app.use('/api/replies', repliesRouter);
 app.use('/api/follows', followsRouter);
 app.use('/api/likes', likesRouter);
 app.use('/api/reports', reportsRouter);
+app.use('/api/admins', adminsRouter);
 app.get('/api/upload', function(req, res, next){
   console.log("upload router");
   res.render('upload');

@@ -7,15 +7,18 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   reply.associate = function(models) {
     reply.belongsTo(models.review, {
-      foreignKey:"reviewId"
+      foreignKey:"reviewId",
+      onDelete: 'cascade'
     });
 
     reply.belongsTo(models.user, {
-      foreignKey:"userEmail"
+      foreignKey:"userEmail",
+      onDelete: 'cascade'
     });
 
     reply.belongsTo(models.seller, {
-      foreignKey:"sellerId"
+      foreignKey:"sellerId",
+      onDelete: 'cascade'
     });
   };
   return reply;

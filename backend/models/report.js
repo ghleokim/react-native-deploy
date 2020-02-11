@@ -9,7 +9,10 @@ module.exports = (sequelize, DataTypes) => {
     original: DataTypes.TEXT
   }, {});
   report.associate = function(models) {
-    // associations can be defined here
+    report.belongsTo(models.user, {
+      foreignKey:"userEmail",
+      onDelete: 'cascade'
+    });
   };
   return report;
 };

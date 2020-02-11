@@ -91,62 +91,12 @@ router.put("/update", async function(req, res, next) {
   res.json(resultUser);
 });
 
-router.get("/login", function(req, res, next) {
-  let session = req.session;
-  console.log(session);
-  if (session.isSeller == 1) {
-    res.send(session.name + " 판매자님");
-  } else {
-    res.send(session.name + " 사용자님");
-  }
-  // res.render("sellers/login", {
-  //     session: session
-  // });
-});
-
-// 로그인은 여기 말고 /users/login 에서 하자
-router.post("/login", async function(req, res, next) {
-  let body = req.body;
-
-  let result = await models.seller.findOne({
-    where: {
-      email: body.sellerEmail
-    }
-  });
-
-  let dbPassword = result.dataValues.password;
-  let inputPassword = body.sellerPassword;
-  let salt = result.dataValues.salt;
-  let hashPassword = crypto
-    .createHash("sha512")
-    .update(inputPassword + salt)
-    .digest("hex");
-  if (dbPassword === hashPassword) {
-    // 세션 설정
-    req.session.email = body.sellerEmail;
-    req.session.name = result.name;
-    req.session.isSeller = 1;
-    res.redirect("/sellers");
-  } else {
-    console.log("비밀번호 불일치");
-    res.redirect("/sellers/login");
-  }
-});
-
 router.get("/myTrucks", async function(req, res, next) {
   let result = await models.truck.findAll({
     where: { email: req.session.email }
   });
   console.log(result);
   res.json(result);
-});
-
-// 로그아웃
-router.get("/logout", function(req, res, next) {
-  req.session.destroy();
-  res.clearCookie("sid");
-
-  res.redirect("/sellers/login");
 });
 
 module.exports = router;

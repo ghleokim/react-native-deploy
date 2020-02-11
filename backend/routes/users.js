@@ -97,6 +97,8 @@ router.get("/getUser", async function(req, res, next) {
 
 // 로그인 POST
 router.post("/login", async function(req, res, next) {
+  console.log(req.body.userEmail);
+  console.log(req.body.userPassword);
   const USER_EMAIL = req.body.userEmail.trim();
   const USER_PASSWORD = req.body.userPassword.trim();
 
@@ -121,6 +123,8 @@ router.post("/login", async function(req, res, next) {
       email: USER_EMAIL
     }
   });
+
+ 
 
   let truckIdList = [];
   if (!!result && result.isSeller) {
@@ -214,16 +218,15 @@ router.put("/update", async function(req, res, next) {
 // userEmail 기반 삭제
 router.delete("/delete", async function(req, res, next) {
   let result = await models.user.destroy({
-    where: {
-      email: req.session.email
-    }
+    where: { email: req.session.email }
   });
-
   let resultAuth = await models.authorities.destroy({
     where: { userEmail: req.session.email }
   });
 
   res.json(result);
 });
+
+
 
 module.exports = router;

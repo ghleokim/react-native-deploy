@@ -24,10 +24,10 @@ module.exports = (sequelize, DataTypes) => {
     state: DataTypes.STRING
   }, {});
   truck.associate = function(models) {
-    truck.hasMany(models.menu);
-    truck.hasMany(models.review);
-    truck.hasMany(models.truckUsers);
-    truck.hasMany(models.userTrucks);
+    truck.hasMany(models.menu,{onDelete: 'cascade'});
+    truck.hasMany(models.review,{onDelete: 'cascade'});
+    truck.hasMany(models.truckUsers,{onDelete: 'cascade'});
+    truck.hasMany(models.userTrucks,{onDelete: 'cascade'});
   };
   
   return truck;

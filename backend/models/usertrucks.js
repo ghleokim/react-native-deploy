@@ -5,10 +5,12 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   userTrucks.associate = function(models) {
     userTrucks.belongsTo(models.user, {
-      foreignKey: "userEmail"
+      foreignKey: "userEmail",
+      onDelete: 'cascade'
     });
     userTrucks.belongsTo(models.truck, {
-      foreignKey: "truckId"
+      foreignKey: "truckId",
+      onDelete: 'cascade'
     });
   };
   return userTrucks;
