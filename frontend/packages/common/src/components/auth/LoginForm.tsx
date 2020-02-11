@@ -57,8 +57,15 @@ export const NewLoginForm: React.FC<Props> = observer(({ history }) => {
 
         // session 로컬 스토리지에 저장하기
         localStorage.setItem('cookies', JSON.stringify(response.data.cookie))
-        localStorage.setItem('isSeller', response.data.isSeller.status)
-        localStorage.setItem('truckId', response.data.truckId)
+        localStorage.setItem('userEmail', response.data.email)
+        if (response.data.isSeller.status === true) {
+          localStorage.setItem('isSeller', 'true')
+          localStorage.setItem('truckIdList', response.data.isSeller.truckIdList)
+          localStorage.setItem('truckId', response.data.truckId)
+        } else {
+          localStorage.setItem('isSeller', 'false')
+        }
+
 
         // if success 추가해야됨
         if (response.status === 200) {
