@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useContext, useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Button, ImageBase } from 'react-native';
 import { mainStoreContext } from '../store/MainStore';
 import { searchStoreContext } from '../store/SearchStore';
 import { observer } from 'mobx-react-lite';
@@ -79,7 +79,10 @@ export const RouteMain: React.FC<Props> = observer(({history}) => {
       </View>
       <View style={[styles.staticInfo, { flexGrow: 1 }]}>
         <Text style={styles.staticText}>
-          <Text style={styles.staticTextLink} onPress={() => console.log('hello')}>팀 정보</Text> | <Text style={styles.staticTextLink} onPress={() => console.log('hello2')}>이용 약관</Text> | <Text style={styles.staticTextLink} onPress={() => console.log('hello3')}>개인정보처리방침</Text>
+          <Text style={styles.staticTextLink} onPress={() => console.log('hello')}>팀 정보</Text>
+            | <Text style={styles.staticTextLink} onPress={() => console.log('hello2')}>이용 약관</Text>
+            | <Text style={styles.staticTextLink} onPress={() => console.log('hello3')}>개인정보처리방침</Text>
+            | <Text style={styles.staticTextLink} onPress={() => history.push(`/report`, {division: 0, targetId: 1}) }>신고</Text>
         </Text>
         <Text style={styles.staticText}>foodtruck-map</Text>
       </View>
