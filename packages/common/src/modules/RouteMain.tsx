@@ -10,6 +10,7 @@ import { BannerSwiper } from '../components/main/BannerSwiper'
 import { RouteComponentProps } from 'react-router-dom';
 
 import { BannerStoreContext } from '../store/BannerStore';
+import { Modal } from '../components/main/Modal';
 
 interface Props extends RouteComponentProps {}
 
@@ -36,7 +37,19 @@ export const RouteMain: React.FC<Props> = observer(({history}) => {
   const changeModalState = () => {
     BannerStore.active = !BannerStore.active;
   }
+  const getModal = () => {
+    console.log(BannerStore.pageIndex + " page ");
+    const child: React.FC = () => {
+      return (<><TouchableOpacity style={{height: 'auto', width: '100%'}}>
+        <Image style={{height: 'auto', width: '100%',resizeMode:'contain'}} source={require(`@foodtruckmap/common/src/static/bannerDetail/banner${BannerStore.pageIndex}_detail.jpg`)} />
+      </TouchableOpacity></>)
+    }
+    return (
+      BannerStore.active === true ? <Modal imgURL='https://scontent-ssn1-1.xx.fbcdn.net/v/t1.0-9/67756141_2500914479952501_2554921670380879872_o.jpg?_nc_cat=111&_nc_ohc=WKg-jesH6mcAX-g0Ih9&_nc_ht=scontent-ssn1-1.xx&oh=5e6b1deee100739d2defb61ba78506a2&oe=5EFFA465' /> : <></>
+    )
+  }
 
+  // original
   const getNoticeModal = () => {
     console.log(BannerStore.pageIndex + " page ");
     return (
@@ -83,7 +96,7 @@ export const RouteMain: React.FC<Props> = observer(({history}) => {
         </Text>
         <Text style={styles.staticText}>foodtruck-map</Text>
       </View>
-      {getNoticeModal()}
+      {getModal()}
     </View>
   )
 })
