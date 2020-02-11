@@ -111,11 +111,10 @@ export default (props:IProps) => {
         ? <MenuForm id={props.id} name={props.name} price={props.price} content={props.content} imgURL={props.imgURL} isSoldOut={props.isSoldOut} handleMenuSubmit={handleUpdateMenuSubmit} handleMenuCancel={handleUpdateMenuCancel}></MenuForm>
         : <>
           <View style={{ alignSelf: 'center' }}>
-            <Image
-              defaultSource={{ uri: `https://picsum.photos/id/${props.id}/200` }}
-              source={{ uri: props.imgURL }}
-              style={{ width: 70, height: 70, borderRadius: 10 }}
-            />
+          <Image
+          source={{ uri: props.imgURL.startsWith('http') ? props.imgURL : `${axios.defaults.baseURL}/user/${props.imgURL}` }}
+          style={{ width: 70, height: 70, borderRadius: 10 }}
+          />
           </View>
   
           <View style={{ marginLeft: 15, flexShrink: 1, alignSelf: 'center', width:'100%' }}>
@@ -123,7 +122,7 @@ export default (props:IProps) => {
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Text style={[CustomText.title, { fontSize: 18 }]}>{props.name}</Text>
                 <View style={{ marginHorizontal: 10, flexGrow: 1, alignSelf: 'center',  borderStyle: 'dotted', borderColor: '#000000', borderWidth: 1 }}></View>
-                <Text style={[CustomText.title, { color: '#20a024', fontSize: 16 }]}>{props.id} 원</Text>
+                <Text style={[CustomText.title, { color: '#20a024', fontSize: 16 }]}>{props.price} 원</Text>
               </View>
             <View>
               <Text style={[CustomText.body]}>{props.content}</Text>

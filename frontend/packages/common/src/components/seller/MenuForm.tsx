@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,8 @@ import {
   Image,
 } from "react-native";
 import { CustomStyle } from "../../static/CustomStyle";
+import Dropzone from 'react-dropzone'
+import axios from 'axios'
 
 interface IProps {
     id?: number,
@@ -16,8 +18,8 @@ interface IProps {
     content?: string,
     imgURL?: string,
     isSoldOut?: boolean,
-    handleMenuSubmit: any,
-    handleMenuCancel: any
+    handleMenuSubmit: Function,
+    handleMenuCancel: Function,
 }
 
 const LocalStyles = StyleSheet.create({
@@ -67,10 +69,11 @@ export default (props: IProps) => {
         price: props.price, 
         name: props.name, 
         content: props.content, 
-        imgURL: props.imgURL || 'https://www.idaegu.co.kr/news/photo/201912/2019122601000845100051951.jpg',
         isSoldOut: props.isSoldOut,
       })
-    
+
+    const [imgURL, setImgURL] = useState(props.imgURL || 'https://www.idaegu.co.kr/news/photo/201912/2019122601000845100051951.jpg')
+      
     const submit = () => {
         const reg_price = /^([0-9]+)$/;
 
@@ -88,6 +91,7 @@ export default (props: IProps) => {
             name: editText.name,
             content: editText.content,
             price: editText.price,
+            imgURL: imgURL,
         }
         props.handleMenuSubmit(requestDto, props.id);
     }
@@ -100,18 +104,69 @@ export default (props: IProps) => {
     const onChangeText = (target: string, text: string) => {
         editText[target] = text;
       }
-    
+
+    const imageFileReg = /\.(gif|jpg|jpeg|tiff|png|bmp)$/i
+    const submitImage = (files) => {
+
+        if (files.length === 0) {
+            alert("사진이 존재하지 않습니다.");
+            return;
+        }
+
+        if (files.length !== 1) {
+            alert("사진을 1개만 등록해주세요.")
+            return;
+        }
+
+        const file = files[0];
+        const fileName = file.name;
+        const fileSize = file.size;
+
+        if (!imageFileReg.test(fileName)) {
+            alert("지원하지 않는 확장자입니다.")
+            return;
+        }
+
+        if (fileSize > 20000000) { // 20MB
+            alert("20MB를 초과하는 이미지는 등록할 수 없습니다.")
+            return;
+        }
+        
+        const formData = new FormData();
+        formData.append('userfile', file);
+
+        axios.post("/upload", formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+        })
+        .then((res) => {
+            alert("파일 등록 완료")
+            setImgURL(res.data.imgName)
+        })
+    }
+
       return (
         <>
         <View style={{ alignSelf: 'center' }}>
-        <Image
-          source={{ uri: editText.imgURL }}
-          style={{ width: 70, height: 70, borderRadius: 10 }}
-        />
+            <Dropzone onDrop={acceptedFiles => submitImage(acceptedFiles)}>
+                {({getRootProps, getInputProps}) => (
+                        <section>
+                            <div {...getRootProps()}>
+                                <input {...getInputProps()} />
+                                <Image
+                                source={{ uri: imgURL.startsWith('http') ? imgURL : `${axios.defaults.baseURL}/user/${imgURL}` }}
+                                style={{ width: 70, height: 70, borderRadius: 10 }}
+                                />
+                            </div>
+                      </section>
+                )}
+            </Dropzone>
+
       </View>
 
       <View style={{ marginLeft: 15, flexShrink: 1, alignSelf: 'center', width:'100%' }}>
-
+            
       <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
           <Text style={{fontWeight: '700', marginRight: 5}}>메뉴</Text>
           <TextInput
@@ -122,13 +177,14 @@ export default (props: IProps) => {
             onChangeText={text => onChangeText('name', text)}
           />
         </View>
+
         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
           <Text style={{fontWeight: '700', marginRight: 5}}>가격</Text>
           <TextInput
             style={styles.textInput}
             underlineColorAndroid="transparent"
             autoCapitalize="none"
-            defaultValue={String(editText.price)}
+            defaultValue={editText.price || ''}
             onChangeText={text => onChangeText('price', text)}
           />
         </View>
