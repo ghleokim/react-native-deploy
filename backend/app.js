@@ -29,6 +29,7 @@ var reviewsRouter = require('./routes/reviews');
 var repliesRouter = require('./routes/replies');
 var followsRouter = require('./routes/follows');
 var likesRouter = require('./routes/likes');
+var reportsRouter = require('./routes/reports');
 var cors = require('cors');
 const session = require('express-session');
 
@@ -91,6 +92,7 @@ app.use('/api/reviews', reviewsRouter);
 app.use('/api/replies', repliesRouter);
 app.use('/api/follows', followsRouter);
 app.use('/api/likes', likesRouter);
+app.use('/api/reports', reportsRouter);
 app.get('/api/upload', function(req, res, next){
   console.log("upload router");
   res.render('upload');
