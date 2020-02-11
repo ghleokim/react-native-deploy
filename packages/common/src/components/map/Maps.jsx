@@ -12,7 +12,7 @@ export const Maps =  observer(({history}) => {
   const mainStore = useContext(mainStoreContext);
   const mapStore = useContext(MapStoreContext);
 
-  const getDistance = (point1, point2)=> {
+  const getDistance = (point1, point2, raw)=> {
     const toRadians = (value) => value * Math.PI / 180
     const R = 6371e3; // metres
     const lat1 = point1.latitude
@@ -32,11 +32,15 @@ export const Maps =  observer(({history}) => {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
     const result = Math.floor(R * c)
-
-    if (result > 1000) {
-      return `${Math.floor(result/10) / 100} km` 
+    
+    if (!!raw === false) {
+      if (result > 1000) {
+        return `${Math.floor(result/10) / 100} km` 
+      } else {
+        return `${result} m`
+      }
     } else {
-      return `${result} m`
+      return result
     }
   }
 
@@ -88,7 +92,16 @@ export const Maps =  observer(({history}) => {
       method: 'get'
     }).then((response) => {
       const incoming= { data: [] }
-      if (response.data) {incoming.data = response.data.map((element)=>{element.state = element.state.toLowerCase(); return element})}
+      if (response.data) {
+        incoming.data = response.data
+        .map((element) => {
+          element.state = element.state.toLowerCase()
+          element.distance = getDistance({latitude: mapStore.userCenter.lat, longitude: mapStore.userCenter.lng}, {latitude: element.latitude, longitude: element.longitude}, true)
+          return element
+        })
+        .sort((a,b) => a.distance - b.distance)
+        .filter((element) => element.state !== 'closed')
+      }
       mapStore.markers = incoming.data === undefined ? [] : incoming.data;
       console.log("mapStore.markers : ", mapStore.markers);
       if(mapStore.markers.length === 0) alert("결과가 없습니다.");
