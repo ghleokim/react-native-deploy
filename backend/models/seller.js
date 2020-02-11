@@ -7,8 +7,12 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {});
   seller.associate = function(models) {
-    seller.belongsTo(models.user);
-    seller.hasMany(models.reply);
+    seller.belongsTo(models.user,{
+      onDelete: 'cascade'
+    });
+    seller.hasMany(models.reply, {
+      onDelete: 'cascade'
+    });
     // seller.belongsToMany(models.truck, {through: 'sellerTrucks'});
   };
   return seller;

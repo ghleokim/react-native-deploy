@@ -28,7 +28,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   menu.associate = function(models) {
     menu.belongsTo(models.truck, {
-      foreignKey:"truckId"
+      foreignKey:"truckId",
+      onDelete: 'cascade'
     })
   };
   return menu;

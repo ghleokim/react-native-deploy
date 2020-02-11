@@ -32,10 +32,10 @@ module.exports = (sequelize, DataTypes) => {
   // }
   );
   user.associate = function(models) {
-    user.hasMany(models.review);
-    user.hasMany(models.reply);
-    user.hasMany(models.truckUsers);
-    user.hasMany(models.userTrucks);
+    user.hasMany(models.review,{onDelete: 'cascade'});
+    user.hasMany(models.reply,{onDelete: 'cascade'});
+    user.hasMany(models.truckUsers,{onDelete: 'cascade'});
+    user.hasMany(models.userTrucks,{onDelete: 'cascade'});
   };
 
   return user;

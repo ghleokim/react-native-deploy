@@ -11,15 +11,18 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   review.associate = function(models) {
     review.belongsTo(models.truck, {
-      foreignKey:"truckId"
+      foreignKey:"truckId",
+      onDelete: 'cascade'
     });
 
     review.belongsTo(models.user, {
-      foreignKey:"userEmail"
+      foreignKey:"userEmail",
+      onDelete: 'cascade'
     });
 
-    review.hasMany(models.reply);
-
+    review.hasMany(models.reply,{
+      onDelete: 'cascade'
+    });
   };
   return review;
 };

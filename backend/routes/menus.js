@@ -26,6 +26,7 @@ router.get("/:menuId", async function(req, res, next) {
 
 // insert menu
 router.post("/", async function(req, res, next) {
+  console.log("!!");
   const TRUCK_ID = req.session.truckId;
   let result = await models.menu.create({
     truckId: TRUCK_ID,
