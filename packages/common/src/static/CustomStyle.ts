@@ -76,5 +76,11 @@ export const CustomStyle = StyleSheet.create({
   },
   highlight: {
     fontWeight: '700',
-  }
+  },
+  listView: {
+		borderBottomColor: `rgba(186,186,186, 0.5)`,
+		borderBottomWidth: 1,
+		paddingHorizontal: '6%',
+		paddingVertical: '3%'
+	}
 })
