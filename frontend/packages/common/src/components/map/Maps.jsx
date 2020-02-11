@@ -11,7 +11,6 @@ import { Colors } from '../../static/CustomColor';
 export const Maps =  observer(({history}) => {
   const mainStore = useContext(mainStoreContext);
   const mapStore = useContext(MapStoreContext);
-  console.log(mapStore)
 
   const getDistance = (point1, point2)=> {
     const toRadians = (value) => value * Math.PI / 180
@@ -25,7 +24,7 @@ export const Maps =  observer(({history}) => {
     const φ2 = toRadians(lat2);
     const Δφ = toRadians(lat2-lat1);
     const Δλ = toRadians(lon2-lon1);
-    console.log(point1, point2)
+    // console.log(point1, point2)
 
     const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
               Math.cos(φ1) * Math.cos(φ2) *
@@ -42,37 +41,55 @@ export const Maps =  observer(({history}) => {
   }
 
   const getMyLocation = () => {
-    if (navigator.geolocation) { // GPS를 지원하면
-      navigator.geolocation.getCurrentPosition(function(position) {
-        mapStore.userCenter = {
-          lat: position.coords.latitude, 
-          lng: position.coords.longitude
-        };
-        mapStore.center = mapStore.userCenter;
-        console.log("mapStore.userCenter : ", mapStore.userCenter);
-        mapStore.myPosState = !mapStore.reftest.updating
-      }, function(error) {
-        console.error(error);
-      }, {
-        enableHighAccuracy: false,
-        maximumAge: 0,
-        timeout: Infinity
-      });
-    } else {
-      alert('GPS를 지원하지 않습니다');
-    }
-    mapStore.zoom = 14; // 내 위치를 누르면 default zoom으로 복귀
+    return new Promise(function(resolve, reject) {
+      if (navigator.geolocation) { // GPS를 지원하면
+        navigator.geolocation.getCurrentPosition(function(position) {
+          mapStore.userCenter = {
+            lat: position.coords.latitude, 
+            lng: position.coords.longitude,
+            _lat: position.coords.latitude, 
+            _lng: position.coords.longitude
+          };
+          mapStore.center = mapStore.userCenter;
+          console.log("mapStore.userCenter : ", mapStore.userCenter);
+          const bounds = {
+            _sw: {
+              _lat: position.coords.latitude - 0.0161,
+              _lng: position.coords.longitude - 0.02764,
+            },
+            _ne: {
+              _lat: position.coords.latitude + 0.0161,
+              _lng: position.coords.longitude + 0.02764,
+            },
+          }
+          mapStore.bounds = bounds
+          console.log(mapStore.bounds)
+
+          resolve(bounds)
+
+        }, function(error) {
+          console.error(error);
+        }, {
+          enableHighAccuracy: false,
+          maximumAge: 0,
+          timeout: Infinity
+        });
+      } else {
+        alert('GPS를 지원하지 않습니다');
+      }
+      mapStore.zoom = 14; // 내 위치를 누르면 default zoom으로 복귀
+    })
   }
 
   // 위치값을 전달해주어야 함.
-  const getMarkersFromLocation = () => {
+  const getMarkersFromLocation = (bounds) => {
     mapStore.selectedId = -1;
     axios({
       url: '/trucks/boundary/?'
-        + 'startLatitude=' + mapStore.bounds._sw._lat
-        + '&startLongitude=' + mapStore.bounds._sw._lng
-        + '&endLatitude=' + mapStore.bounds._ne._lat
-        + '&endLongitude=' + mapStore.bounds._ne._lng,
+        + 'startLatitude=' + bounds._sw._lat
+        + '&startLongitude=' + bounds._sw._lng
+        + '&endLatitude=' + bounds._ne._lat
+        + '&endLongitude=' + bounds._ne._lng,
       method: 'get'
     }).then((response) => {
       const incoming= { data: [] }
@@ -88,20 +105,36 @@ export const Maps =  observer(({history}) => {
 
   useEffect(() => { // 라이프사이클 주기때문에 이렇게 하지 않으면, 렌더할 때 무한히 돈당..
     getMyLocation()
+    .then((bounds) => {
+      mapStore.loading = false;
+      mapStore.myPosState = true;
+      mapStore.boundsChanged = false;
+      getMarkersFromLocation(bounds)
+    });
   }, []);
 
   const handleBoundsChanged = (bounds) => {
+    mapStore.myPosState = false
+    mapStore.boundsChanged = true
     mapStore.bounds = bounds;
     console.log("mapStore.bounds : ", mapStore.bounds);
+    // console.log('diff sw x', mapStore.center.x - mapStore.bounds._sw.x )
+    // console.log('diff sw y', mapStore.center.y - mapStore.bounds._sw.y )
+    // console.log('diff ne x', mapStore.center.x - mapStore.bounds._ne.x )
+    // console.log('diff ne y', mapStore.center.y - mapStore.bounds._ne.y )
   }
+
   const handleZoomChanged = (zoom) => {
     mapStore.zoom = zoom;
     console.log("mapStore.zoom : ", mapStore.zoom);
   }
+
   const handleCenter = (center) => {
+    // const difference = Math.sqrt( Math.pow((mapStore.center._lat - center._lat),2) + Math.pow((mapStore.center._lng - center._lng),2))
+    // console.log(difference, !!difference)
     mapStore.center = center;
     console.log("mapStore.center : ", mapStore.center);
-    if(mapStore.stat != -1 && mapStore.listState === false) getMarkersFromLocation();
+    if(mapStore.stat != -1 && mapStore.listState === false) getMarkersFromLocation(mapStore.bounds);
     mapStore.stat = -1;
   }
 
@@ -283,7 +316,7 @@ export const Maps =  observer(({history}) => {
   }
 
   return (
-      <View>        
+      <View>
         {mapStore.listState == false && drawLargeMap()}
         {mapStore.listState == true && drawSmallMap()}
 
@@ -302,31 +335,48 @@ export const Maps =  observer(({history}) => {
             source={require('@foodtruckmap/common/src/static/icon_processed/noun_Pin_1015369.png')}
           />
         </View>
-
-        <View style={{position: 'absolute', left: 20, 
-          top: 80, width: 70, height: 40, zIndex: 1, backgroundColor:'#cccccc'}}
-          onClick={() => getMarkersFromLocation() }
+        
+         <TouchableOpacity style={{position: 'absolute', right: 20, bottom: 30, flexDirection: 'row', paddingHorizontal: 3,
+           height: 40, borderRadius: 5, zIndex: 1, backgroundColor: mapStore.boundsChanged ? '#ffffff': 'rgba(119,119,119,0.4)', borderColor: mapStore.boundsChanged ? '#4177c9': '#777777', borderRadius: 8, borderWidth: 1, borderRightWidth: 2, borderBottomWidth: 3,
+          justifyContent: 'center', alignItems: 'center'
+        }}
+          onPress={() => {getMarkersFromLocation(mapStore.bounds); mapStore.boundsChanged = false; } }
         >
-          <Text>트럭 검색</Text>
-        </View>
+          <Image
+          style={{
+            tintColor: '#4177c9',
+            height: 30,
+            width: 30,
+            resizeMode: 'cover',
+            overflow: 'hidden'
+          }}
+          source={require('@foodtruckmap/common/src/static/icon_processed/noun_reload_1485755.png')}
+          />
+          <Text style={[CustomText.title, {alignSelf: 'center', color: '#4177c9', marginBottom: 3, paddingRight: 3}]}>재검색</Text>
+        </TouchableOpacity>
 
-        <View style={{position: 'absolute', left: 20,
-          top: 140, width: 70, height: 40, zIndex: 1, backgroundColor:'#aaaaaa'}}
-          onClick={(e) => {
+        <TouchableOpacity style={{position: 'absolute', bottom: 30, left: (mainStore.screenWidth - 100) / 2,
+          width: 100, height: 40, zIndex: 1, backgroundColor:'#4177c9', borderBottomColor: '#2e5ca1', borderBottomWidth: 3, borderRadius: 8,
+          justifyContent: 'center'
+        }}
+          onPress={(e) => {
             // toggle 토글을 할 경우, 지도를 줄이고 끝이 아닌 지도를 지우고 새로 그리는 방향으로 해야 한다.
+            mapStore.boundsChanged = true;
             mapStore.listState = !mapStore.listState;
             mapStore.mapHeight = "50%";
           }}
-          >
-          <Text>리스트</Text>
-        </View>
+        >
+          <Text style={[CustomText.title, {alignSelf: 'center', color: Colors.white}]}>{mapStore.listState ? '지도 보기' : '목록 보기'}</Text>
+        </TouchableOpacity>
 
         { mapStore.stat != -1 && newOverlay() }
 
         {mapStore.listState == true && (mapStore.markers.length ? showListView()
-          : <View>
+          : <View style={{alignItems: 'center', justifyContent: 'center', flexDirection: 'column', height: '100%'}}>
               <Text
-                style={{ flexDirection: 'row', backgroundColor: '#ffffff', }}>아 데이터가 없네 젠장</Text>
+                style={{ backgroundColor: '#ffffff', textAlign: 'center' }}>데이터를 찾을 수 없습니다.{'\n'}다시 검색해주세요.
+              </Text>
+              <TouchableOpacity style={{ height: 40, width: 80, borderRadius: 8, borderColor: '#808080'}}><Text>다시 검색</Text></TouchableOpacity>
             </View>
         )}
       </View>
