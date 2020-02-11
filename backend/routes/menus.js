@@ -46,7 +46,8 @@ router.put("/:menuId", async function(req, res, next) {
     {
       price: req.body.price,
       name: req.body.name,
-      content: req.body.content
+      content: req.body.content,
+      imgURL: req.body.imgURL
     },
     {
       where: {

@@ -16,7 +16,9 @@ var storage = multer.diskStorage({
   //파일명 뭐라 할것인가
   filename: function (req, file, cb) {
     // 파일 이름 중복 방지 위해 date()값을 넣음
-    cb(null, file.originalname) // + '-' + Date.now())
+    const ext = file.originalname.split('.').pop();
+    const fileName = file.originalname.substring(0, file.originalname.length - ext.length - 1);
+    cb(null, fileName + '-' + Date.now() + '.' + ext)
   }
 })
 var upload = multer({ storage: storage })
