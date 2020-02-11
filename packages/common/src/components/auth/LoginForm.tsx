@@ -50,7 +50,7 @@ export const NewLoginForm: React.FC<Props> = observer(({ history }) => {
         userPassword: loginStore.pass
       })
       .then((response) => {
-        console.log('login success: response', response);
+        console.log(response);
         // 현재 내부 state에서 필요한 값을 유지하도록 구현하였다. 라우팅할 때 쓰일 수 있을 듯.
         mainStore.isSeller = response.data.isSeller.status;
         console.log('isSeller:', mainStore.isSeller)
@@ -65,6 +65,7 @@ export const NewLoginForm: React.FC<Props> = observer(({ history }) => {
         } else {
           localStorage.setItem('isSeller', 'false')
         }
+
 
         // if success 추가해야됨
         if (response.status === 200) {
