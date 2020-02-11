@@ -111,11 +111,10 @@ export default (props:IProps) => {
         ? <MenuForm id={props.id} name={props.name} price={props.price} content={props.content} imgURL={props.imgURL} isSoldOut={props.isSoldOut} handleMenuSubmit={handleUpdateMenuSubmit} handleMenuCancel={handleUpdateMenuCancel}></MenuForm>
         : <>
           <View style={{ alignSelf: 'center' }}>
-            <Image
-              defaultSource={{ uri: `https://picsum.photos/id/${props.id}/200` }}
-              source={{ uri: props.imgURL }}
-              style={{ width: 70, height: 70, borderRadius: 10 }}
-            />
+          <Image
+          source={{ uri: props.imgURL.startsWith('http') ? props.imgURL : `${axios.defaults.baseURL}/user/${props.imgURL}` }}
+          style={{ width: 70, height: 70, borderRadius: 10 }}
+          />
           </View>
   
           <View style={{ marginLeft: 15, flexShrink: 1, alignSelf: 'center', width:'100%' }}>
