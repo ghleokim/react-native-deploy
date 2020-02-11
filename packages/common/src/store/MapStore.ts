@@ -4,8 +4,6 @@ import { createContext } from 'react';
 class MapStore {
   // user current pos
   @observable center = {
-    lat: 37.3595704,
-    lng: 127.105399
   }
   @observable.ref markers = []
   @observable.ref markerData = {}
@@ -18,10 +16,14 @@ class MapStore {
   @observable fabtop;
   @observable mapHeight = "400px"
 
-  @observable myPosState:boolean = false;
+  @observable myPosState : boolean = false;
+
   @observable listState = false;
   @observable selectedId: number = -1;
   
+  @observable loading: boolean = true;
+  @observable boundsChanged: boolean = false;
+
   //test
   @observable reftest: any;
   @observable stat: number = -1;
