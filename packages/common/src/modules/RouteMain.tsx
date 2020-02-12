@@ -51,7 +51,7 @@ export const RouteMain: React.FC<Props> = observer(({history}) => {
       console.log(response);
       setNoticeList(response.data)
     })
-    .catch((err)=>console.log(err))
+    .catch((err)=>console.log(setNoticeList([])))
   }
 
   useEffect(()=>{
@@ -138,10 +138,12 @@ export const RouteMain: React.FC<Props> = observer(({history}) => {
           </TouchableOpacity>
         </View>
       </View>
+      { noticeList.length !== 0 ?
       <TouchableOpacity style={[styles.noticeContainer]} onPress={()=>{setModalData({category: 'notice', imgURL: '', notice: noticeList[2]}); BannerStore.active = true;}}>
         <Text style={[CustomText.title, {flex: 1, fontWeight: '700', fontSize: 14, textAlign: 'center', marginHorizontal: 10}]}>공지사항</Text>
         <Text style={[CustomText.body, {flex: 4, fontSize: 14, marginRight: 30}]} numberOfLines={1} ellipsizeMode='clip'>{!!noticeList[2] ? noticeList[2].title : ''}</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> : <></>
+      }
       <View style={[styles.staticInfo, { flexGrow: 1 }]}>
         <Text style={styles.staticText}>
           <Text style={styles.staticTextLink} onPress={() => console.log('hello')}>팀 정보</Text>
