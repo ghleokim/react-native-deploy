@@ -76,44 +76,30 @@ export const RouteMain: React.FC<Props> = observer(({history}) => {
   const changeModalState = () => {
     BannerStore.active = !BannerStore.active;
   }
-  const getModal = () => {
-    console.log(BannerStore.pageIndex + " page ");
-    const child: React.FC = () => {
-      return (<><TouchableOpacity style={{height: 'auto', width: '100%'}}>
-        <Image style={{height: 'auto', width: '100%',resizeMode:'contain'}} source={require(`@foodtruckmap/common/src/static/bannerDetail/banner${BannerStore.pageIndex}_detail.jpg`)} />
-      </TouchableOpacity></>)
+
+  useEffect(()=>{
+    if (BannerStore.pageIndex === -1) {
+      setModalData({category: '', imgURL: '', notice: emptyNotice})
+    } else {
+      setModalData({category: 'banner', imgURL: defaultImgURL, notice: emptyNotice})
     }
-    return (
-      BannerStore.active === true ? <Modal imgURL='https://scontent-ssn1-1.xx.fbcdn.net/v/t1.0-9/67756141_2500914479952501_2554921670380879872_o.jpg?_nc_cat=111&_nc_ohc=WKg-jesH6mcAX-g0Ih9&_nc_ht=scontent-ssn1-1.xx&oh=5e6b1deee100739d2defb61ba78506a2&oe=5EFFA465' /> : <></>
-    )
+  }, [BannerStore.pageIndex])
+
+  const getModal = () => {
+    // console.log(BannerStore.pageIndex + " page ", modalData);
+    if (BannerStore.active === true) {
+      if (modalData.category === 'banner') {
+        return <Modal imgURL={modalData.imgURL}/>
+      } else if (modalData.category === 'notice') {
+        return <Modal notice={modalData.notice}/>
+      } else {
+        return <></>
+      }
+    } else {
+      return <></>
+    }
   }
 
-// <<<<<<< HEAD
-// =======
-//   useEffect(()=>{
-//     if (BannerStore.pageIndex === -1) {
-//       setModalData({category: '', imgURL: '', notice: emptyNotice})
-//     } else {
-//       setModalData({category: 'banner', imgURL: defaultImgURL, notice: emptyNotice})
-//     }
-//   }, [BannerStore.pageIndex])
-
-//   const getModal = () => {
-//     // console.log(BannerStore.pageIndex + " page ", modalData);
-//     if (BannerStore.active === true) {
-//       if (modalData.category === 'banner') {
-//         return <Modal imgURL={modalData.imgURL}/>
-//       } else if (modalData.category === 'notice') {
-//         return <Modal notice={modalData.notice}/>
-//       } else {
-//         return <></>
-//       }
-//     } else {
-//       return <></>
-//     }
-//   }
-
-// >>>>>>> dev-front
   // original
   const getNoticeModal = () => {
     console.log(BannerStore.pageIndex + " page ");
@@ -132,9 +118,7 @@ export const RouteMain: React.FC<Props> = observer(({history}) => {
   return (
     <View style={{ flex: 1, flexDirection: 'column' }}>
       <View>
-        {/* <TouchableOpacity onPress = {changeModalState}> */}
           <BannerSwiper />
-        {/* </TouchableOpacity> */}
 
         <View style={styles.mainButtonWrapper}>
           <TouchableOpacity style={styles.mainButton} onPress={() => { history.push('/map') }}><Text style={styles.sectionTitle}> 내 주변 푸드트럭 찾기 🚚 </Text></TouchableOpacity>
