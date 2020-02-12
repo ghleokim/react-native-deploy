@@ -99,4 +99,21 @@ router.get("/myTrucks", async function(req, res, next) {
   res.json(result);
 });
 
+router.post("/approve", async function(req, res, next){
+  let resultSeller = await models.seller.findOne({
+    where: {
+      businessRegistrationNumber: req.body.businessRegistrationNumber
+    }
+  });
+
+  let resultAuth = await models.authorities.update({
+    authority : "ROLE_WAITING_SELLER"
+  }, {
+    where: {
+      userEmail: resultSeller.userEmail
+    }
+  })
+  res.send("승인 요청");
+})
+
 module.exports = router;
