@@ -14,7 +14,7 @@ router.delete("/delete/user/:email", async function(req, res, next) {
       userEmail: req.session.email
     }
   });
-  if (resultAuth.authority == "ROLE_USER") {
+  if (resultAuth.authority != "ROLE_ADMIN") {
     res.status(404).send({
       code: 1001,
       message: "권한이 없습니다."
@@ -36,7 +36,7 @@ router.delete("/delete/seller/:email", async function(req, res, next) {
       userEmail: req.session.email
     }
   });
-  if (resultAuth.authority == "ROLE_USER") {
+  if (resultAuth.authority != "ROLE_ADMIN") {
     res.status(404).send({
       code: 1001,
       message: "권한이 없습니다."
@@ -55,7 +55,7 @@ router.delete("/delete/truck/:truckId", async function(req, res, next) {
       userEmail: req.session.email
     }
   });
-  if (resultAuth.authority == "ROLE_USER") {
+  if (resultAuth.authority != "ROLE_ADMIN") {
     res.status(404).send({
       code: 1001,
       message: "권한이 없습니다."
@@ -72,7 +72,22 @@ router.delete("/delete/truck/:truckId", async function(req, res, next) {
 
 router.post('/approval', async function(req, res, next){
     let truckId = req.body.truckId;
-    res.send(truckId + " 트럭 승인해주세요");
+
+    let resultTruck = await truck.findOne({
+      where: {
+          id: req.body.truckId
+      }
+    });
+
+    let resultAuth = await authorities.update({
+      authority : "ROLE_SELLER"
+    }, {
+      where: {
+        userEmail: resultTruck.email
+      }
+    })
+
+    res.send("승인 완료");
 })
 
 router.delete("/delete/review/:reviewId", async function(req, res, next) {
@@ -81,7 +96,7 @@ router.delete("/delete/review/:reviewId", async function(req, res, next) {
       userEmail: req.session.email
     }
   });
-  if (resultAuth.authority == "ROLE_USER") {
+  if (resultAuth.authority != "ROLE_ADMIN") {
     res.status(404).send({
       code: 1001,
       message: "권한이 없습니다."
@@ -103,7 +118,7 @@ router.delete("/delete/reply/:replyId", async function(req, res, next) {
       userEmail: req.session.email
     }
   });
-  if (resultAuth.authority == "ROLE_USER") {
+  if (resultAuth.authority != "ROLE_ADMIN") {
     res.status(404).send({
       code: 1001,
       message: "권한이 없습니다."
@@ -125,7 +140,7 @@ router.delete("/delete/menu/:menuId", async function(req, res, next) {
       userEmail: req.session.email
     }
   });
-  if (resultAuth.authority == "ROLE_USER") {
+  if (resultAuth.authority != "ROLE_ADMIN") {
     res.status(404).send({
       code: 1001,
       message: "권한이 없습니다."
