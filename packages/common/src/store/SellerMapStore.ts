@@ -5,7 +5,9 @@ class SellerMapStore {
   // user current pos
   @observable center = {
     lat: 37.3595704,
-    lng: 127.105399
+    lng: 127.105399,
+    _lat: 37.3595704,
+    _lng: 127.105399
   }
   @observable.ref userCenter = {
   }
