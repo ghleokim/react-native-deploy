@@ -24,7 +24,7 @@ export default observer(() => {
     console.log('finished', sellerTruckId, !!sellerTruckId)
     
     // doesn't work if truckid is null
-    if (!!sellerTruckId === false) { return 0 }
+    if (!!sellerTruckId === false || !!center === false) { console.log('truckid not set or center not set', 'truckid', !!sellerTruckId, 'center', !!center); return 0 }
     
     const state = data.open === true ? 'open' : data.preparing === true ? 'prepare' : 'closed'
     const truckStateData = state === 'closed' ? 
@@ -70,7 +70,7 @@ export default observer(() => {
                   <View style={{ position: 'absolute', flexDirection: 'column', justifyContent: 'space-between', backgroundColor: 'rgba(255, 255, 255, 0.8)', height: 160, alignItems: 'flex-end', borderRadius: 25, paddingVertical: 10, marginLeft: '20%', bottom: 10, right: 20 }}>
                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Text style={{ fontWeight: '700', fontSize: 16, backgroundColor: 'rgba(255, 255, 255, 0.8)', paddingVertical: 1 }}> 푸드트럭 영업 종료 </Text>
-                        <TouchableOpacity onPress={() => { open(2); setToggle({ map: false, button: false }) }} style={{ backgroundColor: '#dc191e', height: 40, width: 40, zIndex: 2, marginLeft: 5, borderRadius: 25, alignItems: 'center', justifyContent: 'center', borderBottomColor: '#c5161b', borderRightColor: '#c5161b', borderBottomWidth: 3, borderRightWidth: 3 }}></TouchableOpacity>
+                        <TouchableOpacity onPress={() => { open(2); setToggle({ map: false, button: false }); emitFunc({})}} style={{ backgroundColor: '#dc191e', height: 40, width: 40, zIndex: 2, marginLeft: 5, borderRadius: 25, alignItems: 'center', justifyContent: 'center', borderBottomColor: '#c5161b', borderRightColor: '#c5161b', borderBottomWidth: 3, borderRightWidth: 3 }}></TouchableOpacity>
                       </View>
                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Text style={{ fontWeight: '700', fontSize: 16, backgroundColor: 'rgba(255, 255, 255, 0.8)', paddingVertical: 1 }}> 영업 준비하기 </Text>
