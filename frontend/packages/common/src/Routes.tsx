@@ -10,6 +10,7 @@ import { RouteMypage } from './modules/RouteMypage';
 import { RouteTruck } from './modules/RouteTruck';
 import { Header } from './components/main/Header';
 import { RouteSellerMain } from './modules/RouteSellerMain';
+import { RouteReport } from './modules/RouteReport';
 
 interface Props {
   height: number;
@@ -33,6 +34,7 @@ export const Routes = (Props: Props) => {
             <Route exact path='/mypage' component={RouteMypage} />
             <Route exact path='/seller' component={RouteSellerMain} />
             <Route exact path='/trucks/:targetId' component={RouteTruck} />
+            <Route exact path='/report' component={RouteReport} />
             <Redirect path='*' to='/' />
           </Switch>
         </ScrollView>
