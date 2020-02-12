@@ -42,7 +42,7 @@ export default (infoData: IProps) => {
 
     return (
         <View>
-            <InfoStaticMaps data={infoData.data}/>
+            {infoData.data.state !== 'closed' ? <InfoStaticMaps data={infoData.data}/> : <></>}
             <Line/>
             <OpeningState state={infoData.data.state}></OpeningState>
             <Line/>
