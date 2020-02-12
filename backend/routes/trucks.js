@@ -68,7 +68,8 @@ router.get("/getTruck", async function(req, res, next) {
       "imgURL",
       "latitude",
       "longitude",
-      "state"
+      "state",
+      "truckNotice"
     ]
   });
   console.log(result);
@@ -90,7 +91,8 @@ router.get("/:truckId", async function(req, res, next) {
       "imgURL",
       "latitude",
       "longitude",
-      "state"
+      "state",
+      "truckNotice"
     ]
   });
 
@@ -130,7 +132,8 @@ router.get("/search/:searchKeyword", function(req, res, next) {
         "imgURL",
         "latitude",
         "longitude",
-        "state"
+        "state",
+        "truckNotice"
       ],
       where: {
         [Op.or]: [
@@ -191,6 +194,7 @@ router.get("/search/:searchKeyword", function(req, res, next) {
 // insert truck
 router.post("/", async function(req, res, next) {
   console.log(req.session.email);
+  let notice = req.body.truckNotice || "";
   let resultTruck = await models.truck.create({
     email: req.session.email,
     title: req.body.title,
@@ -198,7 +202,8 @@ router.post("/", async function(req, res, next) {
     imgURL: req.body.imgURL,
     latitude: req.body.latitude,
     longitude: req.body.longitude,
-    state: req.body.state
+    state: req.body.state,
+    truckNotice: notice
   });
   let getTruck = await models.truck.findOne({
     where: {
@@ -221,6 +226,36 @@ router.post("/", async function(req, res, next) {
   res.json(resultTruck);
 });
 
+router.put("/update/notice/:truckId", async function(req, res, next){
+  let findTruck = await models.truck.findOne({
+    where: {
+      id: req.params.truckId,
+      email: req.session.email
+    }
+  });
+  if (findTruck == null) {
+    res.status(401).send({
+      code: 0,
+      message: "본인의 트럭만 수정 가능합니다."
+    });
+  }
+  else{
+    let result = await models.truck.update({
+      truckNotice: req.body.truckNotice
+    }, {
+      where:{
+        id: req.params.truckId
+      }
+    })
+    let resultTruck = await models.truck.findOne({
+      where: {
+        id: req.params.truckId
+      }
+    });
+    res.json(resultTruck);
+  }
+
+})
 router.put("/update/:truckId", async function(req, res, next) {
   let findTruck = await models.truck.findOne({
     where: {
@@ -235,6 +270,7 @@ router.put("/update/:truckId", async function(req, res, next) {
       message: "본인의 트럭만 수정 가능합니다."
     });
   } else {
+    let notice = req.body.truckNotice || "";
     let result = await models.truck.update(
       {
         title: req.body.title,
@@ -242,7 +278,8 @@ router.put("/update/:truckId", async function(req, res, next) {
         state: req.body.state,
         imgURL: req.body.imgURL,
         latitude: req.body.latitude,
-        longitude: req.body.longitude
+        longitude: req.body.longitude,
+        truckNotice: notice
       },
       {
         where: {
@@ -266,8 +303,6 @@ router.delete("/delete/:truckId", async function(req, res, next) {
   let resultTruck = await models.truck.destroy({
     where: { email: req.session.email, id: req.params.truckId }
   });
-
-  console.log("# : " + resultTruck);
 
   if (resultTruck == 0) {
     res.status(401).send({
