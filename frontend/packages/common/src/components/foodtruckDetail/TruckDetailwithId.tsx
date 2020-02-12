@@ -19,6 +19,9 @@ interface IState {
   imgURL?: string,
   title: string,
   contents: string,
+  latitude: Number,
+  longitude: Number,
+  state: string,
   menus: [],
 }
 
@@ -57,7 +60,7 @@ export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
   })
 
   const [data, setData] = useState<IState>({
-    id: 0, imgURL: '', title: '', contents: '', menus: [] })
+    id: 0, imgURL: '', title: '', contents: '', menus: [], latitude: 0.0, longitude: 0.0, state: ''})
 
   const [follow, setFollow] = useState<IFollow>({
     isFollow: true

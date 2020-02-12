@@ -10,12 +10,14 @@ import {
 } from "react-native";
 
 import MenuList from './MenuList';
+import InfoList from './InfoList';
 import Line from '../Line'
 import axios from 'axios'
 
-import SellerState from './SellerState'
-
-import { mainStoreContext } from '../../store/MainStore';
+import { CustomStyle, CustomText } from "../../static/CustomStyle";
+import EditBtn from '../EditBtn';
+import { Navbar } from '../main/Navbar';
+import SellerState from './SellerState';
 
 interface IState {
   id: Number,
@@ -28,8 +30,6 @@ interface IState {
   state: string,
   menus: [],
 }
-import { CustomStyle, CustomText } from "../../static/CustomStyle";
-import EditBtn from '../EditBtn';
 
 const LocalStyles = StyleSheet.create({
   form: {
@@ -59,6 +59,11 @@ export default () => {
   const [data, setData] = useState({ id: '', imgURL: '', title: '', contents: '', latitude: 0, longitude: 0, state: '', menus: [] });
   const [isEditing, setIsEditing] = useState({ id: false, imgURL: false, title: false, contents: false, latitude: false, longitude: false, state: false, menus: [] });
   const [editText, setEditText] = useState({ id: '', imgURL: '', title: '', contents: '', latitude: 0, longitude: 0, state: ''})
+  const [navState, setNavState] = useState({
+    nav: 'menu',
+  })
+  const [infoData, setInfoData] = useState({ id: 0, _lat: 0.0, _lng: 0.0, state: ''});
+
 
   const myTruckId = localStorage.getItem('truckId')
 
@@ -66,6 +71,7 @@ export default () => {
     axios.get(`/trucks/${myTruckId === undefined ? '1' : myTruckId}`)
       .then((res) => {
         setData(res.data.result);
+        setInfoData({id: Number(myTruckId), _lat: res.data.result.latitude, _lng: res.data.result.longitude, state: res.data.result.state});
         setEditText(res.data.result);
       })
   }, []);
@@ -185,29 +191,71 @@ export default () => {
       })
   }
 
+  const DetailNavBar: React.FC = () => {
+    return (
+      <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#ffffff' }}>
+        <TouchableOpacity
+          style={[
+            { flex: 1, alignItems: 'center', height: 50, paddingTop: 10 },
+            navState.nav === 'menu' ? { borderBottomColor: '#EDAA11', borderBottomWidth: 2 } : {}
+          ]}
+          onPress={() => setNavState({ ...navState, nav: 'menu' })}>
+          <Text style={[CustomText.title, { fontSize: 18 }]}>메뉴</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            { flex: 1, alignItems: 'center', height: 50, paddingTop: 10 },
+            navState.nav === 'info' ? { borderBottomColor: '#EDAA11', borderBottomWidth: 2 } : {}
+          ]}
+          onPress={() => setNavState({ ...navState, nav: 'info' })}>
+          <Text style={[CustomText.title, { fontSize: 18 }]}>정보</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            { flex: 1, alignItems: 'center', height: 50, paddingTop: 10 },
+            navState.nav === 'review' ? { borderBottomColor: '#EDAA11', borderBottomWidth: 2 } : {}
+          ]}
+          onPress={() => setNavState({ ...navState, nav: 'review' })}>
+          <Text style={[CustomText.title, { fontSize: 18 }]}>리뷰</Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  const DetailNavContents: React.FC = () => {
+    console.log('navcontent', data)
+
+    return (
+      <View style={{paddingTop: 10}}>
+        {navState.nav === 'menu' ? <MenuList menulist={data.menus} handleUpdateMenu={handleUpdateMenu} handleDeleteMenu={handleDeleteMenu} handleAddMenuSubmit={handleAddMenuSubmit}/>
+          : navState.nav === 'info' ? <InfoList data={infoData}></InfoList>
+            : <></>}
+      </View>
+    )
+  }
 
   return (
-    <View style={{ flex: 1 }}>
-      <Image
-        style={{ width: '100%', height: 150, marginBottom: -30 }}
-        source={{ uri: data.imgURL ? data.imgURL : '' }}
-        defaultSource={{ uri: `https://picsum.photos/id/${data.id ? data.id : 0}/200` }}
-      />
-      <View style={{ paddingBottom: 10, backgroundColor: '#edaa11', width: '70%', alignSelf: 'center', borderRadius: 9, marginBottom: 5 }}>
-        <View style={{ width: '100%', backgroundColor: '#f2be46', paddingHorizontal: 15, paddingVertical: 8, borderRadius: 9, alignItems: 'center' }}>
-          {editTitleComponent('title')}
+    <View>
+      <View style={{ flex: 1 }}>
+        <Image
+          style={{ width: '100%', height: 150, marginBottom: -30 }}
+          source={{ uri: data.imgURL ? data.imgURL : '' }}
+          defaultSource={{ uri: `https://picsum.photos/id/${data.id ? data.id : 0}/200` }}
+        />
+        <View style={{ paddingBottom: 10, backgroundColor: '#edaa11', width: '70%', alignSelf: 'center', borderRadius: 9, marginBottom: 5 }}>
+          <View style={{ width: '100%', backgroundColor: '#f2be46', paddingHorizontal: 15, paddingVertical: 8, borderRadius: 9, alignItems: 'center' }}>
+            {editTitleComponent('title')}
+          </View>
         </View>
-      </View>
 
-      <View style={{ paddingHorizontal: '5%' }}>
-        {editContentComponent('contents')}
-      </View>
-
-      <Line></Line>
-
-      <MenuList menulist={data.menus} handleUpdateMenu={handleUpdateMenu} handleDeleteMenu={handleDeleteMenu} handleAddMenuSubmit={handleAddMenuSubmit} ></MenuList>
-
-      {/* <SellerState></SellerState> */}
+        <View style={{ paddingHorizontal: '5%' }}>
+          {editContentComponent('contents')}
+        </View>
+        <Line></Line>
+        <DetailNavBar/>
+        <DetailNavContents/>
+        {/* <SellerState/> */}
+      </View>    
     </View>
   )
 }
