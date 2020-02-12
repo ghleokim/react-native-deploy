@@ -26,7 +26,7 @@ export default (props: IProps) => {
 
   return (
     <View style={styles.menuListContainer}>
-      {props.data.state === 'closed' ? 
+      {props.data.state !== 'closed' ? 
         <InfoStaticMaps data={mapState}></InfoStaticMaps>
       : <></>
       }
