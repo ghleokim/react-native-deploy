@@ -4,27 +4,31 @@ const {authorities, menu, reply, report, review, seller, truck, truckusers, user
         = require("../models");
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
+const moment = require('moment');
+
 
 // 오늘 가입 유저
 router.get('/users/day', async function(req, res, next){
+    let d = moment(); 		 				 
+
     let result = await user.findAndCountAll({
         where:{
             createdAt: {
-                [Op.lt]: new Date(),
-                [Op.gt]: new Date(new Date() - 24 * 60 * 60 * 1000)
-              }
+                [Op.lte]: moment(d).format(),
+                [Op.gte]: moment(d).startOf('day')
+            }
         }
     })
     res.json(result);
 });
 
-// 오늘 달린 리뷰
 router.get('/reviews/day', async function(req, res, next){
+    let d = moment();
     let result = await review.findAndCountAll({
         where:{
             createdAt: {
-                [Op.lt]: new Date(),
-                [Op.gt]: new Date(new Date() - 24 * 60 * 60 * 1000)
+                [Op.lte]: moment(d).format(),
+                [Op.gte]: moment(d).startOf('day')
               }
         }
     })
@@ -33,11 +37,12 @@ router.get('/reviews/day', async function(req, res, next){
 
 // 오늘 가입 판매자
 router.get('/sellers/day', async function(req, res, next){
+    let d = moment();
     let result = await seller.findAndCountAll({
         where:{
             createdAt: {
-                [Op.lt]: new Date(),
-                [Op.gt]: new Date(new Date() - 24 * 60 * 60 * 1000)
+                [Op.lte]: moment(d).format(),
+                [Op.gte]: moment(d).startOf('day')
               }
         }
     })
