@@ -4,16 +4,22 @@ import { View, Text, Image, ScrollView, Animated, TouchableOpacity } from 'react
 import { BannerStoreContext } from '../../store/BannerStore';
 import { observer } from 'mobx-react-lite';
 import { mainStoreContext } from '../../store/MainStore';
+import { CustomText } from '../../static/CustomStyle';
 
-interface Props {
-  title?: string,
-  updatedAt?: string,
-  content?: string,
-  imgURL?: string,
-  Child?: React.FC
+interface Notice {
+  id: number,
+  title: string,
+  createdAt: string,
+  updatedAt: string,
+  content: string,
 }
 
-export const Modal: React.FC<Props> = observer(({title, content, imgURL, updatedAt, Child}) => {
+interface Props {
+  notice?: Notice, 
+  imgURL?: string,
+}
+
+export const Modal: React.FC<Props> = observer(({ notice, imgURL }) => {
   const MainStore = useContext(mainStoreContext);
   const BannerStore = useContext(BannerStoreContext);
 
@@ -30,12 +36,10 @@ export const Modal: React.FC<Props> = observer(({title, content, imgURL, updated
   if (!!imgURL) { Image.getSize(imgURL, (width, height)=>{BannerStore.imgHeight = height * MainStore.screenWidth / width}, (err)=>{console.log(err)})}
   console.log(!!imgURL, imgURL, BannerStore.imgHeight)
 
-  
-
   return (
     <Animated.View style={{position: 'absolute', top: topOffset, width: '100%', height: '100%', backgroundColor: '#ffffff', zIndex: 2}}>
       <View style={{height: 40, borderBottomColor: '#a090c0', borderBottomWidth: 1, justifyContent: 'center'}}>
-        <TouchableOpacity onPressOut={()=>{setModalState(false); setTimeout(()=>{BannerStore.active=false}, 500)}} style={{flex: 1, flexDirection:'row', justifyContent: 'space-between'}}>
+        <TouchableOpacity onPressOut={()=>{setModalState(false); setTimeout(()=>{BannerStore.active=false; BannerStore.pageIndex = -1}, 500)}} style={{flex: 1, flexDirection:'row', justifyContent: 'space-between'}}>
           <View style={{width: 20}}></View>
           <Text style={{alignSelf: 'center'}}>공지사항</Text>
           <Image style={{ marginRight: 10, width: 20, height: 20, alignSelf: 'center'}} source={require('@foodtruckmap/common/src/static/icon_processed/noun_Close_1015372.png')}/>
@@ -47,9 +51,13 @@ export const Modal: React.FC<Props> = observer(({title, content, imgURL, updated
           <Image style={{height: '100%', width: '100%', resizeMode: 'contain'}} source={{uri: imgURL}} defaultSource={{uri: 'https://picsum.photos/200'}}/>
           </View>
           : <View>
-            <Text>{title}</Text>
-            <Text>{updatedAt}</Text>
-            <Text>{content}</Text>
+              <View style={{height: 80, paddingHorizontal: 15, justifyContent: 'center', borderBottomColor: '#c0c0c0', borderBottomWidth: 1}}>
+                <Text style={[CustomText.title, {fontSize: 16}]}>{notice.title}</Text>
+                <Text style={[CustomText.body, {fontSize: 14, color: '#606060'}]}>{notice.updatedAt}</Text>
+              </View>
+              <View style={{paddingTop: 12, paddingHorizontal: 15}}>
+                <Text style={[CustomText.body, {fontSize: 14}]}>{notice.content}</Text>
+              </View>
           </View> 
         }
       </ScrollView>
