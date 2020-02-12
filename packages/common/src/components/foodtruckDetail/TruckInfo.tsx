@@ -4,25 +4,35 @@ import {
   StyleSheet,
   Text,
 } from "react-native";
-
+import InfoStaticMaps from './../map/InfoStaticMaps';
+import OpeningState from './../seller/OpeningState';
 interface IState {
-  id: Number,
+  id: number,
   imgURL?: string,
   title: string,
   contents: string,
-  menus: []
+  latitude: Number,
+  longitude: Number,
+  state: string,
+  menus: [],
 }
 
 interface IProps {
-  data: IState 
+  data: IState
 }
 
 export default (props: IProps) => {
+  const [mapState, setMapState] = useState({id: props.data.id, _lat: props.data.latitude, _lng: props.data.longitude, state:props.data.state});
 
   return (
     <View style={styles.menuListContainer}>
-      <Text>트럭 정보</Text>
-      <Text>{props.data.title}</Text>
+      {props.data.state !== 'closed' ? 
+        <InfoStaticMaps data={mapState}></InfoStaticMaps>
+      : <></>
+      }
+
+      {/* 오프닝 스테이트 폼 제작 중 */}
+      <OpeningState state={props.data.state}></OpeningState>
     </View>
   );
 
