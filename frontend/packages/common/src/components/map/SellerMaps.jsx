@@ -28,7 +28,9 @@ export const SellerMaps = observer(({emitFunc}) => {
         onZoomChanged = { (zoom) => handleZoomChanged(zoom) }
         center={ sellerMapStore.center }
         onCenterChanged = { (center) => handleCenter(center) }
-        naverRef={ref => sellerMapStore.reftest = ref} />
+        naverRef={ref => sellerMapStore.reftest = ref}
+        transitionOptions={{duration: 0}}
+        />
       )
   }
 
@@ -56,9 +58,9 @@ export const SellerMaps = observer(({emitFunc}) => {
 
   const drawPin = () => {
     return (
-      <View style={{position: 'absolute', top: mainStore.scrollviewHeight / 2 - 35, left: mainStore.screenWidth / 2 - 25}}>
-        <Image style={{height:50, width: 50}}
-        source={require('@foodtruckmap/common/src/static/icon_processed/noun_Pin_1015369.png')} />
+      <View style={{position: 'absolute', top: mainStore.scrollviewHeight / 2 - 35, left: mainStore.screenWidth / 2 - 15}}>
+        <Image style={{height:40, width: 30}}
+        source={require('@foodtruckmap/common/src/static/icon_processed/mypos_3_72.png')} />
       </View>
     )
   }
@@ -66,7 +68,7 @@ export const SellerMaps = observer(({emitFunc}) => {
   const drawButton = () => {
       return (
         <View style={{position: 'absolute', bottom: 25, right: 10}}>
-          <TouchableOpacity onPress={() => {console.log("center : ", sellerMapStore.center); emitFunc()}} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#4177c9', height: 50, zIndex: 3, borderRadius: 25, borderBottomColor: '#4177c9', borderBottomWidth: 3 }}>
+          <TouchableOpacity onPress={() => {console.log("center : ", sellerMapStore.center); emitFunc({_lat: sellerMapStore.center._lat, _lng: sellerMapStore.center._lng})}} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#4177c9', height: 50, zIndex: 3, borderRadius: 25, borderBottomColor: '#4177c9', borderBottomWidth: 3 }}>
             <Text style={{ paddingBottom: 1, paddingLeft: 7, paddingRight: 10, color: '#ffffff', fontSize: 16, fontWeight: '700'}}>위치 확정하기</Text>
           </TouchableOpacity> 
           {/* // 위치선정을 끝냈을 때. sellerMapStore.center를 리턴하면 됨. */}

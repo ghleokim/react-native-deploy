@@ -6,10 +6,12 @@ import { CustomStyle } from '../../static/CustomStyle';
 import { COLOR_HEADER } from '../../static/CustomColor';
 import { searchResultContext } from '../../store/SearchStore';
 import { RouteComponentProps } from 'react-router-dom';
+import SellerState from '../seller/SellerState';
 
 interface Props extends RouteComponentProps {}
 
 export const Navbar: React.FC<Props> = observer(({ history }) => {
+  console.log(history.location)
   const mainStore = useContext(mainStoreContext);
 
   const checkAuth = () => {
@@ -65,6 +67,11 @@ export const Navbar: React.FC<Props> = observer(({ history }) => {
         <Text style={styles.navButtonText}>Map</Text>
       </TouchableOpacity>
       {AuthButton()}
+      { history.location.pathname === '/seller' || history.location.pathname === '/mypage' && mainStore.isSeller === true && mainStore.isLoggedIn === true ? 
+      <View style={{position: 'absolute', right: 0, height: 0, width: '100%' }}>
+        <SellerState />
+      </View>
+      : <></>}
     </View>
   )
 })
