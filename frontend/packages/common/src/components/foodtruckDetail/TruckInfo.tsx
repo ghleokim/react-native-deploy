@@ -26,7 +26,10 @@ export default (props: IProps) => {
 
   return (
     <View style={styles.menuListContainer}>
-      <InfoStaticMaps data={mapState}></InfoStaticMaps>
+      {props.data.state !== 'closed' ? 
+        <InfoStaticMaps data={mapState}></InfoStaticMaps>
+      : <></>
+      }
 
       {/* 오프닝 스테이트 폼 제작 중 */}
       <OpeningState state={props.data.state}></OpeningState>
