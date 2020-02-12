@@ -4,6 +4,7 @@
     "password": "test",
     "database": "test",
     "host": "54.180.141.50",
+    "timezone": "+09:00",
      "dialect": "mysql",
      "operatorsAliases": false
   },
@@ -13,6 +14,7 @@
     "password": "test",
     "database": "test",
     "host": "54.180.141.50",
+    "timezone": "+09:00",
     "dialect": "mysql",
     "operatorsAliases": false
   },
@@ -22,6 +24,7 @@
     "password": "dbadmin",
     "database": "mysqltest",
     "host": "127.0.0.1",
+    "timezone": "+09:00",
     "dialect": "mysql",
     "operatorsAliases": false
   }
