@@ -20,7 +20,7 @@ class MainStore {
   @observable bannerPage: number = 1;
   @observable bannerTotal: number = 1;
   @observable bannerCountOpacity: number = 1;
-
+  
   // test
   @observable count = 0;
   @observable testCurrentLocation: any;
