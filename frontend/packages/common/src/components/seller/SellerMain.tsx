@@ -254,7 +254,7 @@ export default () => {
         <Line></Line>
         <DetailNavBar/>
         <DetailNavContents/>
-        <SellerState/>
+        {/* <SellerState/> */}
       </View>    
     </View>
   )
