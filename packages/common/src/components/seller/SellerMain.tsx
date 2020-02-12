@@ -207,7 +207,7 @@ export default () => {
 
       <MenuList menulist={data.menus} handleUpdateMenu={handleUpdateMenu} handleDeleteMenu={handleDeleteMenu} handleAddMenuSubmit={handleAddMenuSubmit} ></MenuList>
 
-      <SellerState></SellerState>
+      {/* <SellerState></SellerState> */}
     </View>
   )
 }

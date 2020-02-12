@@ -71,7 +71,7 @@ export const MyPageTrucks : React.FC<Props> = ({history, myInfo}) => {
         renderItem={({item}) =>
           <MyPageTruckItem truck={item} history={history}/>
         }
-        keyExtractor={item=>item.title}
+        keyExtractor={item=>`${item.title}${item.id}`}
       />
       }
     </View>
