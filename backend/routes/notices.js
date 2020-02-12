@@ -26,9 +26,40 @@ router.post('/admin/add', async function(req, res, next){
         let result = await notice.create({
             title: req.body.title,
             content: req.body.content,
-            userEmail: req.session.email
+            userEmail: req.session.email,
+            state: req.body.state
         });
         res.json(result);
+      }
+})
+
+router.put('/admin/update/state', async function(req, res, next){
+    let resultAuth = await authorities.findOne({
+        where: {
+          userEmail: req.session.email
+        }
+      });
+      if (resultAuth.authority != "ROLE_ADMIN") {
+        res.status(404).send({
+          code: 1001,
+          message: "권한이 없습니다."
+        });
+      }
+      else{
+          let resultNotice = await notice.findOne({
+              where: {
+                  id: req.body.id
+              }
+          });
+          let newState = !resultNotice.state;
+          let updateNotice = await notice.update({
+              state: newState
+          }, {
+              where: {
+                  id:req.body.id
+              }
+          });
+          res.json(newState);
       }
 })
 

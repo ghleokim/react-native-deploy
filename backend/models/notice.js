@@ -2,7 +2,8 @@
 module.exports = (sequelize, DataTypes) => {
   const notice = sequelize.define('notice', {
     title: DataTypes.STRING,
-    content: DataTypes.TEXT
+    content: DataTypes.TEXT,
+    state: DataTypes.BOOLEAN
   }, {});
   notice.associate = function(models) {
     notice.belongsTo(models.user, {
