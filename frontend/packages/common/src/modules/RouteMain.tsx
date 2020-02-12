@@ -11,7 +11,10 @@ import { RouteComponentProps } from 'react-router-dom';
 
 import { BannerStoreContext } from '../store/BannerStore';
 import { Modal } from '../components/main/Modal';
+// <<<<<<< HEAD
+// =======
 import axios from 'axios';
+// >>>>>>> dev-front
 
 interface Notice {
   id: number,
@@ -97,6 +100,7 @@ export const RouteMain: React.FC<Props> = observer(({history}) => {
     }
   }
 
+// >>>>>>> dev-front
   // original
   const getNoticeModal = () => {
     console.log(BannerStore.pageIndex + " page ");
@@ -115,9 +119,7 @@ export const RouteMain: React.FC<Props> = observer(({history}) => {
   return (
     <View style={{ flex: 1, flexDirection: 'column' }}>
       <View>
-        {/* <TouchableOpacity onPress = {changeModalState}> */}
           <BannerSwiper />
-        {/* </TouchableOpacity> */}
 
         <View style={styles.mainButtonWrapper}>
           <TouchableOpacity style={styles.mainButton} onPress={() => { history.push('/map') }}><Text style={styles.sectionTitle}> 내 주변 푸드트럭 찾기 🚚 </Text></TouchableOpacity>
