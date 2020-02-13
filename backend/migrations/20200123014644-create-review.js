@@ -11,7 +11,7 @@ module.exports = {
       content: {
         type: Sequelize.TEXT
       },
-      startLating: {
+      starRating: {
         type: Sequelize.FLOAT
       },
       createdAt: {

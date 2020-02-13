@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     content: {
       type: DataTypes.TEXT,
     },
-    startRating: {
+    starRating: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
