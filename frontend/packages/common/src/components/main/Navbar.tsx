@@ -7,12 +7,19 @@ import { COLOR_HEADER } from '../../static/CustomColor';
 import { searchResultContext } from '../../store/SearchStore';
 import { RouteComponentProps } from 'react-router-dom';
 import SellerState from '../seller/SellerState';
+import axios from 'axios';
 
 interface Props extends RouteComponentProps {}
 
 export const Navbar: React.FC<Props> = observer(({ history }) => {
   console.log(history.location)
   const mainStore = useContext(mainStoreContext);
+
+  axios.get('/users/sid').then((response) => {
+    if (!response.data) {
+      localStorage.clear()
+    } 
+  }).catch(err=>console.log(err))
 
   const checkAuth = () => {
     const isSeller = localStorage.getItem('isSeller') === 'true' ? true : false
