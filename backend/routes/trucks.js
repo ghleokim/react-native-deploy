@@ -259,7 +259,7 @@ router.put("/update/notice/:truckId", async function(req, res, next){
 router.put("/update/:truckId", async function(req, res, next) {
   let findTruck = await models.truck.findOne({
     where: {
-      id: truckId,
+      id: req.params.truckId,
       email: req.session.email
     }
   });
