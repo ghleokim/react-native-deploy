@@ -64,7 +64,6 @@ export default () => {
   })
   const [infoData, setInfoData] = useState({ id: 0, _lat: 0.0, _lng: 0.0, state: ''});
 
-
   const myTruckId = localStorage.getItem('truckId')
 
   useEffect(() => {
@@ -227,9 +226,10 @@ export default () => {
 
     return (
       <View style={{paddingTop: 10}}>
-        {navState.nav === 'menu' ? <MenuList menulist={data.menus} handleUpdateMenu={handleUpdateMenu} handleDeleteMenu={handleDeleteMenu} handleAddMenuSubmit={handleAddMenuSubmit}/>
+        {navState.nav === 'menu' ? <MenuList menulist={data.menus} handleUpdateMenu={handleUpdateMenu} handleDeleteMenu={handleDeleteMenu} handleAddMenuSubmit={handleAddMenuSubmit} />
           : navState.nav === 'info' ? <InfoList data={infoData}></InfoList>
-            : <></>}
+            : <></>
+        }
       </View>
     )
   }
