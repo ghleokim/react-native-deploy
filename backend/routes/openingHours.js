@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const models = require("../models");
 const sequelize = require("sequelize");
+const {isLoggedIn, isLoggedInByUser, isLoggedInBySeller, isLoggedInByAdmin} = require('./middlewares');
+
 
 router.get('/getMyTime', async function(req, res, next){
     let result = await models.openingHours.findOne({
@@ -21,7 +23,7 @@ router.get('/getTime/:truckId', async function(req, res, next){
     res.json(result);
 });
 
-router.post('/setTime', async function(req, res, next){
+router.post('/setTime', isLoggedInBySeller, async function(req, res, next){
     let result = await models.openingHours.create({
         truckId: req.session.truckId,
         beginTime: req.body.beginTime,
@@ -30,7 +32,7 @@ router.post('/setTime', async function(req, res, next){
     res.json(result);
 });
 
-router.put('/updateTime', async function(req, res, next){
+router.put('/updateTime', isLoggedInBySeller, async function(req, res, next){
     let result = await models.openingHours.update({
         beginTime: req.body.beginTime,
         endTime: req.body.endTime
@@ -45,7 +47,7 @@ router.put('/updateTime', async function(req, res, next){
             truckId: req.session.truckId
         }
     });
-    
+
     res.json(ret);
 });
 

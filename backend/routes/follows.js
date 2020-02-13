@@ -2,8 +2,10 @@ const express = require("express");
 const router = express.Router();
 const models = require("../models");
 const sequelize = require("sequelize");
+const {isLoggedIn, isLoggedInByUser, isLoggedInBySeller, isLoggedInByAdmin} = require('./middlewares');
 
-router.post("/follow", async function(req, res, next) {
+
+router.post("/follow", isLoggedIn, async function(req, res, next) {
   let resultUser = await models.userTrucks.findOne({
     where: {
       truckId: req.body.truckId,

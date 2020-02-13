@@ -1,6 +1,7 @@
 const express = require("express");
 const models = require("../models");
 const router = express.Router();
+const {isLoggedIn, isLoggedInByUser, isLoggedInBySeller, isLoggedInByAdmin} = require('./middlewares');
 
 router.get("/", function(req, res, next) {
   res.json({ health: "OK" });
@@ -17,13 +18,7 @@ router.get("/searchReplies/:reviewId", async function(req, res, next) {
   res.json(result);
 });
 
-router.post("/create", async function(req, res, next) {
-  if (req.session == null) {
-    res.status(401).send({
-      code: 0,
-      message: "로그인 후 작성해주세요."
-    });
-  } else {
+router.post("/create", isLoggedIn, async function(req, res, next) {
     var sellerId = null;
     if (req.session.isSeller) {
       sellerId = req.session.sellerId;
@@ -38,7 +33,6 @@ router.post("/create", async function(req, res, next) {
     });
     console.log(resultSeller);
     res.json(resultSeller);
-  }
 });
 
 router.get("/searchReply/:replyId", async function(req, res, next) {
@@ -50,7 +44,7 @@ router.get("/searchReply/:replyId", async function(req, res, next) {
   res.json(result);
 });
 
-router.put("/update", async function(req, res, next) {
+router.put("/update", isLoggedIn, async function(req, res, next) {
   let result = await models.reply.update(
     {
       content: req.body.content
@@ -79,7 +73,7 @@ router.put("/update", async function(req, res, next) {
   }
 });
 
-router.delete("/delete/:replyId", async function(req, res, next) {
+router.delete("/delete/:replyId", isLoggedIn, async function(req, res, next) {
   let result = await models.reply.destroy({
     where: {
       id: req.params.replyId,

@@ -3,6 +3,7 @@ const router = express.Router();
 const models = require("../models");
 const crypto = require("crypto");
 const calcDistance = require("../lib/distance");
+const {isLoggedIn, isLoggedInByUser, isLoggedInBySeller, isLoggedInByAdmin} = require('./middlewares');
 
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
@@ -113,9 +114,6 @@ router.get("/:truckId", async function(req, res, next) {
     var isFollow = true;
   }
 
-  console.log(isFollow);
-  console.log(result);
-
   res.send({ result, isFollow: isFollow });
 });
 
@@ -192,8 +190,7 @@ router.get("/search/:searchKeyword", function(req, res, next) {
 });
 
 // insert truck
-router.post("/", async function(req, res, next) {
-  console.log(req.session.email);
+router.post("/", isLoggedInBySeller, async function(req, res, next) {
   let notice = req.body.truckNotice || "";
   let resultTruck = await models.truck.create({
     email: req.session.email,
@@ -210,8 +207,7 @@ router.post("/", async function(req, res, next) {
       email: req.session.email
     }
   });
-  console.log(getTruck);
-  console.log(getTruck.id);
+
   let resultSeller = await models.seller.update(
     {
       truckId: getTruck.id
@@ -226,7 +222,7 @@ router.post("/", async function(req, res, next) {
   res.json(resultTruck);
 });
 
-router.put("/update/notice/:truckId", async function(req, res, next){
+router.put("/update/notice/:truckId", isLoggedInBySeller, async function(req, res, next){
   let findTruck = await models.truck.findOne({
     where: {
       id: req.params.truckId,
@@ -256,7 +252,7 @@ router.put("/update/notice/:truckId", async function(req, res, next){
   }
 
 })
-router.put("/update/:truckId", async function(req, res, next) {
+router.put("/update/:truckId", isLoggedInBySeller, async function(req, res, next) {
   let findTruck = await models.truck.findOne({
     where: {
       id: req.params.truckId,
@@ -299,7 +295,7 @@ router.put("/update/:truckId", async function(req, res, next) {
   }
 });
 
-router.delete("/delete/:truckId", async function(req, res, next) {
+router.delete("/delete/:truckId", isLoggedInBySeller, async function(req, res, next) {
   let resultTruck = await models.truck.destroy({
     where: { email: req.session.email, id: req.params.truckId }
   });
@@ -322,7 +318,7 @@ router.delete("/delete/:truckId", async function(req, res, next) {
   }
 });
 
-router.put("/:truckId/state", async function(req, res, next) {
+router.put("/:truckId/state", isLoggedInBySeller, async function(req, res, next) {
   if (req.params.truckId != req.session.truckId) {
     let error = new Error("푸드트럭 수정 권한이 없습니다.");
     error.status = 403;

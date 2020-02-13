@@ -3,25 +3,14 @@ const router = express.Router();
 const {authorities, menu, reply, report, review, seller, truck, truckusers, user, usertrucks} 
         = require("../models");
 const sequelize = require("sequelize");
+const {isLoggedIn, isLoggedInByUser, isLoggedInBySeller, isLoggedInByAdmin} = require('./middlewares');
+
 
 router.get("/", function(req, res, next) {
     res.json({ health: "OK" });
   });
 
-router.delete("/delete/user/:email", async function(req, res, next) {
-  let email = req.session.email ? req.session.email : "null";
-  let resultAuth = await authorities.findOne({
-    where: {
-      userEmail: email
-    }
-  });
-  if (!resultAuth || resultAuth.authority != "ROLE_ADMIN") {
-    console.log("Here");
-    res.status(404).send({
-      code: 1001,
-      message: "권한이 없습니다."
-    });
-  } else {
+router.delete("/delete/user/:email", isLoggedInByAdmin, async function(req, res, next) {
     let resultDel = await user.destroy({
       where: { email: req.params.email }
     });
@@ -29,52 +18,25 @@ router.delete("/delete/user/:email", async function(req, res, next) {
       where: { userEmail: req.params.email }
     });
     res.send("삭제 완료");
-  }
 });
 
-router.delete("/delete/seller/:email", async function(req, res, next) {
-  let email = req.session.email ? req.session.email : "null";
-  let resultAuth = await authorities.findOne({
-    where: {
-      userEmail: email
-    }
-  });
-  if (!resultAuth || resultAuth.authority != "ROLE_ADMIN") {
-    res.status(404).send({
-      code: 1001,
-      message: "권한이 없습니다."
-    });
-  } else {
+router.delete("/delete/seller/:email", isLoggedInByAdmin, async function(req, res, next) {
     let resultSeller = await seller.destroy({
       where: { userEmail: req.params.email }
     });
     res.send("삭제 완료");
-  }
 });
 
-router.delete("/delete/truck/:truckId", async function(req, res, next) {
-  let email = req.session.email ? req.session.email : "null";
-  let resultAuth = await authorities.findOne({
-    where: {
-      userEmail: email
-    }
-  });
-  if (!resultAuth || resultAuth.authority != "ROLE_ADMIN") {
-    res.status(404).send({
-      code: 1001,
-      message: "권한이 없습니다."
-    });
-  } else {
+router.delete("/delete/truck/:truckId", isLoggedInByAdmin, async function(req, res, next) {
     let result = await truck.destroy({
       where: {
         id: req.params.truckId
       }
     });
     res.send("삭제 완료");
-  }
 });
 
-router.post('/approval', async function(req, res, next){
+router.post('/approval', isLoggedInByAdmin, async function(req, res, next){
     let truckId = req.body.truckId;
 
     let resultTruck = await truck.findOne({
@@ -94,74 +56,35 @@ router.post('/approval', async function(req, res, next){
     res.send("승인 완료");
 })
 
-router.delete("/delete/review/:reviewId", async function(req, res, next) {
-  let email = req.session.email ? req.session.email : "null";
-  let resultAuth = await authorities.findOne({
-    where: {
-      userEmail: email
-    }
-  });
-  if (!resultAuth || resultAuth.authority != "ROLE_ADMIN") {
-    res.status(404).send({
-      code: 1001,
-      message: "권한이 없습니다."
-    });
-  } else {
+router.delete("/delete/review/:reviewId", isLoggedInByAdmin, async function(req, res, next) {
     let resultReview = await review.destroy({
       where: {
         id: req.params.reviewId
       }
     });
     res.send("삭제 완료");
-  }
 });
 
 
-router.delete("/delete/reply/:replyId", async function(req, res, next) {
-  let email = req.session.email ? req.session.email : "null";
-  let resultAuth = await authorities.findOne({
-    where: {
-      userEmail: email
-    }
-  });
-  if (!resultAuth || resultAuth.authority != "ROLE_ADMIN") {
-    res.status(404).send({
-      code: 1001,
-      message: "권한이 없습니다."
-    });
-  } else {
+router.delete("/delete/reply/:replyId", isLoggedInByAdmin, async function(req, res, next) {
     let resultReply = await reply.destroy({
       where: {
         id: req.params.replyId
       }
     });
     res.send("삭제 완료");
-  }
 });
 
-router.delete("/delete/menu/:menuId", async function(req, res, next) {
-  let email = req.session.email ? req.session.email : "null";
-  let resultAuth = await authorities.findOne({
-    where: {
-      userEmail: email
-    }
-  });
-  if (!resultAuth || resultAuth.authority != "ROLE_ADMIN") {
-    res.status(404).send({
-      code: 1001,
-      message: "권한이 없습니다."
-    });
-  } else {
+router.delete("/delete/menu/:menuId", isLoggedInByAdmin, async function(req, res, next) {
     let resultMenu = await menu.destroy({
       where: {
         id: req.params.menuId
       }
     });
     res.send("삭제 완료");
-  }
 });
 
-router.get('/auth/:email', async function(req, res, next){
+router.get('/auth/:email', isLoggedInByAdmin, async function(req, res, next){
   let result = await authorities.findOne({
     where: {
       email: req.params.email

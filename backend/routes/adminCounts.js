@@ -5,10 +5,11 @@ const {authorities, menu, reply, report, review, seller, truck, truckusers, user
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
 const moment = require('moment');
+const {isLoggedIn, isLoggedInByUser, isLoggedInBySeller, isLoggedInByAdmin} = require('./middlewares');
 
 
 // 오늘 가입 유저
-router.get('/users/day', async function(req, res, next){
+router.get('/users/day', isLoggedInByAdmin, async function(req, res, next){
     let d = moment(); 		 				 
 
     let result = await user.findAndCountAll({
@@ -22,7 +23,7 @@ router.get('/users/day', async function(req, res, next){
     res.json(result);
 });
 
-router.get('/reviews/day', async function(req, res, next){
+router.get('/reviews/day', isLoggedInByAdmin, async function(req, res, next){
     let d = moment();
     let result = await review.findAndCountAll({
         where:{
@@ -35,7 +36,7 @@ router.get('/reviews/day', async function(req, res, next){
     res.json(result);
 });
 
-router.get('/reviews/all', async function(req, res, next){
+router.get('/reviews/all', isLoggedInByAdmin, async function(req, res, next){
     let result = await review.findAll({
         include: {
             model: reply
@@ -45,7 +46,7 @@ router.get('/reviews/all', async function(req, res, next){
 });
 
 // 오늘 가입 판매자
-router.get('/sellers/day', async function(req, res, next){
+router.get('/sellers/day', isLoggedInByAdmin, async function(req, res, next){
     let d = moment();
     let result = await seller.findAndCountAll({
         where:{
@@ -59,13 +60,13 @@ router.get('/sellers/day', async function(req, res, next){
 });
 
 // 전체 트럭
-router.get('/trucks/total', async function(req, res, next){
+router.get('/trucks/total', isLoggedInByAdmin, async function(req, res, next){
     let result = await truck.findAndCountAll();
     res.json(result);
 });
 
 // 영업중 트럭
-router.get('/trucks/open', async function(req, res, next){
+router.get('/trucks/open', isLoggedInByAdmin, async function(req, res, next){
     let result = await truck.findAndCountAll({
         where: {
             state: "OPEN"
@@ -75,7 +76,7 @@ router.get('/trucks/open', async function(req, res, next){
 });
 
 // 준비중 트럭
-router.get('/trucks/prepare', async function(req, res, next){
+router.get('/trucks/prepare', isLoggedInByAdmin, async function(req, res, next){
     let result = await truck.findAndCountAll({
         where: {
             state: "PREPARE"
@@ -84,7 +85,7 @@ router.get('/trucks/prepare', async function(req, res, next){
     res.json(result);
 });
 
-router.get('/trucks/openingHours', async function(req, res, next){
+router.get('/trucks/openingHours', isLoggedInByAdmin, async function(req, res, next){
     let result = await openingHours.findAndCountAll();
     res.json(result);
 })

@@ -1,6 +1,7 @@
 const express = require("express");
 const models = require("../models");
 const router = express.Router();
+const {isLoggedIn, isLoggedInByUser, isLoggedInBySeller, isLoggedInByAdmin} = require('./middlewares');
 
 router.get("/", function(req, res, next) {
   res.json({ health: "OK" });
@@ -21,22 +22,15 @@ router.get('/all/:truckId', async function(req, res, next){
 });
 
 // 글쓰기
-router.post("/create", async function(req, res, next) {
-  if (req.session == null) {
-    res.status(401).send({
-      code: 0,
-      message: "로그인 후 작성해주세요."
-    });
-  } else {
-    let result = await models.review.create({
-      content: req.body.content,
-      startRating: req.body.startRating,
-      truckId: req.body.truckId,
-      userEmail: req.session.email
-    });
-    console.log(result);
-    res.json(result);
-  }
+router.post("/create", isLoggedIn, async function(req, res, next) {
+  let result = await models.review.create({
+    content: req.body.content,
+    startRating: req.body.startRating,
+    truckId: req.body.truckId,
+    userEmail: req.session.email
+  });
+  console.log(result);
+  res.json(result);
 });
 
 // review 1개 조회
@@ -49,7 +43,7 @@ router.get("/search/:reviewId", async function(req, res, next) {
   res.json(result);
 });
 
-router.put("/update", async function(req, res, next) {
+router.put("/update", isLoggedIn, async function(req, res, next) {
   let result = await models.review.update(
     {
       content: req.body.content,
@@ -79,7 +73,7 @@ router.put("/update", async function(req, res, next) {
 });
 
 // 그 밑에 달린 댓글들도 다 삭제
-router.delete("/delete/:reviewId", async function(req, res, next) {
+router.delete("/delete/:reviewId", isLoggedIn, async function(req, res, next) {
   let findReview = await models.review.findOne({
     where: {
       userEmail: req.session.email,
