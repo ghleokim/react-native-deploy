@@ -19,6 +19,18 @@ axios.defaults.baseURL=HTTPS_AWS;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 axios.defaults.headers.common['Accept'] = 'application/json';
 axios.defaults.withCredentials = true;
+axios.interceptors.request.use( function (config) {
+  const sid_check = document.cookie.split(';').map(e => e.split('=')[0].trim() ).filter(e => e === 'sid')
+
+  // if sid cookie does not exist
+  if (!sid_check.length) {
+    localStorage.clear()
+  }
+
+  return config 
+}, function (error) {
+  return Promise.reject(error)
+})
 
 export const App: React.FC = observer(() => {
   const mainStore = useContext(mainStoreContext);

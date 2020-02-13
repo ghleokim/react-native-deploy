@@ -11,10 +11,7 @@ import { RouteComponentProps } from 'react-router-dom';
 
 import { BannerStoreContext } from '../store/BannerStore';
 import { Modal } from '../components/main/Modal';
-// <<<<<<< HEAD
-// =======
 import axios from 'axios';
-// >>>>>>> dev-front
 
 interface Notice {
   id: number,
@@ -100,7 +97,6 @@ export const RouteMain: React.FC<Props> = observer(({history}) => {
     }
   }
 
-// >>>>>>> dev-front
   // original
   const getNoticeModal = () => {
     console.log(BannerStore.pageIndex + " page ");
