@@ -18,6 +18,18 @@ router.get("/searchReplies/:reviewId", async function(req, res, next) {
   res.json(result);
 });
 
+router.get("/myReplies", isLoggedIn, async function(req, res, next){
+  let result = await models.review.findAll({
+    include: {
+      model: models.reply,
+    },
+    where: {
+      userEmail: req.session.email
+    },
+  })
+  res.json(result);
+});
+
 router.post("/create", isLoggedIn, async function(req, res, next) {
     var sellerId = null;
     if (req.session.isSeller) {

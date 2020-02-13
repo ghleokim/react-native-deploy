@@ -85,12 +85,13 @@ router.delete("/delete/menu/:menuId", isLoggedInByAdmin, async function(req, res
 });
 
 router.get('/auth/:email', isLoggedInByAdmin, async function(req, res, next){
+  console.log("h");
   let result = await authorities.findOne({
     where: {
-      email: req.params.email
+      userEmail: req.params.email
     }
   });
-  res.json(result);
+  res.json(result.authority);
 })
 
 
