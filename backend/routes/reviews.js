@@ -21,6 +21,15 @@ router.get('/all/:truckId', async function(req, res, next){
     res.json(result);
 });
 
+router.get('/myReviews', isLoggedIn, async function(req, res, next){
+  let result = await models.review.findAll({
+    where: {
+      userEmail: req.session.email
+    }
+  });
+  res.json(result);
+});
+
 // 글쓰기
 router.post("/create", isLoggedIn, async function(req, res, next) {
   let result = await models.review.create({
