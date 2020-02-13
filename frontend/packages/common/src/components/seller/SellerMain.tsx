@@ -18,6 +18,8 @@ import { CustomStyle, CustomText } from "../../static/CustomStyle";
 import EditBtn from '../EditBtn';
 import { Navbar } from '../main/Navbar';
 import SellerState from './SellerState';
+import ReviewList from '../foodtruckDetail/ReviewList';
+import { IReview, IReply } from './../foodtruckDetail/TruckInterface';
 
 interface IState {
   id: Number,
@@ -58,21 +60,34 @@ const LocalStyles = StyleSheet.create({
 export default () => {
   const [data, setData] = useState({ id: '', imgURL: '', title: '', contents: '', latitude: 0, longitude: 0, state: '', menus: [] });
   const [isEditing, setIsEditing] = useState({ id: false, imgURL: false, title: false, contents: false, latitude: false, longitude: false, state: false, menus: [] });
-  const [editText, setEditText] = useState({ id: '', imgURL: '', title: '', contents: '', latitude: 0, longitude: 0, state: ''})
+  const [editText, setEditText] = useState({ id: '', imgURL: '', title: '', contents: '', latitude: 0, longitude: 0, state: '' })
   const [navState, setNavState] = useState({
     nav: 'menu',
   })
-  const [infoData, setInfoData] = useState({ id: 0, _lat: 0.0, _lng: 0.0, state: ''});
-
+  const [infoData, setInfoData] = useState({ id: 0, _lat: 0.0, _lng: 0.0, state: '' });
+  const [review, setReview] = useState<IReview[]>([{
+    id: 0, content: '', startRating: 1, createdAt: '', updatedAt: '', truckId: 0, userEmail: '', replies: [],
+  }])
+  
   const myTruckId = localStorage.getItem('truckId')
 
   useEffect(() => {
+    const settingTruck = async () => {
     axios.get(`/trucks/${myTruckId === undefined ? '1' : myTruckId}`)
       .then((res) => {
         setData(res.data.result);
-        setInfoData({id: Number(myTruckId), _lat: res.data.result.latitude, _lng: res.data.result.longitude, state: res.data.result.state});
+        setInfoData({ id: Number(myTruckId), _lat: res.data.result.latitude, _lng: res.data.result.longitude, state: res.data.result.state });
         setEditText(res.data.result);
-      })
+      });
+    };
+    const fetchReview = async () => {
+      const result = await axios(`/reviews/all/${myTruckId === undefined ? '1' : myTruckId}`,
+      );
+      console.log("Review: ", result.data)
+      setReview(result.data);
+    }
+    settingTruck();
+    fetchReview();
   }, []);
 
   const EditButton = () => {
@@ -87,7 +102,7 @@ export default () => {
     return (
       <View>
         {isEditing[target]
-          ? <View style={{ paddingHorizontal: '10%'}}>
+          ? <View style={{ paddingHorizontal: '10%' }}>
             <TextInput
               style={[CustomText.titleHN, CustomText.textCenter, { fontSize: 24, borderBottomWidth: 2, borderBottomColor: '#303030' }]}
               underlineColorAndroid="transparent"
@@ -155,7 +170,7 @@ export default () => {
 
     axios.put('/trucks/update/1', requestDto)
       .then((res) => {
-        setData({ ...data , ...res.data });
+        setData({ ...data, ...res.data });
       })
     getdd(target);
   }
@@ -222,13 +237,14 @@ export default () => {
   }
 
   const DetailNavContents: React.FC = () => {
-    console.log('navcontent', data)
+    console.log('navcontent', data);
 
     return (
-      <View style={{paddingTop: 10}}>
+      <View style={{ paddingTop: 10 }}>
         {navState.nav === 'menu' ? <MenuList menulist={data.menus} handleUpdateMenu={handleUpdateMenu} handleDeleteMenu={handleDeleteMenu} handleAddMenuSubmit={handleAddMenuSubmit} />
           : navState.nav === 'info' ? <InfoList data={infoData}></InfoList>
-            : <></>
+            : navState.nav === 'review' ? <ReviewList reviewList={review.sort((a,b)=> Date.parse(b.updatedAt) - Date.parse(a.updatedAt))} truckId={infoData.id} onDelete={() => {}} ></ReviewList>
+              : <></>
         }
       </View>
     )
@@ -252,10 +268,10 @@ export default () => {
           {editContentComponent('contents')}
         </View>
         <Line></Line>
-        <DetailNavBar/>
-        <DetailNavContents/>
+        <DetailNavBar />
+        <DetailNavContents />
         {/* <SellerState/> */}
-      </View>    
+      </View>
     </View>
   )
 }
