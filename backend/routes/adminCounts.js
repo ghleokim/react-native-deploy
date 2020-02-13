@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {authorities, menu, reply, report, review, seller, truck, truckusers, user, usertrucks} 
+const {authorities, menu, reply, report, review, seller, truck, truckusers, user, usertrucks, openingHours} 
         = require("../models");
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
@@ -32,6 +32,15 @@ router.get('/reviews/day', async function(req, res, next){
               }
         }
     })
+    res.json(result);
+});
+
+router.get('/reviews/all', async function(req, res, next){
+    let result = await review.findAll({
+        include: {
+            model: reply
+        }
+    });
     res.json(result);
 });
 
@@ -74,5 +83,10 @@ router.get('/trucks/prepare', async function(req, res, next){
     });
     res.json(result);
 });
+
+router.get('/trucks/openingHours', async function(req, res, next){
+    let result = await openingHours.findAndCountAll();
+    res.json(result);
+})
 
 module.exports = router;
