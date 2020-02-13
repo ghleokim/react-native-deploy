@@ -12,6 +12,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { BannerStoreContext } from '../store/BannerStore';
 import { Modal } from '../components/main/Modal';
 import axios from 'axios';
+import { PersonalPage } from '../components/main/PersonalPage';
 
 interface Notice {
   id: number,
@@ -136,6 +137,7 @@ export const RouteMain: React.FC<Props> = observer(({history}) => {
           </TouchableOpacity>
         </View>
       </View>
+      <PersonalPage />
       { noticeList.length !== 0 ?
       <TouchableOpacity style={[styles.noticeContainer]} onPress={()=>{setModalData({category: 'notice', imgURL: '', notice: noticeList[2]}); BannerStore.active = true;}}>
         <Text style={[CustomText.title, {flex: 1, fontWeight: '700', fontSize: 14, textAlign: 'center', marginHorizontal: 10}]}>공지사항</Text>
