@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const models = require("../models");
 const sequelize = require("sequelize");
+const {isLoggedIn, isLoggedInByUser, isLoggedInBySeller, isLoggedInByAdmin} = require('./middlewares');
 
 // select all menu
 router.get("/", async function(req, res, next) {
@@ -25,8 +26,7 @@ router.get("/:menuId", async function(req, res, next) {
 });
 
 // insert menu
-router.post("/", async function(req, res, next) {
-  console.log("!!");
+router.post("/", isLoggedInBySeller, async function(req, res, next) {
   const TRUCK_ID = req.session.truckId;
   let result = await models.menu.create({
     truckId: TRUCK_ID,
@@ -39,7 +39,7 @@ router.post("/", async function(req, res, next) {
   res.json(result);
 });
 
-router.put("/:menuId", async function(req, res, next) {
+router.put("/:menuId", isLoggedInBySeller, async function(req, res, next) {
   const TRUCK_ID = req.session.truckId;
   const MENU_ID = req.params.menuId;
 
@@ -65,11 +65,10 @@ router.put("/:menuId", async function(req, res, next) {
     }
   });
 
-  console.log(resultMenu);
   res.json(resultMenu);
 });
 
-router.delete("/:menuId", async function(req, res, next) {
+router.delete("/:menuId", isLoggedInBySeller, async function(req, res, next) {
   const TRUCK_ID = req.session.truckId;
   const MENU_ID = req.params.menuId;
 

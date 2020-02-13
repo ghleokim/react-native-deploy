@@ -2,6 +2,15 @@ const express = require("express");
 const router = express.Router();
 const models = require("../models");
 const crypto = require("crypto");
+const {isLoggedIn} = require("./middlewares");
+
+router.get("/sid", function(req, res, next) {
+  if (req.session.email) {
+    res.send(true);
+  } else {
+    res.send(false);
+  }
+});
 
 // 회원가입 GET
 router.get("/sign_up", function(req, res, next) {
@@ -80,7 +89,7 @@ router.get("/login", function(req, res, next) {
   });
 });
 
-router.get("/getUser", async function(req, res, next) {
+router.get("/getUser", isLoggedIn, async function(req, res, next) {
   let result = await models.user.findOne({
     where: {
       email: req.session.email
@@ -185,7 +194,7 @@ router.post("/login", async function(req, res, next) {
 });
 
 // 로그아웃
-router.get("/logout", function(req, res, next) {
+router.get("/logout", isLoggedIn, function(req, res, next) {
   req.session.destroy();
   res.clearCookie("sid");
 
@@ -193,7 +202,7 @@ router.get("/logout", function(req, res, next) {
   res.send(true);
 });
 
-router.put("/update", async function(req, res, next) {
+router.put("/update", isLoggedIn, async function(req, res, next) {
   const USER_NAME = req.body.userName;
   let result = await models.user.update(
     {
@@ -216,7 +225,7 @@ router.put("/update", async function(req, res, next) {
 });
 
 // userEmail 기반 삭제
-router.delete("/delete", async function(req, res, next) {
+router.delete("/delete", isLoggedIn, async function(req, res, next) {
   let result = await models.user.destroy({
     where: { email: req.session.email }
   });
@@ -226,7 +235,5 @@ router.delete("/delete", async function(req, res, next) {
 
   res.json(result);
 });
-
-
 
 module.exports = router;

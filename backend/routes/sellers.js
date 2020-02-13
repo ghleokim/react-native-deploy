@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const models = require("../models");
 const crypto = require("crypto");
+const {isLoggedIn, isLoggedInByUser, isLoggedInBySeller, isLoggedInByAdmin} = require('./middlewares');
+
 
 router.get("/sign_up", function(req, res, next) {
   res.render("sellers/sign_up");
@@ -51,7 +53,7 @@ router.get("/", function(req, res, next) {
 });
 
 // sellerEmail 기반 삭제
-router.delete("/delete", async function(req, res, next) {
+router.delete("/delete", isLoggedInBySeller, async function(req, res, next) {
   let resultUser = await models.user.destroy({
     where: { email: req.session.email }
   });
@@ -70,7 +72,7 @@ router.delete("/delete", async function(req, res, next) {
   res.json(resultSeller);
 });
 
-router.put("/update", async function(req, res, next) {
+router.put("/update", isLoggedInBySeller, async function(req, res, next) {
   let findUser = await models.user.update(
     {
       name: req.body.name
@@ -91,7 +93,7 @@ router.put("/update", async function(req, res, next) {
   res.json(resultUser);
 });
 
-router.get("/myTrucks", async function(req, res, next) {
+router.get("/myTrucks", isLoggedInBySeller, async function(req, res, next) {
   let result = await models.truck.findAll({
     where: { email: req.session.email }
   });
@@ -99,7 +101,7 @@ router.get("/myTrucks", async function(req, res, next) {
   res.json(result);
 });
 
-router.post("/approve", async function(req, res, next){
+router.post("/approve", isLoggedInBySeller, async function(req, res, next){
   let resultSeller = await models.seller.findOne({
     where: {
       businessRegistrationNumber: req.body.businessRegistrationNumber

@@ -3,6 +3,8 @@ const router = express.Router();
 const {authorities, menu, reply, report, review, seller, truck, truckusers, user, usertrucks, notice} 
         = require("../models");
 const sequelize = require("sequelize");
+const {isLoggedIn, isLoggedInByUser, isLoggedInBySeller, isLoggedInByAdmin} = require('./middlewares');
+
 
 
 router.get("/", async function(req, res, next) {
@@ -10,19 +12,7 @@ router.get("/", async function(req, res, next) {
   res.json(result);
 });
 
-router.post('/admin/add', async function(req, res, next){
-    console.log("here")
-    let resultAuth = await authorities.findOne({
-        where: {
-          userEmail: req.session.email
-        }
-      });
-      if (resultAuth.authority != "ROLE_ADMIN") {
-        res.status(404).send({
-          code: 1001,
-          message: "권한이 없습니다."
-        });
-      } else {
+router.post('/admin/add', isLoggedInByAdmin, async function(req, res, next){  
         let result = await notice.create({
             title: req.body.title,
             content: req.body.content,
@@ -30,83 +20,44 @@ router.post('/admin/add', async function(req, res, next){
             state: req.body.state
         });
         res.json(result);
-      }
 })
 
-router.put('/admin/update/state', async function(req, res, next){
-    let resultAuth = await authorities.findOne({
+router.put('/admin/update/state', isLoggedInByAdmin, async function(req, res, next){
+    let resultNotice = await notice.findOne({
         where: {
-          userEmail: req.session.email
+            id: req.body.id
         }
-      });
-      if (resultAuth.authority != "ROLE_ADMIN") {
-        res.status(404).send({
-          code: 1001,
-          message: "권한이 없습니다."
-        });
-      }
-      else{
-          let resultNotice = await notice.findOne({
-              where: {
-                  id: req.body.id
-              }
-          });
-          let newState = !resultNotice.state;
-          let updateNotice = await notice.update({
-              state: newState
-          }, {
-              where: {
-                  id:req.body.id
-              }
-          });
-          res.json(newState);
-      }
+    });
+    let newState = !resultNotice.state;
+    let updateNotice = await notice.update({
+        state: newState
+    }, {
+        where: {
+            id:req.body.id
+        }
+    });
+    res.json(newState);
 })
 
-router.put('/admin/update', async function(req, res, next){
-    let resultAuth = await authorities.findOne({
-        where: {
-          userEmail: req.session.email
-        }
+router.put('/admin/update', isLoggedInByAdmin, async function(req, res, next){
+      let result = await notice.update({
+          title: req.body.title,
+          content: req.body.content
+      }, {
+          where: {
+              id: req.body.noticeId
+          }
       });
-      if (resultAuth.authority != "ROLE_ADMIN") {
-        res.status(404).send({
-          code: 1001,
-          message: "권한이 없습니다."
-        });
-      } else {
-        let result = await notice.update({
-            title: req.body.title,
-            content: req.body.content
-        }, {
-            where: {
-                id: req.body.noticeId
-            }
-        });
-        res.json(result);
-      }
+      res.json(result);
 })
 
-router.delete('/admin/delete/:noticeId', async function(req, res, next){
-    console.log("del");
-    let resultAuth = await authorities.findOne({
-        where: {
-          userEmail: req.session.email
+router.delete('/admin/delete/:noticeId', isLoggedInByAdmin, async function(req, res, next){
+    let result = await notice.destroy({
+        where:{
+            id: req.params.noticeId
         }
-      });
-      if (resultAuth.authority != "ROLE_ADMIN") {
-        res.status(404).send({
-          code: 1001,
-          message: "권한이 없습니다."
-        });
-      } else {
-        let result = await notice.destroy({
-            where:{
-                id: req.params.noticeId
-            }
-        });
-        res.json(result);
-      }
+    });
+    res.json(result);
 })
 
 
