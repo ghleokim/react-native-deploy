@@ -15,7 +15,7 @@ const AWS = 'http://54.180.141.50:8001/api';
 const LOCAL = 'http://localhost:8001/api';
 const HODUN = 'http://70.12.247.106:8001/api';
 
-axios.defaults.baseURL=HTTPS_AWS;
+axios.defaults.baseURL=HODUN;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 axios.defaults.headers.common['Accept'] = 'application/json';
 axios.defaults.withCredentials = true;
