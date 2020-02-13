@@ -22,7 +22,7 @@ export const Header: React.FC<Props> = observer(({ history }) => {
   // test for dev
   const devTest = () => {
     axios.get('/')
-      .then((response) => { console.log(response); alert(JSON.stringify(response.data)) })
+      .then((response) => { console.log('db health check',response); alert(JSON.stringify(response.data)) })
       .catch((error) => { console.log(error.response); alert(JSON.stringify(error.response.data)) })
   }
 

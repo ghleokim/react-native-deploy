@@ -6,11 +6,11 @@ import {
   Button,
   StyleSheet
 } from "react-native";
-import { NaverMap, Marker } from 'react-naver-maps';
-import { mainStoreContext } from '../../store/MainStore';
 import Line from '../Line'
 import InfoStaticMaps from '../map/InfoStaticMaps';
 import OpeningState from '../seller/OpeningState';
+import { WebPicker } from './WebPicker';
+import axios from 'axios';
 
 interface IState {
     id: Number,
@@ -24,18 +24,46 @@ interface IProps {
 }
 
 export default (infoData: IProps) => {
+    useEffect(() => {
+        axios.get(`openingHours/getTime/${infoData.data.id}`)
+            .then((response) => {
+                console.log('getTime : ', response);
+                setBeginTime(response.data.beginTime);
+                setEndTime(response.data.endTime);
+            })
+            .catch((err) => console.log(err));
+    }, []);
 
-    const SellerState: React.FC = () => {
-        return (
-        <Text style={{fontSize: 20}}>영업상태 : {infoData.data.state}</Text>
-        )
-    }
+    const [beginTime, setBeginTime] = useState('09:00');
+    const [endTime, setEndTime] = useState('18:00');
 
     const HoursOfOperation: React.FC = () => {
+        const SubmitButton: React.FC = () => {
+            const sendTimeSetting = () => {
+                axios.put('openingHours/updateTime', { beginTime: beginTime, endTime: endTime })
+                    .then((response) => {
+                        console.log('updateTime : ', response);
+                    })
+                    .catch((err) => console.log(err))
+            }
+            return (
+                <View style={{height: 30, width: 100}}>
+                    <Button title='시간 수정' onPress={ sendTimeSetting }></Button>
+                </View>
+            )
+        }
         return (
+            // 디자인 수정 필요
             <View>
-                <Text>영업 종료 예정 시간</Text>
-                <Text>필요해지면 더 만들겠습니다</Text>
+                <View style={{ height: 50, width: '50%' }}>
+                    <Text>시작 시간</Text>
+                    <WebPicker currentValue={beginTime} onChange={(e) => { console.log(setBeginTime(e)) }} options={[{ label: '00', value: 0 }, { label: '01', value: 1 }, { label: '02', value: 2 },]} style={'jin'} ></WebPicker>
+                </View>
+                <View style={{ height: 50, width: '50%' }}>
+                    <Text>종료 시간</Text>
+                    <WebPicker currentValue={endTime} onChange={(e) => { console.log(setEndTime(e)) }} options={[{ label: '00', value: 0 }, { label: '01', value: 1 }, { label: '02', value: 2 },]} style={'jin'} ></WebPicker>
+                </View>
+                <SubmitButton />
             </View>
         )
     }
@@ -46,11 +74,7 @@ export default (infoData: IProps) => {
             <Line/>
             <OpeningState state={infoData.data.state}></OpeningState>
             <Line/>
-            {/* <HoursOfOperation/> */}
-
-
-
-
+            <HoursOfOperation/>
         </View>
     );
 };
