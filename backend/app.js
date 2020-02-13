@@ -35,6 +35,8 @@ var reportsRouter = require('./routes/reports');
 var adminsRouter = require('./routes/admins');
 var noticesRouter = require('./routes/notices');
 var adminCountsRouter = require('./routes/adminCounts');
+var openingHoursRouter = require('./routes/openingHours');
+
 var cors = require('cors');
 const session = require('express-session');
 
@@ -101,6 +103,7 @@ app.use('/api/reports', reportsRouter);
 app.use('/api/admins', adminsRouter);
 app.use('/api/notices', noticesRouter);
 app.use('/api/adminCounts', adminCountsRouter);
+app.use('/api/openingHours', openingHoursRouter);
 app.get('/api/upload', function(req, res, next){
   console.log("upload router");
   res.render('upload');
