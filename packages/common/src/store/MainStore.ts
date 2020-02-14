@@ -1,6 +1,20 @@
 import { observable } from 'mobx';
 import { createContext } from 'react';
 
+interface Notice {
+  id: number,
+  title: string,
+  createdAt: string,
+  updatedAt: string,
+  content: string,
+}
+
+interface ModalData {
+  category: 'notice' | 'banner' | '',
+  imgURL?: string,
+  notice?: Notice,
+}
+
 class MainStore {
   // global setting
   @observable DEVELOP: boolean = true;
@@ -20,6 +34,9 @@ class MainStore {
   @observable bannerPage: number = 1;
   @observable bannerTotal: number = 1;
   @observable bannerCountOpacity: number = 1;
+
+  // modal info
+  @observable modalData: ModalData = { category: '' };
   
   // test
   @observable count = 0;
