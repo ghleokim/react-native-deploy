@@ -48,8 +48,8 @@ export const Modal: React.FC<Props> = observer(({ notice, imgURL }) => {
       </View>
       <ScrollView contentContainerStyle={{flex: 1,}}>
         {!!imgURL ? <View style={{width: '100%'}}>
-          <Image style={{height: BannerStore.imgHeight, width: '100%', resizeMode: 'contain'}} source={{uri: imgURL}} defaultSource={{uri: 'https://picsum.photos/200'}}/>
-          <Image style={{height: '100%', width: '100%', resizeMode: 'contain'}} source={{uri: imgURL}} defaultSource={{uri: 'https://picsum.photos/200'}}/>
+          <Image style={{height: BannerStore.imgHeight, width: '100%', resizeMode: 'contain'}} source={{uri: imgURL}} defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}/>
+          <Image style={{height: '100%', width: '100%', resizeMode: 'contain'}} source={{uri: imgURL}} defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}/>
           </View>
           : <View>
               <View style={{height: 80, paddingHorizontal: 15, justifyContent: 'center', borderBottomColor: '#c0c0c0', borderBottomWidth: 1}}>

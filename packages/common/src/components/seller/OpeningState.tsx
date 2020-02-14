@@ -12,9 +12,9 @@ interface IState {
 
 export default (props: IState) => {
     const getState = (state) => {
-        if (state === 'open') {
+        if (state === 'open' || state === 'OPEN') {
           return {message:'영업중', color: '#008000'}
-        } else if (state === 'prepare') {
+        } else if (state === 'prepare' || state === 'PREPARE') {
           return {message:'영업 준비중', color: '#e0c000'}
         } else {
           return {message:'영업 종료', color: '#608080'}

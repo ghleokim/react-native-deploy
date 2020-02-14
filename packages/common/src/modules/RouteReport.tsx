@@ -40,6 +40,8 @@ export const RouteReport: React.FC<Props> = observer(({history}) => {
         , {...content, category: reportStore.sellectedClassifiedCode, division: history.location.state.division, targetId: history.location.state.targetId})
       .then(response=>{
         console.log(response)
+        alert('신고 내용 접수하였습니다.')
+        history.replace('/')
       })
       .catch(err=>console.log(err))
       } else {
