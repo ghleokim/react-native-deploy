@@ -22,7 +22,8 @@ module.exports = (sequelize, DataTypes) => {
     latitude: DataTypes.FLOAT,
     longitude: DataTypes.FLOAT,
     state: DataTypes.STRING,
-    truckNotice: DataTypes.TEXT
+    truckNotice: DataTypes.TEXT,
+    starRatingAVG: DataTypes.FLOAT
   }, {});
   truck.associate = function(models) {
     truck.hasMany(models.menu,{onDelete: 'cascade'});

@@ -44,7 +44,8 @@ router.get("/followList", async function(req, res, next) {
           "imgURL",
           "latitude",
           "longitude",
-          "state"
+          "state",
+          "starRatingAVG"
         ],
         where: {}
       }

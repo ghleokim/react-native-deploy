@@ -34,6 +34,10 @@ router.get('/starRating/:truckId', async function(req, res, next){
       truckId: req.params.truckId
     }
   });
+  let avg = JSON.stringify(result);
+  let avg1 = JSON.parse(avg);             
+  console.log("JSON : " + avg1[0].starRating);
+
   res.json(result);
 });
 
@@ -54,7 +58,8 @@ router.get("/boundary", function(req, res, next) {
         "imgURL",
         "latitude",
         "longitude",
-        "state"
+        "state",
+        "starRatingAVG"
       ],
       where: {
         latitude: { [Op.between]: [x1, x2] },
@@ -87,7 +92,8 @@ router.get("/getTruck", async function(req, res, next) {
       "latitude",
       "longitude",
       "state",
-      "truckNotice"
+      "truckNotice",
+      "starRatingAVG"
     ]
   });
   console.log(result);
@@ -110,7 +116,8 @@ router.get("/:truckId", async function(req, res, next) {
       "latitude",
       "longitude",
       "state",
-      "truckNotice"
+      "truckNotice",
+      "starRatingAVG"
     ]
   });
 
@@ -148,7 +155,8 @@ router.get("/search/:searchKeyword", function(req, res, next) {
         "latitude",
         "longitude",
         "state",
-        "truckNotice"
+        "truckNotice",
+        "starRatingAVG"
       ],
       where: {
         [Op.or]: [
@@ -217,7 +225,8 @@ router.post("/", isLoggedInBySeller, async function(req, res, next) {
     latitude: req.body.latitude,
     longitude: req.body.longitude,
     state: req.body.state,
-    truckNotice: notice
+    truckNotice: notice,
+    starRatingAVG: req.body.starRatingAVG
   });
   let getTruck = await models.truck.findOne({
     where: {
