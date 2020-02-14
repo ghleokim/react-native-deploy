@@ -6,6 +6,9 @@ const {isLoggedIn, isLoggedInByUser, isLoggedInBySeller, isLoggedInByAdmin} = re
 
 router.get('/all', async function(req, res, next){
     let result = await models.report.findAll({
+      include: {
+        model: models.truck,
+      },
     });
 
     res.json(result);
@@ -43,7 +46,8 @@ router.post('/report', isLoggedIn, async function(req, res, next){
           category: req.body.category,
           content: req.body.content,
           division: req.body.division,
-          targetId: req.body.division,
+          targetId: req.body.targetId,
+          truckId: req.body.targetId,
           original: str
         });
 

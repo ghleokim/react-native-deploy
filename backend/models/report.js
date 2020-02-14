@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey:"userEmail",
       onDelete: 'cascade'
     });
+    report.belongsTo(models.truck, {
+      foreignKey:"truckId",
+      onDelete: 'cascade'
+    });
   };
   return report;
 };
