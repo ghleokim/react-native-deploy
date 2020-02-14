@@ -8,10 +8,9 @@ import { CustomStyle, CustomText } from '../static/CustomStyle';
 import { Colors } from '../static/CustomColor';
 import { BannerSwiper } from '../components/main/BannerSwiper'
 import { RouteComponentProps } from 'react-router-dom';
-
 import { BannerStoreContext } from '../store/BannerStore';
-import { Modal } from '../components/main/Modal';
 import axios from 'axios';
+import { PersonalPage } from '../components/main/PersonalPage';
 import { NoticeList } from '../components/main/NoticeList';
 
 interface Notice {
@@ -105,6 +104,7 @@ export const RouteMain: React.FC<Props> = observer(({history}) => {
           </TouchableOpacity>
         </View>
       </View>
+      <PersonalPage />
       <NoticeList noticeList={noticeList}/>
       <View style={[styles.staticInfo, { flexGrow: 1 }]}>
         <Text style={styles.staticText}>

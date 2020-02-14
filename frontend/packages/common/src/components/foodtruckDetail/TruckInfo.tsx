@@ -25,6 +25,7 @@ interface IProps {
 
 export default (props: IProps) => {
   useEffect(() => {
+    console.log('props : ', props)
     axios.get(`openingHours/getTime/${props.data.id}`)
       .then((response) => {
         console.log('getTime : ', response);
