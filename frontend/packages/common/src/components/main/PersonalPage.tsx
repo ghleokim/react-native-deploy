@@ -130,9 +130,17 @@ export const PersonalPage: React.FC<Props> = ({history}) => {
     )
   }
 
-  const ifNotLoggedIn = () => {
+  const SampleContents: React.FC = () => {
     if (!!userEmail) {
-      return <></>
+      return (
+        <>
+        <SampleList />
+        <View style={{width: '100%', height: '100%', backgroundColor: 'rgba(255,255,255,0.7)', justifyContent: 'center', alignItems: 'center', position: 'absolute', zIndex: 2}}>
+          <Text>찜한 푸드트럭이 없네요 !</Text><Text>관심 있는 푸드트럭을 저장해보세요.</Text>
+          <TouchableOpacity onPress={()=>history.push('/map')}><Text style={{textDecorationLine: 'underline'}}>푸드트럭 보러 가기</Text></TouchableOpacity>
+        </View>
+      </>
+      )
     }
     return (
     <>
@@ -211,7 +219,9 @@ export const PersonalPage: React.FC<Props> = ({history}) => {
         <Text style={[CustomText.title, {fontSize: 18}]}>내가 찜한 푸드트럭</Text>
       </View>
 
-      <View style={{paddingHorizontal: 10}}>
+      {!!truckList && 0 === truckList.length
+      ? <SampleContents /> 
+      : <View style={{paddingHorizontal: 10}}>
         <FlatList<TruckItem>
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -222,8 +232,9 @@ export const PersonalPage: React.FC<Props> = ({history}) => {
           keyExtractor={(truck)=> `${truck.id}${truck.title}`}
           />
       </View>
+      }
 
-      {ifNotLoggedIn()}
+      
     </View>
   )
 
