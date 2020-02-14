@@ -27,7 +27,7 @@ export const ListView: React.FC<Props> = ({ history, id, imageUri, title, conten
 	return (
 		<TouchableOpacity disabled={!isOpen()} onPress={()=>handleItemSelect(id)} style={[styles.listView, { flexDirection: 'row' }]}>
 			<View style={{ flex: 1 }}>
-				<Image style={{ borderRadius: 30, width: 60, height: 60 }} defaultSource={{uri: `https://picsum.photos/id/${id}/200`}} source={{ uri: imageUri === undefined ? 'https://picsum.photos/200' : imageUri }} />
+				<Image style={{ borderRadius: 30, width: 60, height: 60 }} defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')} source={{ uri: imageUri }} />
 			</View>
 			<View style={{ flex: 3, justifyContent: 'center' }}>
 				<Text style={[CustomText.title, isOpen() ? { color: Colors.black } : { color: Colors.gray }]}>id {id} | {title}</Text>

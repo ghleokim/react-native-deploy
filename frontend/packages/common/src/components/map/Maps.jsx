@@ -152,9 +152,9 @@ export const Maps =  observer(({history}) => {
     console.log("markers data : ", mapStore.markerData);
     return <View style={{position: 'absolute', 
     left: mapStore.markerData.domEvent.clientX + 150 <= mainStore.screenWidth ?
-    mapStore.markerData.domEvent.clientX : mapStore.markerData.domEvent.clientX - 150, 
+    mapStore.markerData.domEvent.clientX : mapStore.markerData.domEvent.clientX - 130, 
       top: mapStore.markerData.domEvent.clientY - 20 + 150 <= mapStore.mapHeight ? 
-      mapStore.markerData.domEvent.clientY - 20 : mapStore.markerData.domEvent.clientY - 200, 
+      mapStore.markerData.domEvent.clientY - 20 : mapStore.markerData.domEvent.clientY - 115, 
       width: 'auto', height: 50, zIndex: 1, backgroundColor:'#ffffff',
       borderColor: '#2c200d', borderRadius: 10, borderWidth: 2, paddingHorizontal: 10, justifyContent: 'center'
       }}>
@@ -269,7 +269,7 @@ export const Maps =  observer(({history}) => {
             <Image
               style={{ borderRadius: 30, width: 60, height: 60 }}
               source={{ uri: element.imgURL }}
-              defaultSource={{uri: `https://picsum.photos/id/${element.id}/200`}}
+              defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}
               />
           </View>
           <View style={{ flex: 3, justifyContent: 'center' }}>
