@@ -22,13 +22,14 @@ interface Props {
 export const Modal: React.FC<Props> = observer(({ notice, imgURL }) => {
   const MainStore = useContext(mainStoreContext);
   const BannerStore = useContext(BannerStoreContext);
+  const defaultTopOffset = MainStore.headerHeight
 
   const [modalState, setModalState] = useState(true);
   const [topOffset] = useState(new Animated.Value(MainStore.screenHeight));
 
   useEffect(() => {
     Animated.timing(topOffset, {
-      toValue: modalState ? 0 : MainStore.screenHeight,
+      toValue: modalState ? defaultTopOffset : MainStore.screenHeight,
       duration: 300
     }).start()
   },[modalState])

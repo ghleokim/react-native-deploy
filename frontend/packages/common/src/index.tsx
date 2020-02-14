@@ -9,6 +9,8 @@ import { Routes } from './Routes';
 import { mainStoreContext } from './store/MainStore';
 import { CustomStyle } from './static/CustomStyle';
 import axios from 'axios';
+import { Modal } from './components/main/Modal';
+import { BannerStoreContext } from './store/BannerStore';
 
 const HTTPS_AWS='https://food-truck.shop/api'
 const AWS = 'http://54.180.141.50:8001/api';
@@ -22,6 +24,7 @@ axios.defaults.withCredentials = true;
 
 export const App: React.FC = observer(() => {
   const mainStore = useContext(mainStoreContext);
+  const bannerStore = useContext(BannerStoreContext);
 
   mainStore.screenWidth = Dimensions.get('window').width;
   mainStore.screenHeight = Dimensions.get('window').height;
@@ -38,9 +41,25 @@ export const App: React.FC = observer(() => {
     mainStore.scrollviewHeight = mainStore.screenHeight - mainStore.footerHeight - mainStore.headerHeight;
   }
 
+  const getModal = () => {
+    // console.log(BannerStore.pageIndex + " page ", modalData);
+    if (bannerStore.active === true) {
+      if (mainStore.modalData.category === 'banner') {
+        return <Modal imgURL={mainStore.modalData.imgURL}/>
+      } else if (mainStore.modalData.category === 'notice') {
+        return <Modal notice={mainStore.modalData.notice}/>
+      } else {
+        return <></>
+      }
+    } else {
+      return <></>
+    }
+  }
+
   return (
     <View style={{ height: mainStore.screenHeight, flex: 1 }} onLayout={()=>getDimension()}>
       <Routes height={mainStore.scrollviewHeight} headerHeight={mainStore.headerHeight} footerHeight={mainStore.footerHeight} />
+      {getModal()}
     </View>
   )
 })
