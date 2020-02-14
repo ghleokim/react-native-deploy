@@ -66,7 +66,7 @@ export default () => {
   })
   const [infoData, setInfoData] = useState({ id: 0, _lat: 0.0, _lng: 0.0, state: '' });
   const [review, setReview] = useState<IReview[]>([{
-    id: 0, content: '', startRating: 1, createdAt: '', updatedAt: '', truckId: 0, userEmail: '', replies: [],
+    id: 0, content: '', starRating: 1, createdAt: '', updatedAt: '', truckId: 0, userEmail: '', replies: [],
   }])
   
   const myTruckId = localStorage.getItem('truckId')
