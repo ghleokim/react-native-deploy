@@ -104,7 +104,7 @@ export const RouteMain: React.FC<Props> = observer(({history}) => {
           </TouchableOpacity>
         </View>
       </View>
-      <PersonalPage />
+      <PersonalPage history={history}/>
       <NoticeList noticeList={noticeList}/>
       <View style={[styles.staticInfo, { flexGrow: 1 }]}>
         <Text style={styles.staticText}>

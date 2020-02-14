@@ -15,6 +15,12 @@ interface ModalData {
   notice?: Notice,
 }
 
+interface Coordidate {
+  X: number;
+  Y: number;
+  timestamp: number;
+}
+
 class MainStore {
   // global setting
   @observable DEVELOP: boolean = true;
@@ -37,6 +43,12 @@ class MainStore {
 
   // modal info
   @observable modalData: ModalData = { category: '' };
+
+  // personal content
+  @observable scrollTimeStamp: number = 0;
+  @observable newSS: boolean = false;
+  @observable touchIn: Coordidate = { X: -1, Y: -1, timestamp: 0};
+  @observable touchOut: Coordidate = { X: -1, Y: -1, timestamp: 0};
   
   // test
   @observable count = 0;

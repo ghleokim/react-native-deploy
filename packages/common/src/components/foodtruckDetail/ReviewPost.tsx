@@ -15,7 +15,7 @@ interface Props {
 
 export const ReviewPost: React.FC<Props> = ({truckId}) => {
   const [write, setWrite] = useState(false)
-  const [content, setContent] = useState({ content: '', startRating: 1 })
+  const [content, setContent] = useState({ content: '', starRating: 1 })
 
   const onChangeText = (text) => {
     content.content = text
@@ -48,11 +48,11 @@ export const ReviewPost: React.FC<Props> = ({truckId}) => {
     return (
       <View>
         <View style={{ flexDirection: 'row', alignContent: 'center', alignSelf: 'center', paddingVertical: 10}}>
-          <TouchableOpacity onPress={()=>setContent({...content, startRating: 1})}><Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 35, width: 35, tintColor: content.startRating > 0 ? '#feb246' : '#c0c0c0'}}/></TouchableOpacity>
-          <TouchableOpacity onPress={()=>setContent({...content, startRating: 2})}><Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 35, width: 35, tintColor: content.startRating > 1 ? '#feb246' : '#c0c0c0'}}/></TouchableOpacity>
-          <TouchableOpacity onPress={()=>setContent({...content, startRating: 3})}><Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 35, width: 35, tintColor: content.startRating > 2 ? '#feb246' : '#c0c0c0'}}/></TouchableOpacity>
-          <TouchableOpacity onPress={()=>setContent({...content, startRating: 4})}><Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 35, width: 35, tintColor: content.startRating > 3 ? '#feb246' : '#c0c0c0'}}/></TouchableOpacity>
-          <TouchableOpacity onPress={()=>setContent({...content, startRating: 5})}><Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 35, width: 35, tintColor: content.startRating > 4 ? '#feb246' : '#c0c0c0'}}/></TouchableOpacity>
+          <TouchableOpacity onPress={()=>setContent({...content, starRating: 1})}><Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 35, width: 35, tintColor: content.starRating > 0 ? '#feb246' : '#c0c0c0'}}/></TouchableOpacity>
+          <TouchableOpacity onPress={()=>setContent({...content, starRating: 2})}><Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 35, width: 35, tintColor: content.starRating > 1 ? '#feb246' : '#c0c0c0'}}/></TouchableOpacity>
+          <TouchableOpacity onPress={()=>setContent({...content, starRating: 3})}><Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 35, width: 35, tintColor: content.starRating > 2 ? '#feb246' : '#c0c0c0'}}/></TouchableOpacity>
+          <TouchableOpacity onPress={()=>setContent({...content, starRating: 4})}><Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 35, width: 35, tintColor: content.starRating > 3 ? '#feb246' : '#c0c0c0'}}/></TouchableOpacity>
+          <TouchableOpacity onPress={()=>setContent({...content, starRating: 5})}><Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 35, width: 35, tintColor: content.starRating > 4 ? '#feb246' : '#c0c0c0'}}/></TouchableOpacity>
         </View>
         <TextInput onChangeText={(text) => onChangeText(text)} onSubmitEditing={handleReviewPost} style={styles.reviewInput} defaultValue={content.content} />
         <View style={{alignSelf: 'flex-end', flexDirection: 'row'}}>
