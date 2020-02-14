@@ -13,6 +13,7 @@ import { CustomStyle, CustomText } from '../../static/CustomStyle';
 import ReviewList from './ReviewList';
 import TruckInfo from './TruckInfo';
 import { Colors } from '../../static/CustomColor';
+import { mainStoreContext } from '../../store/MainStore';
 
 interface IState {
   id: number,
@@ -55,6 +56,9 @@ interface Props {
 }
 
 export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
+  const mainStore = useContext(mainStoreContext)
+  const isLoggedIn = !!localStorage.getItem('userEmail')
+
   const [state, setState] = useState({
     nav: 'menu',
   })
@@ -69,6 +73,10 @@ export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
   const [review, setReview] = useState<IReview[]>([{
     id: 0, content: '', startRating: 1, createdAt: '', updatedAt: '', truckId: 0, userEmail: '', replies: [],
   }])
+
+  const followButtonInfo = {
+    width: mainStore.screenWidth / 10, height: mainStore.screenWidth / 10, offset: mainStore.screenWidth / 20
+  }
 
   const DetailNavBar: React.FC = () => {
     return (
@@ -131,6 +139,9 @@ export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
     })
     .catch(function (error) {
       console.log(error);
+      if (error.response.status === 401) {
+        alert('로그인 후 사용 가능한 기능입니다.')
+      }
     });
   }
 
@@ -159,14 +170,15 @@ export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
         source={{ uri: data.imgURL ? data.imgURL : '' }}
         defaultSource={{ uri: `https://picsum.photos/id/${data.id ? data.id : 0}/200` }}
       />
+      {isLoggedIn ? 
       <TouchableOpacity
-        style={{ position: 'absolute', right: 10, top: 50, alignSelf: 'center', paddingTop: 8, paddingBottom: 8, marginBottom: 5, height: 30, width: 30, borderRadius: 15, borderColor: '#FFFFFF', borderWidth: 1.2, alignItems: 'center', justifyContent: 'center', backgroundColor: follow.isFollow === true ? '#ec585c': '#c0c0c0' }}
+        style={{ position: 'absolute', right: 2 + followButtonInfo.offset/ 2, top: 120 + followButtonInfo.offset / 2, alignSelf: 'center', height: followButtonInfo.height, width: followButtonInfo.width, borderRadius: followButtonInfo.offset, borderColor: '#FFFFFF', borderWidth: 1.2, alignItems: 'center', justifyContent: 'center', backgroundColor: follow.isFollow === true ? '#ec585c': '#c0c0c0' }}
         onPress={() => clickedFollowButton()} >
         <Image
-        style={{ tintColor: '#ffffff', width: 21, height: 21 }}
+        style={{ tintColor: '#ffffff', width: 25, height: 25 }}
         source={require('@foodtruckmap/common/src/static/icon_processed/noun_Heart_1015352.png')} />
-        
       </TouchableOpacity>
+      : <></>}
       <View style={{ paddingBottom: 10, backgroundColor: '#edaa11', width: '70%', alignSelf: 'center', borderRadius: 9, marginBottom: 5 }}>
         <View style={{ width: '100%', backgroundColor: '#f2be46', paddingHorizontal: 15, paddingVertical: 8, borderRadius: 9, alignItems: 'center' }}>
           <Text style={[styles.titleHN, { fontSize: 24 }]}>{data.title}</Text>
