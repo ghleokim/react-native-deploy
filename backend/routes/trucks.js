@@ -21,6 +21,23 @@ router.get("/", function(req, res, next) {
       next(err);
     });
 });
+
+router.get('/starRating/:truckId', async function(req, res, next){
+  let result = await models.review.findAll({
+    attributes: [
+      [
+        models.sequelize.fn("AVG", models.sequelize.col("starRating")),
+        "starRating"
+      ]
+    ],
+    where: {
+      truckId: req.params.truckId
+    }
+  });
+  res.json(result);
+});
+
+
 router.get("/boundary", function(req, res, next) {
   const x1 = Number(req.query.startLatitude);
   const y1 = Number(req.query.startLongitude);

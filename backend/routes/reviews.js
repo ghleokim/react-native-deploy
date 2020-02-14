@@ -21,6 +21,15 @@ router.get('/all/:truckId', async function(req, res, next){
     res.json(result);
 });
 
+router.get('/count/:truckId', async function(req, res, next){
+  let result = await models.review.count({
+    where: {
+      truckId: req.params.truckId
+    }
+  });
+  res.json(result);
+})
+
 router.get('/myReviews', isLoggedIn, async function(req, res, next){
   let result = await models.review.findAll({
     where: {
@@ -34,7 +43,7 @@ router.get('/myReviews', isLoggedIn, async function(req, res, next){
 router.post("/create", isLoggedIn, async function(req, res, next) {
   let result = await models.review.create({
     content: req.body.content,
-    startRating: req.body.startRating,
+    starRating: req.body.starRating,
     truckId: req.body.truckId,
     userEmail: req.session.email
   });
@@ -56,7 +65,7 @@ router.put("/update", isLoggedIn, async function(req, res, next) {
   let result = await models.review.update(
     {
       content: req.body.content,
-      startRating: req.body.startRating
+      starRating: req.body.starRating
     },
     {
       where: {
