@@ -20,7 +20,7 @@ import { Navbar } from '../main/Navbar';
 import SellerState from './SellerState';
 import ReviewList from '../foodtruckDetail/ReviewList';
 import { IReview, IReply } from './../foodtruckDetail/TruckInterface';
-
+import Dropzone from 'react-dropzone'
 interface IState {
   id: Number,
   imgURL: string,
@@ -168,11 +168,53 @@ export default () => {
 
     requestDto[target] = editText[target];
 
-    axios.put('/trucks/update/1', requestDto)
+    axios.put(`/trucks/update/${myTruckId === undefined ? '1' : myTruckId}`, requestDto)
       .then((res) => {
         setData({ ...data, ...res.data });
       })
     getdd(target);
+  }
+
+  const imageFileReg = /\.(gif|jpg|jpeg|tiff|png|bmp)$/i
+  const submitImage = (files) => {
+
+      if (files.length === 0) {
+          alert("사진이 존재하지 않습니다.");
+          return;
+      }
+
+      if (files.length !== 1) {
+          alert("사진을 1개만 등록해주세요.")
+          return;
+      }
+
+      const file = files[0];
+      const fileName = file.name;
+      const fileSize = file.size;
+
+      if (!imageFileReg.test(fileName)) {
+          alert("지원하지 않는 확장자입니다.")
+          return;
+      }
+
+      if (fileSize > 20000000) { // 20MB
+          alert("20MB를 초과하는 이미지는 등록할 수 없습니다.")
+          return;
+      }
+      
+      const formData = new FormData();
+      formData.append('userfile', file);
+
+      axios.post("/upload", formData, {
+          headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+      })
+      .then((res) => {
+        isEditing['imgURL'] = true;
+        onChangeText('imgURL', res.data.imgURL);
+        submit('imgURL');
+      })
   }
 
   const cancel = (target: string) => {
@@ -251,13 +293,21 @@ export default () => {
   }
 
   return (
-    <View>
-      <View style={{ flex: 1 }}>
-        <Image
-          style={{ width: '100%', height: 150, marginBottom: -30 }}
-          source={{ uri: data.imgURL ? data.imgURL : '' }}
-          defaultSource={{ uri: `https://picsum.photos/id/${data.id ? data.id : 0}/200` }}
-        />
+    <View style={{ flex: 1 }}>
+        <Dropzone onDrop={acceptedFiles => submitImage(acceptedFiles)}>
+              {({getRootProps, getInputProps}) => (
+                      <section>
+                          <div {...getRootProps()}>
+                              <input {...getInputProps()} />
+                              <Image
+                              style={{ width: '100%', height: 150, marginBottom: -30 }}
+                              source={{ uri: data.imgURL === undefined ? 'https://picsum.photos/200' : data.imgURL }}
+                            />
+                          </div>
+                    </section>
+              )}
+        </Dropzone>
+
         <View style={{ paddingBottom: 10, backgroundColor: '#edaa11', width: '70%', alignSelf: 'center', borderRadius: 9, marginBottom: 5 }}>
           <View style={{ width: '100%', backgroundColor: '#f2be46', paddingHorizontal: 15, paddingVertical: 8, borderRadius: 9, alignItems: 'center' }}>
             {editTitleComponent('title')}
@@ -272,7 +322,6 @@ export default () => {
         <DetailNavContents />
         {/* <SellerState/> */}
       </View>
-    </View>
   )
 }
 
