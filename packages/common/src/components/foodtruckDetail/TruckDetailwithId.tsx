@@ -43,7 +43,7 @@ interface IReply {
 interface IReview {
   id: number,
   content: string,
-  startRating: number,
+  starRating: number,
   createdAt: string,
   updatedAt: string,
   truckId: number,
@@ -71,7 +71,7 @@ export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
   })
 
   const [review, setReview] = useState<IReview[]>([{
-    id: 0, content: '', startRating: 1, createdAt: '', updatedAt: '', truckId: 0, userEmail: '', replies: [],
+    id: 0, content: '', starRating: 1, createdAt: '', updatedAt: '', truckId: 0, userEmail: '', replies: [],
   }])
 
   const followButtonInfo = {

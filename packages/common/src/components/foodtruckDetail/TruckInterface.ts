@@ -11,7 +11,7 @@ export interface IReply {
 export interface IReview {
   id: number,
   content: string,
-  startRating: number,
+  starRating: number,
   createdAt: string,
   updatedAt: string,
   truckId: number,
