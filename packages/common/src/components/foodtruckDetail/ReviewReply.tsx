@@ -36,10 +36,11 @@ export const ReviewReply: React.FC<Props> = ({ replies }) => {
     detail: false,
   })
 
-  console.log(replies);
+  console.log('replies : ', replies);
 
   const ReplyItem : React.FC<ReplyProps> = ({item}) => {
     return <View>
+      {console.log('item.userEmail : ', item.userEmail)}
       <View style={{flexDirection: 'row', justifyContent: "space-between"}}>
         {myEmail === item.userEmail ? <DeleteButton /> : <></>}
         <Text style={{ alignSelf: 'flex-end' }}>{formatDate(new Date(Date.parse(item.createdAt)))} <Text style={CustomText.italic}>{item.userEmail === null ? '' : (item.userEmail).split('@')[0]}</Text></Text>
