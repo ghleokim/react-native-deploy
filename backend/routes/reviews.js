@@ -47,7 +47,33 @@ router.post("/create", isLoggedIn, async function(req, res, next) {
     truckId: req.body.truckId,
     userEmail: req.session.email
   });
-  console.log(result);
+
+  let avg = await models.review.findAll({
+    attributes: [
+      [
+        models.sequelize.fn("AVG", models.sequelize.col("starRating")),
+        "starRating"
+      ]
+    ],
+    where: {
+      truckId: result.truckId
+    }
+  });
+
+  let avg1 = JSON.stringify(avg);
+  let avg2 = JSON.parse(avg1);             
+  let avg3 =  avg2[0].starRating;
+
+  
+  let resultTruck = await models.truck.update({
+    starRatingAVG : avg3
+  }, {
+    where: {
+      id: req.body.truckId
+    }
+  })
+  
+  console.log(JSON.stringify(resultTruck));
   res.json(result);
 });
 
@@ -81,6 +107,42 @@ router.put("/update", isLoggedIn, async function(req, res, next) {
       message: "본인이 작성한 글만 수정 가능합니다."
     });
   } else {
+
+    let resultTrc = await models.review.findOne({
+      where: {
+        id: req.body.reviewId
+      }
+    })
+
+    let tId = resultTrc.truckId
+
+
+    let avg = await models.review.findAll({
+      attributes: [
+        [
+          models.sequelize.fn("AVG", models.sequelize.col("starRating")),
+          "starRating"
+        ]
+      ],
+      where: {
+        truckId: resultTrc.truckId
+      }
+    });
+  
+    let avg1 = JSON.stringify(avg);
+    let avg2 = JSON.parse(avg1);             
+    let avg3 =  avg2[0].starRating;
+  
+    
+    let resultTruck = await models.truck.update({
+      starRatingAVG : avg3
+    }, {
+      where: {
+        id: resultTrc.truckId
+      }
+    })
+
+
     let resultReview = await models.review.findOne({
       where: {
         id: req.body.reviewId
@@ -105,6 +167,34 @@ router.delete("/delete/:reviewId", isLoggedIn, async function(req, res, next) {
       message: "본인이 작성한 리뷰만 삭제가능합니다."
     });
   } else {
+    let truckId = findReview.truckId
+    
+    let avg = await models.review.findAll({
+      attributes: [
+        [
+          models.sequelize.fn("AVG", models.sequelize.col("starRating")),
+          "starRating"
+        ]
+      ],
+      where: {
+        truckId: truckId
+      }
+    });
+  
+    let avg1 = JSON.stringify(avg);
+    let avg2 = JSON.parse(avg1);             
+    let avg3 =  avg2[0].starRating;
+  
+    
+    let resultTruck = await models.truck.update({
+      starRatingAVG : avg3
+    }, {
+      where: {
+        id: truckId
+      }
+    })
+
+
     let resultReplies = await models.reply.destroy({
       where: {
         reviewId: req.params.reviewId
