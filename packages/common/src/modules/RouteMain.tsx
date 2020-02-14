@@ -12,6 +12,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { BannerStoreContext } from '../store/BannerStore';
 import { Modal } from '../components/main/Modal';
 import axios from 'axios';
+import { NoticeList } from '../components/main/NoticeList';
 
 interface Notice {
   id: number,
@@ -19,6 +20,8 @@ interface Notice {
   createdAt: string,
   updatedAt: string,
   content: string,
+  state: any,
+  userEmail: string
 }
 
 interface ModalData {
@@ -31,11 +34,11 @@ interface Props extends RouteComponentProps {
 }
 
 export const RouteMain: React.FC<Props> = observer(({history}) => {
-  const emptyNotice = {id: -1, title: '', createdAt: '', updatedAt: '', content: ''}
+  const emptyNotice = {id: -1, title: '', createdAt: '', updatedAt: '', content: '', state: '', userEmail: ''}
   const defaultImgURL = 'https://scontent-ssn1-1.xx.fbcdn.net/v/t1.0-9/67756141_2500914479952501_2554921670380879872_o.jpg?_nc_cat=111&_nc_ohc=WKg-jesH6mcAX-g0Ih9&_nc_ht=scontent-ssn1-1.xx&oh=5e6b1deee100739d2defb61ba78506a2&oe=5EFFA465'
 
   const [noticeList, setNoticeList] = useState<Notice[]>([{
-    id: -1, title: 'default title', createdAt: '2020-02-07T05:33:26.000Z', updatedAt: '2020-02-07T05:33:26.000Z', content: 'default content'
+    id: -1, title: 'default title', createdAt: '2020-02-07T05:33:26.000Z', updatedAt: '2020-02-07T05:33:26.000Z', content: 'default content', state: true, userEmail: ''
   }])
 
   const [modalData, setModalData] = useState<ModalData>({ category: '', imgURL: '', notice: emptyNotice })
@@ -70,10 +73,6 @@ export const RouteMain: React.FC<Props> = observer(({history}) => {
     searchStore.searchKeyword === undefined ? undefined : handleSearchBar(searchStore.searchKeyword)
   }
 
-  const changeModalState = () => {
-    BannerStore.active = !BannerStore.active;
-  }
-
   useEffect(()=>{
     if (BannerStore.pageIndex === -1) {
       setModalData({category: '', imgURL: '', notice: emptyNotice})
@@ -81,36 +80,6 @@ export const RouteMain: React.FC<Props> = observer(({history}) => {
       setModalData({category: 'banner', imgURL: defaultImgURL, notice: emptyNotice})
     }
   }, [BannerStore.pageIndex])
-
-  const getModal = () => {
-    // console.log(BannerStore.pageIndex + " page ", modalData);
-    if (BannerStore.active === true) {
-      if (modalData.category === 'banner') {
-        return <Modal imgURL={modalData.imgURL}/>
-      } else if (modalData.category === 'notice') {
-        return <Modal notice={modalData.notice}/>
-      } else {
-        return <></>
-      }
-    } else {
-      return <></>
-    }
-  }
-
-  // original
-  const getNoticeModal = () => {
-    console.log(BannerStore.pageIndex + " page ");
-    return (
-      BannerStore.active === true ?
-      <View style={{position: 'absolute', width: '100%', height: '100%', backgroundColor: '#ffffff', zIndex: 2}}>
-
-        <TouchableOpacity style={{height: '100%', width: '100%'}} onPress = {changeModalState}>
-          <Image style={[{height: '100%', width: '100%',resizeMode:'contain'}]} source={require(`@foodtruckmap/common/src/static/bannerDetail/banner${BannerStore.pageIndex}_detail.jpg`)} />
-          </TouchableOpacity>
-      </View>
-      : <></>
-    )
-  }
 
   return (
     <View style={{ flex: 1, flexDirection: 'column' }}>
@@ -136,22 +105,19 @@ export const RouteMain: React.FC<Props> = observer(({history}) => {
           </TouchableOpacity>
         </View>
       </View>
-      { noticeList.length !== 0 ?
-      <TouchableOpacity style={[styles.noticeContainer]} onPress={()=>{setModalData({category: 'notice', imgURL: '', notice: noticeList[2]}); BannerStore.active = true;}}>
-        <Text style={[CustomText.title, {flex: 1, fontWeight: '700', fontSize: 14, textAlign: 'center', marginHorizontal: 10}]}>공지사항</Text>
-        <Text style={[CustomText.body, {flex: 4, fontSize: 14, marginRight: 30}]} numberOfLines={1} ellipsizeMode='clip'>{!!noticeList[2] ? noticeList[2].title : ''}</Text>
-      </TouchableOpacity> : <></>
-      }
+      <NoticeList noticeList={noticeList}/>
       <View style={[styles.staticInfo, { flexGrow: 1 }]}>
         <Text style={styles.staticText}>
           <Text style={styles.staticTextLink} onPress={() => console.log('hello')}>팀 정보</Text>
-            | <Text style={styles.staticTextLink} onPress={() => console.log('hello2')}>이용 약관</Text>
-            | <Text style={styles.staticTextLink} onPress={() => console.log('hello3')}>개인정보처리방침</Text>
-            | <Text style={styles.staticTextLink} onPress={() => history.push(`/report`, {division: 0, targetId: 1}) }>신고</Text>
+          <Text> | </Text>
+          <Text style={styles.staticTextLink} onPress={() => console.log('hello2')}>이용 약관</Text>
+          <Text> | </Text>
+          <Text style={styles.staticTextLink} onPress={() => console.log('hello3')}>개인정보처리방침</Text>
+          <Text> | </Text>
+          <Text style={styles.staticTextLink} onPress={() => history.push(`/report`, {division: 0, targetId: 1})}>신고</Text>
         </Text>
         <Text style={styles.staticText}>foodtruck-map</Text>
       </View>
-      {getModal()}
     </View>
   )
 })
