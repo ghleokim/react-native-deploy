@@ -51,9 +51,9 @@ export const PersonalPage: React.FC<Props> = ({history}) => {
   const sampleItemList: TruckItem[] = [
     {
       id: 0,
-      title: '타코야끼 트럭',
+      title: '현진이네 버거',
       contents: '',
-      imgURL: '',
+      imgURL: 'https://food-truck.shop/api/user/sample_burger_150-1581657412391.png',
       latitude: 0,
       longitude: 0,
       state: 'open',
@@ -63,7 +63,7 @@ export const PersonalPage: React.FC<Props> = ({history}) => {
       id: 1,
       title: '리틀 쿠반 트럭',
       contents: '',
-      imgURL: '',
+      imgURL: 'https://food-truck.shop/api/user/sample_sandwich_150-1581657265216.png',
       latitude: 0,
       longitude: 0,
       state: 'prepare',
@@ -73,13 +73,47 @@ export const PersonalPage: React.FC<Props> = ({history}) => {
       id: 2,
       title: '쉬림프King',
       contents: '',
-      imgURL: '',
+      imgURL: 'https://food-truck.shop/api/user/sample_shrimp_150-1581657315513.png',
       latitude: 0,
       longitude: 0,
       state: 'open',
       rating: 4.2,
     }
   ]
+
+  const SampleTruckItem: React.FC<TruckProps> = ({truck}) => {
+    const getState = (state:string) => {
+      if (state.toLowerCase() === 'open') {
+        return {message:'영업중', color: '#008000'}
+      } else if (state.toLowerCase() === 'prepare') {
+        return {message:'영업 준비중', color: '#e0c000'}
+      } else {
+        return {message:'영업 종료', color: '#608080'}
+      }
+    }
+
+    const stateProp = getState(truck.state)
+    const TruckIconBW: React.FC = () => {return <Image style={{width: '100%', height: '100%'}} source={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')} defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}/>}
+
+    return (
+      <TouchableOpacity activeOpacity={1}>
+        <View style={{width: mainStore.screenWidth * 2 / 5, padding: 10}}>
+          { truck.state.toLowerCase() === 'open' ? <></> : <View style={{position: 'absolute', backgroundColor: 'rgba(255,255,255,0.7)', height: '100%', width: '100%', zIndex: 2}}></View>}
+          <View style={{width: '100%', height: mainStore.screenWidth * 2 / 5 - 20, alignItems: 'center', justifyContent: 'center', backgroundColor: '#e3e3e3', borderRadius: 25}}>
+            {!!truck.imgURL 
+            ? <Image style={{width: '100%', height: '100%', borderRadius: 20}} source={{uri: truck.imgURL}} defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}/>
+            : <TruckIconBW />}
+          </View>
+          <View style={{position: 'absolute', top: 10, left: 10, zIndex: 4, backgroundColor: '#ffff00', paddingHorizontal: 4, paddingVertical: 2}}><Text style={{fontWeight: '700'}}>{truck.rating}</Text></View>
+          <View style={{position: 'absolute', top: 10, right: 10, zIndex: 4, backgroundColor: stateProp.color, paddingHorizontal: 4, paddingVertical: 2}}><Text style={{fontWeight: '700', color: '#ffffff'}}>{stateProp.message}</Text></View>
+          <View style={{paddingTop: 5, paddingHorizontal: 3}}>
+            <Text style={CustomText.title} numberOfLines={1} ellipsizeMode='clip'>{truck.title}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    )
+  }
+
 
   const SampleList: React.FC = () => {
     return (
@@ -89,7 +123,7 @@ export const PersonalPage: React.FC<Props> = ({history}) => {
           showsHorizontalScrollIndicator={false}
           data={sampleItemList}
           renderItem={({item})=>
-            <FollowingTruckItem truck={item} />
+            <SampleTruckItem truck={item} />
           }
           keyExtractor={(truck)=> `${truck.id}${truck.title}123`}
           />
