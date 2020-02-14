@@ -269,7 +269,7 @@ export const Maps =  observer(({history}) => {
             <Image
               style={{ borderRadius: 30, width: 60, height: 60 }}
               source={{ uri: element.imgURL }}
-              defaultSource={{uri: `https://picsum.photos/id/${element.id}/200`}}
+              defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}
               />
           </View>
           <View style={{ flex: 3, justifyContent: 'center' }}>

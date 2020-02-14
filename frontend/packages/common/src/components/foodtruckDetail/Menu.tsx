@@ -21,7 +21,7 @@ export default (props: IProps) => {
     <View style={styles.menuContainer}>
       <View style={{ alignSelf: 'center' }}>
         <Image
-          defaultSource={{ uri: `https://picsum.photos/id/${props.id}/200` }}
+          defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}
           source={{ uri: props.imgURL }}
           style={{ width: 70, height: 70, borderRadius: 10 }}
         />

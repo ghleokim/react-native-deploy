@@ -106,36 +106,39 @@ export default (props:IProps) => {
   }
 
   return (
-    <View style={styles.menuContainer}>
-      {isEditing
-        ? <MenuForm id={props.id} name={props.name} price={props.price} content={props.content} imgURL={props.imgURL} isSoldOut={props.isSoldOut} handleMenuSubmit={handleUpdateMenuSubmit} handleMenuCancel={handleUpdateMenuCancel}></MenuForm>
-        : <>
-          <View style={{ alignSelf: 'center' }}>
-          <Image
-          source={{ uri: props.imgURL.startsWith('http') ? props.imgURL : `${axios.defaults.baseURL}/user/${props.imgURL}` }}
-          style={{ width: 70, height: 70, borderRadius: 10 }}
-          />
-          </View>
-  
-          <View style={{ marginLeft: 15, flexShrink: 1, alignSelf: 'center', width:'100%' }}>
-            <View>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text style={[CustomText.title, { fontSize: 18 }]}>{props.name}</Text>
-                <View style={{ marginHorizontal: 10, flexGrow: 1, alignSelf: 'center',  borderStyle: 'dotted', borderColor: '#000000', borderWidth: 1 }}></View>
-                <Text style={[CustomText.title, { color: '#20a024', fontSize: 16 }]}>{props.price} 원</Text>
+
+      <View style={styles.menuContainer}>
+        {isEditing
+          ? <MenuForm id={props.id} name={props.name} price={props.price} content={props.content} imgURL={props.imgURL} isSoldOut={props.isSoldOut} handleMenuSubmit={handleUpdateMenuSubmit} handleMenuCancel={handleUpdateMenuCancel}></MenuForm>
+          : <>
+            <View style={{ alignSelf: 'center' }}>
+            <Image
+            source={{ uri: props.imgURL }}
+            defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}
+            style={{ width: 70, height: 70, borderRadius: 10 }}
+            />
+            </View>
+    
+            <View style={{ marginLeft: 15, flexShrink: 1, alignSelf: 'center', width:'100%' }}>
+              <View>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                  <Text style={[CustomText.title, { fontSize: 18 }]}>{props.name}</Text>
+                  <View style={{ marginHorizontal: 10, flexGrow: 1, alignSelf: 'center',  borderStyle: 'dotted', borderColor: '#000000', borderWidth: 1 }}></View>
+                  <Text style={[CustomText.title, { color: '#20a024', fontSize: 16 }]}>{props.price} 원</Text>
+                </View>
+              <View>
+                <Text style={[CustomText.body]}>{props.content}</Text>
               </View>
-            <View>
-              <Text style={[CustomText.body]}>{props.content}</Text>
+              <View style={styles.menuButtonContainer}>
+              <TouchableOpacity style={[styles.menuButton, {backgroundColor: Colors.navy,}]} onPress={() => handleEditMenuBtnClick()}><Text style={{textAlign: 'center', color: '#FFFFFF', fontWeight: '700'}}>수정</Text></TouchableOpacity>
+              <TouchableOpacity style={[styles.menuButton, {backgroundColor: Colors.coral,}]} onPress={() => handleDeleteMenuBtnClick()}><Text style={{textAlign: 'center', color: '#FFFFFF', fontWeight: '700'}}>삭제</Text></TouchableOpacity>
+              </View>
+              </View>
             </View>
-            <View style={styles.menuButtonContainer}>
-            <TouchableOpacity style={[styles.menuButton, {backgroundColor: Colors.navy,}]} onPress={() => handleEditMenuBtnClick()}><Text style={{textAlign: 'center', color: '#FFFFFF', fontWeight: '700'}}>수정</Text></TouchableOpacity>
-            <TouchableOpacity style={[styles.menuButton, {backgroundColor: Colors.coral,}]} onPress={() => handleDeleteMenuBtnClick()}><Text style={{textAlign: 'center', color: '#FFFFFF', fontWeight: '700'}}>삭제</Text></TouchableOpacity>
-            </View>
-            </View>
-          </View>
-        </>
-      }
-    </View>
+          </>
+        }
+      </View>
+ 
   );
   
 };
