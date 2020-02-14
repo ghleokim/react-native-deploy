@@ -32,15 +32,7 @@ export const NoticeList: React.FC<Props> = observer(({ noticeList }) => {
   const NOTICE_HEIGHT = 40
   const NOTICE_LENGTH = noticeList.length
   
-  useEffect(()=>{
-    console.log(mainStore.modalData, BannerStore.active)
-  },[mainStore.modalData])
-  
-  console.log(noticeList)
-  
-  
   const NoticeItem: React.FC<NoticeProps> = ({notice}) => {
-    console.log('notice', notice)
     return (
     <TouchableOpacity style={[styles.noticeContainer, {height: NOTICE_HEIGHT}]} onPress={()=>{mainStore.modalData = {category: 'notice', imgURL: '', notice: notice }; BannerStore.active = true;}}>
       <Text style={[CustomText.title, {flex: 1, fontWeight: '700', fontSize: 14, textAlign: 'center', marginHorizontal: 10}]}>공지사항</Text>
@@ -72,7 +64,6 @@ export const NoticeList: React.FC<Props> = observer(({ noticeList }) => {
           return <NoticeItem notice={item} />
         }}
         pagingEnabled={true}
-        onScroll={()=>console.log('scroll')}
       />
     </View>
   )

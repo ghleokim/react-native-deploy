@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, Image, FlatList, TouchableOpacity }
 import { CustomStyle, CustomText } from '../../static/CustomStyle';
 import { mainStoreContext } from '../../store/MainStore';
 import axios from 'axios';
+import { History, LocationState } from 'history'
 
 interface TruckItem {
   id: number,
@@ -19,7 +20,11 @@ interface TruckProps {
   truck?: TruckItem
 }
 
-export const PersonalPage: React.FC = () => {
+interface Props {
+  history: History<LocationState>
+}
+
+export const PersonalPage: React.FC<Props> = ({history}) => {
   const mainStore = useContext(mainStoreContext)
   const userEmail = localStorage.getItem('userEmail')
   const [truckList, setTruckList] = useState<TruckItem[]>([])
@@ -48,18 +53,70 @@ export const PersonalPage: React.FC = () => {
 
   useEffect(()=>{getFollowingTrucks()},[])  
 
-  const sampleItem = {
-    title: '샘플 푸드트럭',
-    rating: 3.5,
-    imgURL: 'https://lh3.googleusercontent.com/proxy/wE0WUWNjYwPHqPZD_BxuvLAJckYxuCrxvDdazDUIlEQTlfv5fhZqwAPu_eHe7-YwlLZwItSJVBdGL8SABnncWjmJ1oMwiqyk0bfKo1eM9mM4AKC2j-OHzzlCbvUBGSeTmUk6',
+  const sampleItemList: TruckItem[] = [
+    {
+      id: 0,
+      title: '타코야끼 트럭',
+      contents: '',
+      imgURL: '',
+      latitude: 0,
+      longitude: 0,
+      state: 'open',
+      rating: 4.2,
+    },
+    {
+      id: 1,
+      title: '리틀 쿠반 트럭',
+      contents: '',
+      imgURL: '',
+      latitude: 0,
+      longitude: 0,
+      state: 'prepare',
+      rating: 3.9,
+    },
+    {
+      id: 2,
+      title: '쉬림프King',
+      contents: '',
+      imgURL: '',
+      latitude: 0,
+      longitude: 0,
+      state: 'open',
+      rating: 4.2,
+    }
+  ]
+
+  const SampleList: React.FC = () => {
+    return (
+      <View style={{paddingHorizontal: 10}}>
+        <FlatList<TruckItem>
+          horizontal
+          onScroll={(e)=>{
+            setScrollState2(true);
+          }}
+          showsHorizontalScrollIndicator={false}
+          data={sampleItemList}
+          renderItem={({item})=>
+            <FollowingTruckItem truck={item} />
+          }
+          keyExtractor={(truck)=> `${truck.id}${truck.title}123`}
+          />
+      </View>
+    )
   }
 
   const ifNotLoggedIn = () => {
+    if (!!userEmail) {
+      return <></>
+    }
     return (
+    <>
+      <SampleList />
       <View style={{width: '100%', height: '100%', backgroundColor: 'rgba(255,255,255,0.7)', justifyContent: 'center', alignItems: 'center', position: 'absolute', zIndex: 2}}>
         <Text>로그인하시면 내 팔로우 트럭을 볼 수 있어요.</Text>
-        <Text>로그인 하러 가기</Text>
+        <TouchableOpacity onPress={()=>history.push('/login')}><Text style={{textDecorationLine: 'underline'}}>로그인 하러 가기</Text></TouchableOpacity>
       </View>
+    </>
     )
   }
 
@@ -79,19 +136,20 @@ export const PersonalPage: React.FC = () => {
     return (
       <TouchableOpacity activeOpacity={1}
         onPressOut={(e)=>{ 
-          if (scrollState) {
+          if (scrollState2) {
             // if on scroll, set state to false and finish
             setScrollState2(false)
           } else {
             // if not on scroll, set press
             console.log('pressed')
+            // history.push(`/trucks/${truck.id}`)
          }}}>
         <View style={{width: mainStore.screenWidth * 2 / 5, padding: 10}}>
           { truck.state.toLowerCase() === 'open' ? <></> : <View style={{position: 'absolute', backgroundColor: 'rgba(255,255,255,0.7)', height: '100%', width: '100%', zIndex: 2}}></View>}
           <View style={{width: '100%', height: mainStore.screenWidth * 2 / 5 - 20, alignItems: 'center', justifyContent: 'center', backgroundColor: '#e3e3e3', borderRadius: 25}}>
             {!!truck.imgURL 
-            ? <Image style={{width: '100%', height: '100%', borderRadius: 20}} source={{uri: truck.imgURL}}/>
-            : <Image style={{width: 30, height: 30}} source={require('@foodtruckmap/common/src/static/icon_processed/plusbutton.png')} defaultSource={require('@foodtruckmap/common/src/static/icon_processed/plusbutton.png')}/>}
+            ? <Image style={{width: '100%', height: '100%', borderRadius: 20}} source={{uri: truck.imgURL}} defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}/>
+            : <Image style={{width: 30, height: 30}} source={require('@foodtruckmap/common/src/static/icon_processed/plusbutton.png')} defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}/>}
           </View>
           <View style={{position: 'absolute', top: 10, left: 10, zIndex: 4, backgroundColor: '#ffff00', paddingHorizontal: 4, paddingVertical: 2}}><Text style={{fontWeight: '700'}}>{truck.rating}</Text></View>
           <View style={{position: 'absolute', top: 10, right: 10, zIndex: 4, backgroundColor: stateProp.color, paddingHorizontal: 4, paddingVertical: 2}}><Text style={{fontWeight: '700', color: '#ffffff'}}>{stateProp.message}</Text></View>
@@ -168,6 +226,7 @@ export const PersonalPage: React.FC = () => {
           horizontal
           onScroll={(e)=>{
             setScrollState2(true);
+            console.log(e)
           }}
           showsHorizontalScrollIndicator={false}
           data={truckList}
@@ -178,7 +237,7 @@ export const PersonalPage: React.FC = () => {
           />
       </View>
 
-      {/* compare between flatlist and scrollview : scrollview */}
+      {/* compare between flatlist and scrollview : scrollview
       <View style={{paddingHorizontal: 10}}>
         <ScrollView
           horizontal
@@ -190,8 +249,9 @@ export const PersonalPage: React.FC = () => {
         >
           <MapTruckList />
         </ScrollView>
-      </View>
-      {/* {ifNotLoggedIn()} */}
+      </View> */}
+
+      {ifNotLoggedIn()}
     </View>
   )
 
