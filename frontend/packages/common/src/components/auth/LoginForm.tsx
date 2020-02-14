@@ -80,7 +80,7 @@ export const NewLoginForm: React.FC<Props> = observer(({ history }) => {
       })
       .catch((error) => {
         canSubmit = true;
-        alert(error.response.data.message)
+        // alert(error.response.data.message)
       });
   }
 

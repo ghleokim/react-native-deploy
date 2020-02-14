@@ -53,16 +53,16 @@ export default (props: IProps) => {
           <Text style={{ alignSelf: 'flex-end' }}>{formatDate(new Date(Date.parse(props.createdAt)))} <Text style={CustomText.italic}>{props.userEmail === null ? '' : (props.userEmail).split('@')[0]}</Text></Text>
         </View>
         <View style={{flexDirection: 'row'}}>
-          <Text>{props.startRating}/5</Text>
-          <Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 20, width: 20, tintColor: props.startRating > 0 ? '#feb246' : '#c0c0c0'}}/>
-          <Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 20, width: 20, tintColor: props.startRating > 1 ? '#feb246' : '#c0c0c0'}}/>
-          <Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 20, width: 20, tintColor: props.startRating > 2 ? '#feb246' : '#c0c0c0'}}/>
-          <Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 20, width: 20, tintColor: props.startRating > 3 ? '#feb246' : '#c0c0c0'}}/>
-          <Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 20, width: 20, tintColor: props.startRating > 4 ? '#feb246' : '#c0c0c0'}}/>
+          <Text>{props.starRating}/5</Text>
+          <Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 20, width: 20, tintColor: props.starRating > 0 ? '#feb246' : '#c0c0c0'}}/>
+          <Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 20, width: 20, tintColor: props.starRating > 1 ? '#feb246' : '#c0c0c0'}}/>
+          <Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 20, width: 20, tintColor: props.starRating > 2 ? '#feb246' : '#c0c0c0'}}/>
+          <Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 20, width: 20, tintColor: props.starRating > 3 ? '#feb246' : '#c0c0c0'}}/>
+          <Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 20, width: 20, tintColor: props.starRating > 4 ? '#feb246' : '#c0c0c0'}}/>
         </View>
         <Text style={[CustomText.title, { fontSize: 16 }]}>{props.content}</Text>
       </View>
-      <ReviewReply replies={props.replies}/>
+      <ReviewReply replies={props.replies} reviewId={props.id}/>
     </View>
   );
 
