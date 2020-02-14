@@ -13,7 +13,7 @@ interface TruckItem {
   latitude: number,
   longitude: number,
   state: string,
-  rating: number,
+  starRatingAVG: number
 }
 
 interface TruckProps {
@@ -37,7 +37,6 @@ export const PersonalPage: React.FC<Props> = ({history}) => {
         return {
             ...element.truck,
             id: element.truckId,
-            rating: 4.2
         }
       })
       console.log(truckList)
@@ -57,7 +56,7 @@ export const PersonalPage: React.FC<Props> = ({history}) => {
       latitude: 0,
       longitude: 0,
       state: 'open',
-      rating: 4.2,
+      starRatingAVG: 4.2,
     },
     {
       id: 1,
@@ -67,7 +66,7 @@ export const PersonalPage: React.FC<Props> = ({history}) => {
       latitude: 0,
       longitude: 0,
       state: 'prepare',
-      rating: 3.9,
+      starRatingAVG: 3.9,
     },
     {
       id: 2,
@@ -77,7 +76,7 @@ export const PersonalPage: React.FC<Props> = ({history}) => {
       latitude: 0,
       longitude: 0,
       state: 'open',
-      rating: 4.2,
+      starRatingAVG: 4.2,
     }
   ]
 
@@ -104,7 +103,7 @@ export const PersonalPage: React.FC<Props> = ({history}) => {
             ? <Image style={{width: '100%', height: '100%', borderRadius: 20}} source={{uri: truck.imgURL}} defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}/>
             : <TruckIconBW />}
           </View>
-          <View style={{position: 'absolute', top: 10, left: 10, zIndex: 4, backgroundColor: '#ffff00', paddingHorizontal: 4, paddingVertical: 2}}><Text style={{fontWeight: '700'}}>{truck.rating}</Text></View>
+          <View style={{position: 'absolute', top: 10, left: 10, zIndex: 4, backgroundColor: '#ffff00', paddingHorizontal: 4, paddingVertical: 2}}><Text style={{fontWeight: '700'}}>{truck.starRatingAVG}</Text></View>
           <View style={{position: 'absolute', top: 10, right: 10, zIndex: 4, backgroundColor: stateProp.color, paddingHorizontal: 4, paddingVertical: 2}}><Text style={{fontWeight: '700', color: '#ffffff'}}>{stateProp.message}</Text></View>
           <View style={{paddingTop: 5, paddingHorizontal: 3}}>
             <Text style={CustomText.title} numberOfLines={1} ellipsizeMode='clip'>{truck.title}</Text>
@@ -195,7 +194,7 @@ export const PersonalPage: React.FC<Props> = ({history}) => {
             ? <Image style={{width: '100%', height: '100%', borderRadius: 20}} source={{uri: truck.imgURL}} defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}/>
             : <TruckIconBW />}
           </View>
-          <View style={{position: 'absolute', top: 10, left: 10, zIndex: 4, backgroundColor: '#ffff00', paddingHorizontal: 4, paddingVertical: 2}}><Text style={{fontWeight: '700'}}>{truck.rating}</Text></View>
+          <View style={{position: 'absolute', top: 10, left: 10, zIndex: 4, backgroundColor: '#ffff00', paddingHorizontal: 4, paddingVertical: 2}}><Text style={{fontWeight: '700'}}>{ !!truck.starRatingAVG ? truck.starRatingAVG : '-'}</Text></View>
           <View style={{position: 'absolute', top: 10, right: 10, zIndex: 4, backgroundColor: stateProp.color, paddingHorizontal: 4, paddingVertical: 2}}><Text style={{fontWeight: '700', color: '#ffffff'}}>{stateProp.message}</Text></View>
           <View style={{paddingTop: 5, paddingHorizontal: 3}}>
             <Text style={CustomText.title} numberOfLines={1} ellipsizeMode='clip'>{truck.title}</Text>
