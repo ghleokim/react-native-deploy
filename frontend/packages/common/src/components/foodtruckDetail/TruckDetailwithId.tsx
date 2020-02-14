@@ -20,10 +20,11 @@ interface IState {
   imgURL?: string,
   title: string,
   contents: string,
-  latitude: Number,
-  longitude: Number,
+  latitude: number,
+  longitude: number,
   state: string,
   menus: [],
+  starRatingAVG: number
 }
 
 interface IFollow {
@@ -64,7 +65,7 @@ export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
   })
 
   const [data, setData] = useState<IState>({
-    id: 0, imgURL: '', title: '', contents: '', menus: [], latitude: 0.0, longitude: 0.0, state: ''})
+    id: 0, imgURL: '', title: '', contents: '', menus: [], latitude: 0.0, longitude: 0.0, state: '', starRatingAVG: 0.0})
 
   const [follow, setFollow] = useState<IFollow>({
     isFollow: true
@@ -120,7 +121,7 @@ export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
     return (
       <View style={{paddingTop: 10}}>
         {state.nav === 'menu' ? <MenuList menulist={data.menus} />
-          : state.nav === 'info' ? <TruckInfo data={data} />
+          : state.nav === 'info' ? <TruckInfo id={targetId} data={data} />
             : <ReviewList reviewList={review.sort((a,b)=> Date.parse(b.updatedAt) - Date.parse(a.updatedAt))} truckId={targetId} onDelete={handleDeleteReview}/>}
       </View>
     )
