@@ -36,7 +36,13 @@ router.put('/admin/update/state', isLoggedInByAdmin, async function(req, res, ne
             id:req.body.id
         }
     });
-    res.json(newState);
+
+    let notice = await notice.findOne({
+        where: {
+            id: req.body.id
+        }
+    })
+    res.json(notice);
 })
 
 router.put('/admin/update', isLoggedInByAdmin, async function(req, res, next){
@@ -48,7 +54,13 @@ router.put('/admin/update', isLoggedInByAdmin, async function(req, res, next){
               id: req.body.noticeId
           }
       });
-      res.json(result);
+
+      let notice = await notice.findOne({
+          where: {
+            id: req.body.noticeId
+          }
+      })
+      res.json(notice);
 })
 
 router.delete('/admin/delete/:noticeId', isLoggedInByAdmin, async function(req, res, next){
