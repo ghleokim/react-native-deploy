@@ -115,7 +115,7 @@ app.get('/api/upload', function(req, res, next){
 app.post('/api/upload', upload.single('userfile'), function(req, res, next){
   console.log(req.file);
   body = {
-    "imgName" : req.file.filename
+    "imgURL" : `https://food-truck.shop/api/user/${req.file.filename}`
   }
   res.json(body);
 });
