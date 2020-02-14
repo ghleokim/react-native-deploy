@@ -39,7 +39,7 @@ export default (props: IProps) => {
               <Review
                 id={item.id}
                 content={item.content}
-                startRating={item.startRating}
+                starRating={item.starRating}
                 createdAt={item.createdAt}
                 updatedAt={item.updatedAt}
                 truckId={item.truckId}
