@@ -169,7 +169,7 @@ export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
       <Image
         style={{ width: '100%', height: 150, marginBottom: -30 }}
         source={{ uri: data.imgURL ? data.imgURL : '' }}
-        defaultSource={{ uri: `https://picsum.photos/id/${data.id ? data.id : 0}/200` }}
+        defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}
       />
       {isLoggedIn ? 
       <TouchableOpacity

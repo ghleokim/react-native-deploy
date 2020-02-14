@@ -293,35 +293,38 @@ export default () => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
-        <Dropzone onDrop={acceptedFiles => submitImage(acceptedFiles)}>
-              {({getRootProps, getInputProps}) => (
-                      <section>
-                          <div {...getRootProps()}>
-                              <input {...getInputProps()} />
-                              <Image
-                              style={{ width: '100%', height: 150, marginBottom: -30 }}
-                              source={{ uri: data.imgURL === undefined ? 'https://picsum.photos/200' : data.imgURL }}
-                            />
-                          </div>
-                    </section>
-              )}
-        </Dropzone>
+    <View>
+      <View style={{ flex: 1 }}>
+          <Dropzone onDrop={acceptedFiles => submitImage(acceptedFiles)}>
+                {({getRootProps, getInputProps}) => (
+                        <section>
+                            <div {...getRootProps()}>
+                                <input {...getInputProps()} />
+                                <Image
+                                style={{ width: '100%', height: 150, marginBottom: -30 }}
+                                source={{ uri: data.imgURL }}
+                                defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}
+                              />
+                            </div>
+                      </section>
+                )}
+          </Dropzone>
 
-        <View style={{ paddingBottom: 10, backgroundColor: '#edaa11', width: '70%', alignSelf: 'center', borderRadius: 9, marginBottom: 5 }}>
-          <View style={{ width: '100%', backgroundColor: '#f2be46', paddingHorizontal: 15, paddingVertical: 8, borderRadius: 9, alignItems: 'center' }}>
-            {editTitleComponent('title')}
+          <View style={{ paddingBottom: 10, backgroundColor: '#edaa11', width: '70%', alignSelf: 'center', borderRadius: 9, marginBottom: 5 }}>
+            <View style={{ width: '100%', backgroundColor: '#f2be46', paddingHorizontal: 15, paddingVertical: 8, borderRadius: 9, alignItems: 'center' }}>
+              {editTitleComponent('title')}
+            </View>
           </View>
-        </View>
 
-        <View style={{ paddingHorizontal: '5%' }}>
-          {editContentComponent('contents')}
+          <View style={{ paddingHorizontal: '5%' }}>
+            {editContentComponent('contents')}
+          </View>
+          <Line></Line>
+          <DetailNavBar />
+          <DetailNavContents />
+          {/* <SellerState/> */}
         </View>
-        <Line></Line>
-        <DetailNavBar />
-        <DetailNavContents />
-        {/* <SellerState/> */}
-      </View>
+    </View>
   )
 }
 
