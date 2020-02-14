@@ -155,7 +155,7 @@ export default (props: IProps) => {
                             <div {...getRootProps()}>
                                 <input {...getInputProps()} />
                                 <Image
-                                source={{ uri: imgURL.startsWith('http') ? imgURL : `${axios.defaults.baseURL}/user/${imgURL}` }}
+                                source={{ uri: imgURL }}
                                 style={{ width: 70, height: 70, borderRadius: 10 }}
                                 />
                             </div>
