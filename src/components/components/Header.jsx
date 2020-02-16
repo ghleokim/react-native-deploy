@@ -1,8 +1,9 @@
-import React, {} from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { HEADER_HEIGHT } from '../config/config';
-import { Button } from './modules'
+import { Link } from './modules'
 import axios from 'axios';
+import { MainStoreContext } from '../../store/MainStore';
 
 const Container = styled.div`
   position: fixed;
@@ -30,8 +31,24 @@ const Title = styled.h1`
 `;
 
 export const Header = () => {
+  const mainStore = useContext(MainStoreContext)
+
   const healthCheck = () => {
     axios.get('/').then(e=>console.log(e)).catch(e=>console.log(e))
+  }
+
+  const handleLogout = () => {
+    axios.get('/users/logout')
+    .then(response=>{
+      if (response.data === true) {
+        mainStore.isLoggedIn = false;
+        localStorage.clear();
+        alert('로그아웃되었습니다.')
+      } else {
+        console.log(response)
+      }
+    })
+    .catch(e=>console.log(e))
   }
 
   return (
@@ -41,10 +58,17 @@ export const Header = () => {
           Title conatiner
         </Title>
         <div>
-          <Button href="/">home</Button>
-          <Button href="/guide">guide</Button>
-          <Button href="/auth">signup</Button>
-          <Button onClick={()=>{healthCheck()}}>DEV</Button>
+          <Link href="/">home</Link>
+          <Link href="/guide">guide</Link>
+          {
+            mainStore.isLoggedIn === true ? 
+            <Link href="#" onClick={handleLogout}>로그아웃</Link>
+            :<>
+            <Link href="/auth">로그인</Link>
+            <Link href="/signup">회원가입</Link>
+            </>
+          }
+          <Link onClick={()=>{healthCheck()}}>DEV</Link>
         </div>
       </FlexContainer>
     </Container>

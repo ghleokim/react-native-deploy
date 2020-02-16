@@ -8,4 +8,4 @@ class MainStore {
   @observable isLoggedIn = false;
 }
 
-export const MainStoreContext = createContext(MainStore);
+export const MainStoreContext = createContext(new MainStore());
