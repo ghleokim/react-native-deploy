@@ -1,9 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 import { HEADER_HEIGHT } from '../config/config';
 import { Link } from './modules'
-import axios from 'axios';
 import { MainStoreContext } from '../../store/MainStore';
+import { observer } from 'mobx-react-lite';
 
 const Container = styled.div`
   position: fixed;
@@ -16,22 +17,36 @@ const Container = styled.div`
 const FlexContainer = styled.div`
   display: flex;
   flex-direction: row;
-  padding: 0.3rem 0.7rem 0.25rem 0.6rem;
-  justify-content: start;
+  padding: 0.5em 0.7em 0.25em 0.6em;
+  justify-content: space-between;
   align-items: baseline;
+  align-self: center;
 `;
 
 const Title = styled.h1`
-  font-size: 1.5em;
+  font-size: 1.2em;
   font-family: '"Palatino Linotype", "Book Antiqua", Palatino, serif';
   text-align: center;
   color: #333333;
-  margin-bottom: 0.5em; 
   padding: 0 0.3em 0 0.3em;
 `;
 
-export const Header = () => {
+export const Header = observer(() => {
   const mainStore = useContext(MainStoreContext)
+
+  const checkAuth = () => {
+    axios.get('/users/getUser')
+    .then(response=>{
+      mainStore.isLoggedIn = true;
+      mainStore.userName = response.data.result.name;
+      mainStore.userEmail = response.data.result.userEmail;
+    })
+    .catch(e=>console.log(e))
+  }
+
+  useEffect(()=>{
+    checkAuth();
+  },[])
 
   const healthCheck = () => {
     axios.get('/').then(e=>console.log(e)).catch(e=>console.log(e))
@@ -44,6 +59,7 @@ export const Header = () => {
         mainStore.isLoggedIn = false;
         localStorage.clear();
         alert('로그아웃되었습니다.')
+        
       } else {
         console.log(response)
       }
@@ -54,23 +70,28 @@ export const Header = () => {
   return (
     <Container>
       <FlexContainer>
-        <Title>
-          Title conatiner
-        </Title>
+        <div>
+          <Title style={{margin: 0,}}>
+            foodtruck 🚚
+          </Title>
+          <Link onClick={()=>{healthCheck()}}>DEV</Link>
+        </div>
         <div>
           <Link href="/">home</Link>
           <Link href="/guide">guide</Link>
           {
             mainStore.isLoggedIn === true ? 
-            <Link href="#" onClick={handleLogout}>로그아웃</Link>
+            <>
+              <Link href="/myinfo">판매자 {mainStore.userName} 님</Link>
+              <Link href="#" onClick={handleLogout}>로그아웃</Link>
+            </>
             :<>
-            <Link href="/auth">로그인</Link>
-            <Link href="/signup">회원가입</Link>
+              <Link href="/auth">로그인</Link>
+              <Link href="/signup">회원가입</Link>
             </>
           }
-          <Link onClick={()=>{healthCheck()}}>DEV</Link>
         </div>
       </FlexContainer>
     </Container>
   )
-}
+})

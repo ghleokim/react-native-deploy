@@ -7,7 +7,7 @@ export const Link = styled.a`
   margin-bottom: 0.5em;
   padding: 0 0.3em 0 0.3em;
   text-decoration: none;
-  color: '#333333'; 
+  color: #333333; 
   :hover {
     color: salmon;
     text-decoration: underline;
@@ -15,14 +15,14 @@ export const Link = styled.a`
 `;
 
 export const Button = styled.div`
-  width: 100%;
-  display: block;
+  display: inline-block;
   padding: 0.5em 0.3em 0.5em 0.3em;
+  margin: 0.7em 0 0.7em 0;
   color: #ffffff;
   background-color: #4177c9;
   font-size: 0.8em;
   text-align: center;
-  border-radius: 0.1em;
+  border-radius: 0.3em;
   border-width: 1px;
   border-color: #4177c9;
   :hover {
@@ -43,18 +43,20 @@ export const CoveredPage = styled.div`
 
 export const ContentContainer = styled.div`
   padding-top: ${HEADER_HEIGHT};
-  width: 70%;
+  height: ${SCREEN_HEIGHT - 50};
+  width: 100%;
+  background: linear-gradient(rgba(255,255,255,0.5), rgba(0,0,0,0))
 `;
 
 export const Input = styled.input`
-  display: block;
+  display: flex;
   padding: 0.5em 0.3em 0.5em 0.3em;
   font-size: 0.8em;
   border-color: #333333;
+  border-radius: 0.3em;
   border-width: 1px;
   background-color: #ffffff;
   color: #777777;
-  width: 100%;
   margin: 0.7em 0 0.7em 0;
 `
 
@@ -80,3 +82,11 @@ export const Col = styled.div`
     width: ${({ lg }) => lg && `${calcWidthPercent(lg)}%`};
   }
 `;
+
+export const ImageContainer = styled.div`
+  width: ${({ width }) => ( width ? width : `100%`)};
+  height: ${({ height }) => ( height ? height : `100%`)};
+  background-image: url(${({ imgURL }) => (imgURL)});
+  background-size: cover;
+  background-position: center center;
+`

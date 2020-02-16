@@ -1,9 +1,33 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Input, Button } from '../components/modules';
+import { Input, Button, ContentContainer } from '../components/modules';
 import { SignupStoreContext } from '../../store/SignupStore';
 import { observer } from 'mobx-react-lite';
 import styled from 'styled-components';
 import axios from 'axios';
+import { BREAK_POINT_MOBILE, BREAK_POINT_TABLET } from '../config/config';
+
+const FormContainer = styled.div`
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  margin-top: 1em;
+  margin-left: auto;
+  margin-right: auto;
+  width: 95%;
+  @media only screen and (min-width: ${BREAK_POINT_MOBILE}px) {
+    width: 50%;
+  }
+  @media only screen and (min-width: ${BREAK_POINT_TABLET}px) {
+    width: 40%;
+  }
+`
+
+const MainText = styled.div`
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 900;
+  font-size: 1.5em;
+  text-align: center;
+`
 
 const WarningText = styled.div`
   color: #ee1930;
@@ -126,18 +150,22 @@ export const SignupForm = observer(() => {
 
   return (
     <>
-    <div>signup</div>
-    <form>
-      <Input key="sellerName" type="user-name" value={signupStore.sellerName} onChange={handleName} placeholder='이름' autoComplete="off"/>
-      <Input key="sellerEmail" type="user-email" value={signupStore.sellerEmail} onChange={handleEmail} placeholder='이메일' autoComplete="off"/>
-      <Input key="sellerPassword" type="password" value={signupStore.sellerPassword} onChange={handlePassword} placeholder='비밀번호' autoComplete="off"/>
-      <Input key="sellerPasswordCheck" type="password" value={signupStore.sellerPasswordCheck} onChange={handlePasswordCheck} placeholder='비밀번호 확인' autoComplete="off"/>
-      { !signupStore.passwordInput || signupStore.passwordCheckState ? <></> : <WarningText>비밀번호가 다릅니다. 확인해주세요.</WarningText> }
-      { !signupStore.passwordInput || signupStore.passwordLengthState ? <></> : <WarningText>비밀번호가 너무 짧습니다. 6자리 이상 입력해주세요.</WarningText> }
-      <Input key="sellerBusinessRegistrationNumber" type="text" value={signupStore.sellerBusinessRegistrationNumber} onChange={handleBusiness} placeholder='사업자 등록번호 (ex. 1234567890 또는 123-45-67890)' autoComplete="off"/>
-      { !signupStore.sellerBusinessRegistrationNumber || signupStore.businessState ? <></> : <WarningText>형식이 잘못되었습니다.</WarningText> }
-      { canSubmit ? <Button onClick={handleSubmit}>회원가입</Button> : <Button style={{backgroundColor: '#3e3e3e'}}>회원가입</Button> }
-    </form>
+    <ContentContainer>
+      <MainText>회원가입</MainText>
+      <form>
+        <FormContainer>
+          <Input key="sellerName" type="user-name" value={signupStore.sellerName} onChange={handleName} placeholder='이름' autoComplete="off"/>
+          <Input key="sellerEmail" type="user-email" value={signupStore.sellerEmail} onChange={handleEmail} placeholder='이메일' autoComplete="off"/>
+          <Input key="sellerPassword" type="password" value={signupStore.sellerPassword} onChange={handlePassword} placeholder='비밀번호' autoComplete="off"/>
+          <Input key="sellerPasswordCheck" type="password" value={signupStore.sellerPasswordCheck} onChange={handlePasswordCheck} placeholder='비밀번호 확인' autoComplete="off"/>
+          { !signupStore.passwordInput || signupStore.passwordCheckState ? <></> : <WarningText>비밀번호가 다릅니다. 확인해주세요.</WarningText> }
+          { !signupStore.passwordInput || signupStore.passwordLengthState ? <></> : <WarningText>비밀번호가 너무 짧습니다. 6자리 이상 입력해주세요.</WarningText> }
+          <Input key="sellerBusinessRegistrationNumber" type="text" value={signupStore.sellerBusinessRegistrationNumber} onChange={handleBusiness} placeholder='사업자 등록번호 (ex. 1234567890 또는 123-45-67890)' autoComplete="off"/>
+          { !signupStore.sellerBusinessRegistrationNumber || signupStore.businessState ? <></> : <WarningText>형식이 잘못되었습니다.</WarningText> }
+          { canSubmit ? <Button onClick={handleSubmit}>회원가입</Button> : <Button style={{backgroundColor: '#3e3e3e'}}>회원가입</Button> }
+        </FormContainer>
+      </form>
+    </ContentContainer>
     </>
   )
 })

@@ -1,11 +1,38 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { CoveredPage, ContentContainer, Link, Input, Button } from '../components/modules';
 import { MainStoreContext } from '../../store/MainStore';
 import { observer } from 'mobx-react-lite';
 import axios from 'axios';
+import styled from 'styled-components';
+import { BREAK_POINT_MOBILE, BREAK_POINT_TABLET } from '../config/config'
 
-export const AuthForm = observer(() => {
+const MainText = styled.div`
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 900;
+  font-size: 1.5em;
+  text-align: center;
+`
+
+const FormContainer = styled.div`
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  margin-top: 1em;
+  margin-left: auto;
+  margin-right: auto;
+  width: 95%;
+  @media only screen and (min-width: ${BREAK_POINT_MOBILE}px) {
+    width: 50%;
+  }
+  @media only screen and (min-width: ${BREAK_POINT_TABLET}px) {
+    width: 40%;
+  }
+`
+
+export const LoginForm = observer(() => {
   const mainStore = useContext(MainStoreContext);
+
+  console.log(mainStore.userEmail)
 
   const handleEmail = (e) => {
     mainStore.userEmail = e.target.value
@@ -26,6 +53,7 @@ export const AuthForm = observer(() => {
         localStorage.setItem('cookies', JSON.stringify(response.data.cookie))
         localStorage.setItem('userEmail', response.data.email)
         localStorage.setItem('isSeller', 'true')
+        localStorage.setItem('userName', response.data.name)
         if ('ROLE_SELLER' === response.data.authority) {
         localStorage.setItem('truckIdList', response.data.isSeller.truckIdList)
         localStorage.setItem('truckId', response.data.truckId)
@@ -43,16 +71,15 @@ export const AuthForm = observer(() => {
         <ContentContainer>
           {mainStore.isLoggedIn === true ? <div>welcome, {mainStore.userName}</div>
           : <>
-              <div>로그인페이지</div>
-              <div>
+              <MainText>로그인</MainText>
                 <form>
-                  <Input key="userEmail" type="text" value={mainStore.userEmail} onChange={handleEmail} placeholder='이메일' autoComplete="off"/>
-                  <Input key="userPassword" type="password" value={mainStore.password} onChange={handlePassword} placeholder='비밀번호' autoComplete="off"/>
-                  <Button onClick={handleSubmit}>로그인</Button>
-                    {/* <Button style={{backgroundColor: '#3e3e3e'}}>로그인</Button> */}
+                  <FormContainer>
+                    <Input key="userEmail" type="text" value={mainStore.userEmail} onChange={handleEmail} placeholder='이메일' autoComplete="off"/>
+                    <Input key="userPassword" type="password" value={mainStore.password} onChange={handlePassword} placeholder='비밀번호' autoComplete="off"/>
+                    <Button onClick={handleSubmit}>로그인</Button>
+                  </FormContainer>
                 </form>
-              </div>
-              <Link href="/signup">서비스가 처음이신가요 ? 회원가입 하러 가기</Link>
+              <Link href="/signup">회원가입</Link>
             </> }
         </ContentContainer>
       </CoveredPage>
