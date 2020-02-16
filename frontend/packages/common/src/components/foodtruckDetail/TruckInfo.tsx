@@ -8,6 +8,7 @@ import {
 import InfoStaticMaps from './../map/InfoStaticMaps';
 import OpeningState from './../seller/OpeningState';
 import axios from 'axios';
+import TruckSaleHistoryDetail from "./TruckSaleHistoryDetail";
 
 interface IState {
   id: number,
@@ -70,6 +71,7 @@ export default (props: IProps) => {
         </View>
         : <></>
       }
+      <TruckSaleHistoryDetail truckId={props.id}></TruckSaleHistoryDetail>
     </View>
   );
 
