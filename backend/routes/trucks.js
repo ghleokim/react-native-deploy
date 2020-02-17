@@ -345,13 +345,14 @@ router.delete("/delete/:truckId", isLoggedInBySeller, async function(req, res, n
 });
 
 router.put("/:truckId/state", isLoggedInBySeller, async function(req, res, next) {
+
   if (req.params.truckId != req.session.truckId) {
     let error = new Error("푸드트럭 수정 권한이 없습니다.");
     error.status = 403;
     next(error);
   }
 
-  const STATE = req.body.state;
+  const STATE = String(req.body.state).toUpperCase();
   const LONGITUDE = req.body.longitude || 0;
   const LATITUDE = req.body.latitude || 0;
   if (STATE === undefined) {
@@ -360,25 +361,142 @@ router.put("/:truckId/state", isLoggedInBySeller, async function(req, res, next)
     next(error);
   }
 
-  let result = await models.truck.update(
-    {
-      state: STATE,
-      longitude: LONGITUDE,
-      latitude: LATITUDE
-    },
-    {
-      where: {
-        id: req.params.truckId
+  const tmp = await models.truck.findOne({
+    attributes: ["state"],
+    where: {
+      id: req.session.truckId
+    }
+  })
+  const PREV_STATE = tmp.state.toLowerCase()
+
+
+  if(STATE == 'prepare') {
+    if (PREV_STATE !== 'closed') {
+      let error = new Error(`영엽 상태 변경 불가능 (기존 상태: ${PREV_STATE} , 요청 상태: ${STATE})`);
+      error.status = 400;
+      next(error);
+    }
+
+    await models.truckSaleHistory.create({
+      truckId: req.session.truckId,
+      predictedBeginTime: req.body.predictedBeginTime,
+      predictedEndTime: req.body.predictedEndTime,
+    });
+  }
+    
+  if (STATE == 'open') {
+    console.log('STATE == open')
+    switch(PREV_STATE) {
+      case 'open':
+        console.log('OPEN + OPEN')
+        let error = new Error(`영엽 상태 변경 불가능 (기존 상태: ${PREV_STATE} , 요청 상태: ${STATE})`);
+        error.status = 400;
+        next(error);
+      case 'prepare':
+        let truck = await models.truckSaleHistory.findOne({
+        attributes: ["id"],
+          where: {
+            truckId: req.session.truckId,
+          },
+          order: [ [ 'id', 'DESC' ]],
+        });
+        let HISTORY_ID = truck.id
+        await models.truckSaleHistory.update({
+          beginTime: new Date(),
+          predictedEndTime: req.body.predictedEndTime,
+        },
+        {
+          where: {
+            id: HISTORY_ID
+          }
+        })
+        break;
+      case 'closed':
+        await models.truckSaleHistory.create({
+          truckId: req.session.truckId,
+          beginTime: new Date(),
+          predictedEndTime: req.body.predictedEndTime,
+        });
+        break;
       }
     }
-  );
 
+      if (STATE == 'closed') {
+        let truck;
+        switch(PREV_STATE) {
+          case 'prepare':
+              truck = await models.truckSaleHistory.findOne({
+              attributes: ["id"],
+              where: {
+                truckId: req.session.truckId,
+                beginTime: { [Op.eq]: null },
+                endTime: { [Op.eq]: null },
+              },
+              order: [ [ 'id', 'DESC' ]],
+              });
+  
+            await models.truckSaleHistory.destroy({
+              where: { id: truck.id}
+            })
+            break;
+          case 'open':
+            truck = await models.truckSaleHistory.findOne({
+              attributes: ["id"],
+              where: {
+                truckId: req.session.truckId,
+              },
+              order: [ [ 'id', 'DESC' ]],
+              });
+              
+              await models.truckSaleHistory.update({
+                endTime: new Date(),
+              },
+              {
+                where: {
+                  id: truck.id
+                }
+              })
+            break;
+          case 'closed':
+            let error = new Error(`영엽 상태 변경 불가능 (기존 상태: ${PREV_STATE} , 요청 상태: ${STATE})`);
+            error.status = 400;
+            next(error);
+        }
+      }
+      
+    await models.truck.update(
+      {
+        state: STATE,
+        longitude: LONGITUDE,
+        latitude: LATITUDE
+      },
+      {
+        where: {
+          id: req.params.truckId
+        }
+      }
+    );
+    
   const responseDto = await models.truck.findOne({
     where: {
       id: req.params.truckId
     },
     attributes: ["state", "longitude", "latitude"]
   });
+
+  res.json(responseDto);
+})
+
+router.get("/:truckId/history", async function(req, res, next) {
+  const TRUCK_ID = req.params.truckId
+  const responseDto = await models.truckSaleHistory.findAll({
+    where: {
+      truckId: TRUCK_ID,
+      endTime: { [Op.ne]: null }
+    },
+    order: [ [ 'id', 'DESC' ]],
+  });
+
   res.json(responseDto);
 });
 

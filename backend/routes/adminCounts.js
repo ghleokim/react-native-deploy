@@ -23,6 +23,25 @@ router.get('/users/day', isLoggedInByAdmin, async function(req, res, next){
     res.json(result);
 });
 
+router.get('/users/days', isLoggedInByAdmin, async function(req, res, next){
+    let d = moment();
+    const count = req.query.count
+    
+    let result = await user.findAll({
+        attributes: [[sequelize.fn('count', sequelize.col('createdAt')), 'count'], [sequelize.fn('date', sequelize.col('createdAt')), 'joinedDate']],
+        where:{
+            createdAt: {
+                [Op.gte]: moment(d).subtract(count-1, 'days').startOf('day'),
+                [Op.lte]: moment(d).format(),
+            }
+        },
+        group: ['joinedDate'],
+        order: sequelize.literal('joinedDate ASC'),
+    })
+
+    res.json(result);
+});
+
 router.get('/reviews/day', isLoggedInByAdmin, async function(req, res, next){
     let d = moment();
     let result = await review.findAndCountAll({
