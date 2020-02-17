@@ -41,7 +41,7 @@ router.post("/sign_up", async function(req, res, next) {
   });
   console.log("seller 회원가입");
 
-  res.redirect("/sellers/sign_up");
+  res.send(200);
 });
 
 router.get("/", function(req, res, next) {
