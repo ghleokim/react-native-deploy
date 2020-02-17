@@ -37,6 +37,9 @@ module.exports = (sequelize, DataTypes) => {
     user.hasMany(models.truckUsers,{onDelete: 'cascade'});
     user.hasMany(models.userTrucks,{onDelete: 'cascade'});
     user.hasMany(models.notice,{onDelete: 'cascade'});
+    user.hasOne(models.seller);
+    user.hasOne(models.authorities);
+
   };
 
   return user;

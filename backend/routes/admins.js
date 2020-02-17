@@ -10,6 +10,23 @@ router.get("/", function(req, res, next) {
     res.json({ health: "OK" });
   });
 
+  router.get("/watingSeller", isLoggedInByAdmin, async function(req, res, next){
+    let result = await authorities.findAll({
+      where: {
+        authority: "ROLE_WAITING_SELLER"
+      },
+      include: {
+          model: user
+          ,
+          include: [
+            {model: seller}
+          ]
+        }
+    })
+    res.json(result);
+})
+
+
 router.delete("/delete/user/:email", isLoggedInByAdmin, async function(req, res, next) {
     let resultDel = await user.destroy({
       where: { email: req.params.email }

@@ -8,7 +8,11 @@ const {isLoggedIn, isLoggedInByUser, isLoggedInBySeller, isLoggedInByAdmin} = re
 
 
 router.get("/", async function(req, res, next) {
-  let result = await notice.findAll();
+  let result = await notice.findAll({
+    where: {
+      state: 1
+    }
+  });
   res.json(result);
 });
 
