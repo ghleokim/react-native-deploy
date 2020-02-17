@@ -345,7 +345,6 @@ router.delete("/delete/:truckId", isLoggedInBySeller, async function(req, res, n
 });
 
 router.put("/:truckId/state", isLoggedInBySeller, async function(req, res, next) {
-
   if (req.params.truckId != req.session.truckId) {
     let error = new Error("푸드트럭 수정 권한이 없습니다.");
     error.status = 403;
@@ -367,32 +366,33 @@ router.put("/:truckId/state", isLoggedInBySeller, async function(req, res, next)
       id: req.session.truckId
     }
   })
-  const PREV_STATE = tmp.state.toLowerCase()
+  const PREV_STATE = tmp.state.toUpperCase()
 
-
-  if(STATE == 'prepare') {
-    if (PREV_STATE !== 'closed') {
+  if(STATE === 'PREPARE') {
+    if (PREV_STATE !== 'CLOSED') {
       let error = new Error(`영엽 상태 변경 불가능 (기존 상태: ${PREV_STATE} , 요청 상태: ${STATE})`);
       error.status = 400;
       next(error);
     }
 
+    console.log("PREPARE")
     await models.truckSaleHistory.create({
       truckId: req.session.truckId,
       predictedBeginTime: req.body.predictedBeginTime,
       predictedEndTime: req.body.predictedEndTime,
+      longitude: LONGITUDE,
+      latitude: LATITUDE,  
     });
   }
     
-  if (STATE == 'open') {
-    console.log('STATE == open')
+  if (STATE == 'OPEN') {
     switch(PREV_STATE) {
-      case 'open':
+      case 'OPEN':
         console.log('OPEN + OPEN')
         let error = new Error(`영엽 상태 변경 불가능 (기존 상태: ${PREV_STATE} , 요청 상태: ${STATE})`);
         error.status = 400;
         next(error);
-      case 'prepare':
+      case 'PREPARE':
         let truck = await models.truckSaleHistory.findOne({
         attributes: ["id"],
           where: {
@@ -404,6 +404,8 @@ router.put("/:truckId/state", isLoggedInBySeller, async function(req, res, next)
         await models.truckSaleHistory.update({
           beginTime: new Date(),
           predictedEndTime: req.body.predictedEndTime,
+          longitude: LONGITUDE,
+          latitude: LATITUDE,  
         },
         {
           where: {
@@ -411,20 +413,22 @@ router.put("/:truckId/state", isLoggedInBySeller, async function(req, res, next)
           }
         })
         break;
-      case 'closed':
+      case 'CLOSED':
         await models.truckSaleHistory.create({
           truckId: req.session.truckId,
           beginTime: new Date(),
           predictedEndTime: req.body.predictedEndTime,
+          longitude: LONGITUDE,
+          latitude: LATITUDE,  
         });
         break;
-      }
+      } 
     }
 
-      if (STATE == 'closed') {
+      if (STATE == 'CLOSED') {
         let truck;
         switch(PREV_STATE) {
-          case 'prepare':
+          case 'PREPARE':
               truck = await models.truckSaleHistory.findOne({
               attributes: ["id"],
               where: {
@@ -439,7 +443,7 @@ router.put("/:truckId/state", isLoggedInBySeller, async function(req, res, next)
               where: { id: truck.id}
             })
             break;
-          case 'open':
+          case 'OPEN':
             truck = await models.truckSaleHistory.findOne({
               attributes: ["id"],
               where: {
@@ -457,12 +461,15 @@ router.put("/:truckId/state", isLoggedInBySeller, async function(req, res, next)
                 }
               })
             break;
-          case 'closed':
+          case 'CLOSED':
             let error = new Error(`영엽 상태 변경 불가능 (기존 상태: ${PREV_STATE} , 요청 상태: ${STATE})`);
             error.status = 400;
             next(error);
         }
       }
+
+      console.log('id:' + req.session.truckId)
+      console.log('id:' + req.session.truckId)
       
     await models.truck.update(
       {
@@ -472,18 +479,18 @@ router.put("/:truckId/state", isLoggedInBySeller, async function(req, res, next)
       },
       {
         where: {
-          id: req.params.truckId
+          id: req.session.truckId
         }
       }
     );
-    
+  
   const responseDto = await models.truck.findOne({
     where: {
-      id: req.params.truckId
+      id: req.session.truckId
     },
     attributes: ["state", "longitude", "latitude"]
   });
-
+  console.log(responseDto)
   res.json(responseDto);
 })
 
