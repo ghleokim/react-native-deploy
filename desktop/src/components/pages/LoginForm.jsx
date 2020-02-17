@@ -29,7 +29,14 @@ const FormContainer = styled.div`
   }
 `
 
-export const LoginForm = observer(() => {
+const WarningText = styled.div`
+  color: #ee1930;
+  font-size: 0.7em;
+  text-align: left;
+`
+
+
+export const LoginForm = observer(({history}) => {
   const mainStore = useContext(MainStoreContext);
 
   console.log(mainStore.userEmail)
@@ -48,6 +55,7 @@ export const LoginForm = observer(() => {
       console.log(response);
       if (!response.data.isSeller.status) {
         alert('로그인 권한이 없습니다.')
+        history.replace('/')
       } else {
         localStorage.setItem('authority', response.data.authority)
         localStorage.setItem('cookies', JSON.stringify(response.data.cookie))
@@ -60,6 +68,7 @@ export const LoginForm = observer(() => {
         }
         mainStore.isLoggedIn = true
         mainStore.userName = response.data.name
+        history.push('/myinfo')
       }
     })
     .catch(e=>console.log(e))
@@ -74,6 +83,7 @@ export const LoginForm = observer(() => {
               <MainText>로그인</MainText>
                 <form>
                   <FormContainer>
+                    <WarningText>구매자이신가요? 모바일로 로그인 해주세요. 판매자만 로그인 가능합니다.</WarningText>
                     <Input key="userEmail" type="text" value={mainStore.userEmail} onChange={handleEmail} placeholder='이메일' autoComplete="off"/>
                     <Input key="userPassword" type="password" value={mainStore.password} onChange={handlePassword} placeholder='비밀번호' autoComplete="off"/>
                     <Button onClick={handleSubmit}>로그인</Button>
