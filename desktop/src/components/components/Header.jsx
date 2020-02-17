@@ -86,7 +86,7 @@ export const Header = observer(() => {
               <Link href="#" onClick={handleLogout}>로그아웃</Link>
             </>
             :<>
-              <Link href="/auth">로그인</Link>
+              <Link href="/login">로그인</Link>
               <Link href="/signup">회원가입</Link>
             </>
           }
