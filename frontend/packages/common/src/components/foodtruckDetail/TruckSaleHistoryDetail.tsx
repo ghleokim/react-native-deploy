@@ -6,6 +6,7 @@ import {
 } from "react-native";
 import axios from 'axios'
 import moment from 'moment'
+import {getDay} from '../../lib/datetime'
 
 interface IProps {
   truckId: number
@@ -26,9 +27,29 @@ export default (props: IProps) => {
   const historyRow = (history) => {
     return (
         <View style={styles.historyRow}>
-          <Text>{moment(history.beginTime).format('YYYY년 MM월 DD일')}</Text>
-          <Text>{moment(history.beginTime).format('hh:mm')} ~ {moment(history.endTime).format('hh:mm')}</Text>
+        
+
+        <View style={{flex: 1, flexDirection: 'row'}}>
+          <View style={{flex:0.5}}>
+            <Text style={{letterSpacing:0.5}}>{`${moment(history.beginTime).format('YYYY/MM/DD')} (${getDay(history.beginTime)})`}</Text>
+            <Text>{moment(history.beginTime).format('hh:mm')} ~ {moment(history.endTime).format('hh:mm')}</Text>
+          </View>      
+          <View style={{flex:0.5}}>
+            <Text style={styles.addr}>{`${String(history.area2).trim().substring(history.area2.lastIndexOf(" ")+1,history.area2.length)} ${history.area3}`}</Text>
+          </View>
+          
         </View>
+        </View>
+    )
+  }
+
+  const emptyHistory = () => {
+    return (
+      <View>
+        <Text>
+          히스토리가 없습니다.
+        </Text>
+      </View>
     )
   }
 
@@ -38,7 +59,10 @@ export default (props: IProps) => {
           <Text style={styles.historyTitleText}>History</Text>
         </View>
         <View style={styles.historyBody}>
-          {truckHistories.map(history => historyRow(history))}
+          {
+            truckHistories.length === 0 
+            ? emptyHistory() 
+            : truckHistories.map(history => historyRow(history))}
         </View>
       </View>
   );
@@ -46,19 +70,31 @@ export default (props: IProps) => {
 };
 
 const styles = StyleSheet.create({
-  historyContainer: {},
-  historyTitle: {},
+  historyContainer: {
+    borderWidth: 1,
+    borderColor: '#e6e6e8',
+  },
+  historyTitle: {
+    borderBottomWidth: 3,
+    borderColor: '#e1e1e1',    
+  },
   historyTitleText: {
-    fontSize: 20,
+    fontSize: 25,
+    fontWeight: '500',
+    textAlign: 'center'
   },
   historyBody: {
-      borderWidth: 1,
-      borderColor: '#e6e6e8',
   },
   historyRow: {
-      borderBottomWidth: 1,
-      borderColor: '#e6e6e8',
-      paddingBottom: 5,
-      paddingTop: 5,
+    paddingLeft: 8,
+    paddingBottom: 8,
+    paddingTop: 8,
   },
+  addr: {
+    color:'#888888', 
+    position:'absolute', 
+    right:2, 
+    bottom:0, 
+    paddingRight:10
+  }
 })
