@@ -142,7 +142,7 @@ export default (props: IProps) => {
         })
         .then((res) => {
             alert("파일 등록 완료")
-            setImgURL(res.data.imgName)
+            setImgURL(res.data.imgURL)
         })
     }
 
