@@ -29,7 +29,20 @@ module.exports = (sequelize, DataTypes) => {
     longitude: {
       type: DataTypes.FLOAT,
       allowNull: true,
+    },
+    area1: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
+    area2: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
+    area3: {
+      allowNull: true,
+      type: DataTypes.STRING
     }
+
   }, {});
 
   truckSaleHistory.associate = function(models) {

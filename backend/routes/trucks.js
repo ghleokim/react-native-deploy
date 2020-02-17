@@ -4,6 +4,7 @@ const models = require("../models");
 const crypto = require("crypto");
 const calcDistance = require("../lib/distance");
 const {isLoggedIn, isLoggedInByUser, isLoggedInBySeller, isLoggedInByAdmin} = require('./middlewares');
+const fetchAddress = require('../lib/reverseGeocoding')
 
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
@@ -385,6 +386,7 @@ router.put("/:truckId/state", isLoggedInBySeller, async function(req, res, next)
     });
   }
     
+  let area;
   if (STATE == 'OPEN') {
     switch(PREV_STATE) {
       case 'OPEN':
@@ -400,12 +402,18 @@ router.put("/:truckId/state", isLoggedInBySeller, async function(req, res, next)
           },
           order: [ [ 'id', 'DESC' ]],
         });
+
+        area = await fetchAddress(LONGITUDE, LATITUDE)
+
         let HISTORY_ID = truck.id
         await models.truckSaleHistory.update({
           beginTime: new Date(),
           predictedEndTime: req.body.predictedEndTime,
           longitude: LONGITUDE,
           latitude: LATITUDE,  
+          area1: area.area1,
+          area2: area.area2,
+          area3: area.area3,
         },
         {
           where: {
@@ -414,15 +422,20 @@ router.put("/:truckId/state", isLoggedInBySeller, async function(req, res, next)
         })
         break;
       case 'CLOSED':
+        area = await fetchAddress(LONGITUDE, LATITUDE)
+        console.log(area)
         await models.truckSaleHistory.create({
           truckId: req.session.truckId,
           beginTime: new Date(),
           predictedEndTime: req.body.predictedEndTime,
           longitude: LONGITUDE,
           latitude: LATITUDE,  
+          area1: area.area1,
+          area2: area.area2,
+          area3: area.area3,
         });
         break;
-      } 
+      }
     }
 
       if (STATE == 'CLOSED') {
@@ -468,9 +481,6 @@ router.put("/:truckId/state", isLoggedInBySeller, async function(req, res, next)
         }
       }
 
-      console.log('id:' + req.session.truckId)
-      console.log('id:' + req.session.truckId)
-      
     await models.truck.update(
       {
         state: STATE,
@@ -490,7 +500,7 @@ router.put("/:truckId/state", isLoggedInBySeller, async function(req, res, next)
     },
     attributes: ["state", "longitude", "latitude"]
   });
-  console.log(responseDto)
+
   res.json(responseDto);
 })
 
@@ -503,7 +513,6 @@ router.get("/:truckId/history", async function(req, res, next) {
     },
     order: [ [ 'id', 'DESC' ]],
   });
-
   res.json(responseDto);
 });
 

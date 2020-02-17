@@ -40,6 +40,18 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
+      area1: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      area2: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      area3: {
+        allowNull: true,
+        type: Sequelize.STRING
+      }
     });
   },
   down: (queryInterface, Sequelize) => {
