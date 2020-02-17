@@ -42,12 +42,12 @@ export const Modal: React.FC<Props> = observer(({ notice, imgURL }) => {
       <View style={{height: 40, borderBottomColor: '#a090c0', borderBottomWidth: 1, justifyContent: 'center'}}>
         <TouchableOpacity onPressOut={()=>{setModalState(false); setTimeout(()=>{BannerStore.active=false; BannerStore.pageIndex = -1}, 500)}} style={{flex: 1, flexDirection:'row', justifyContent: 'space-between'}}>
           <View style={{width: 20}}></View>
-          <Text style={{alignSelf: 'center'}}>{!!imgURL? '이벤트' : '공지사항'}</Text>
+          <Text style={{alignSelf: 'center'}}>{MainStore.modalData.category === 'banner' ? '이벤트' : '공지사항'}</Text>
           <Image style={{ marginRight: 10, width: 20, height: 20, alignSelf: 'center'}} source={require('@foodtruckmap/common/src/static/icon_processed/noun_Close_1015372.png')}/>
         </TouchableOpacity>
       </View>
       <ScrollView contentContainerStyle={{flex: 1,}}>
-        {!!imgURL ? <View style={{width: '100%'}}>
+        {MainStore.modalData.category === 'banner' ? <View style={{width: '100%'}}>
           <Image style={{height: BannerStore.imgHeight, width: '100%', resizeMode: 'contain'}} source={{uri: imgURL}} defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}/>
           <Image style={{height: '100%', width: '100%', resizeMode: 'contain'}} source={{uri: imgURL}} defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}/>
           </View>
