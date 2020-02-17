@@ -217,6 +217,7 @@ router.get("/search/:searchKeyword", function(req, res, next) {
 // insert truck
 router.post("/", isLoggedInBySeller, async function(req, res, next) {
   let notice = req.body.truckNotice || "";
+  let srAVG = 0;
   let resultTruck = await models.truck.create({
     email: req.session.email,
     title: req.body.title,
@@ -226,7 +227,7 @@ router.post("/", isLoggedInBySeller, async function(req, res, next) {
     longitude: req.body.longitude,
     state: req.body.state,
     truckNotice: notice,
-    starRatingAVG: req.body.starRatingAVG
+    starRatingAVG: srAVG
   });
   let getTruck = await models.truck.findOne({
     where: {
