@@ -33,7 +33,7 @@ export const Button = styled.div`
 
 export const CoveredPage = styled.div`
   height: ${SCREEN_HEIGHT}px;
-  width: ${SCREEN_WIDTH}px;
+  display: flex;
   align-content: center;
   justify-content: center;
   text-align: center;
@@ -45,7 +45,7 @@ export const ContentContainer = styled.div`
   padding-top: ${HEADER_HEIGHT};
   height: ${SCREEN_HEIGHT - 50};
   width: 100%;
-  background: linear-gradient(rgba(255,255,255,0.5), rgba(0,0,0,0))
+  background: linear-gradient(rgba(255,255,255,0.5), rgba(0,0,0,0));
 `;
 
 export const Input = styled.input`

@@ -30,7 +30,7 @@ const FormContainer = styled.div`
 const MainText = styled.div`
   font-family: 'Noto Sans KR', sans-serif;
   font-weight: 900;
-  font-size: 1.5em;
+  font-size: 2em;
   text-align: left;
 `
 
