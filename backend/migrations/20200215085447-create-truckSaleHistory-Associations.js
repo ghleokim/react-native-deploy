@@ -4,7 +4,7 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     // Order belongsTo Customer
     return queryInterface.addColumn(
-      'truckSaleHistory', // name of Source model
+      'truckSaleHistories', // name of Source model
       'truckId', // name of the key we're adding 
       {
         type: Sequelize.INTEGER,
