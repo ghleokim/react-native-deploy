@@ -1,10 +1,12 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { HEADER_HEIGHT } from '../config/config';
 import { Link } from './modules'
 import { MainStoreContext } from '../../store/MainStore';
 import { observer } from 'mobx-react-lite';
+import { useInterval } from './functions';
+import { AnimatedTitle } from './AnimatedTitle';
 
 const Container = styled.div`
   position: fixed;
@@ -31,7 +33,7 @@ const Title = styled.h1`
   padding: 0 0.3em 0 0.3em;
 `;
 
-export const Header = observer(() => {
+export const Header = observer(({location}) => {
   const mainStore = useContext(MainStoreContext)
 
   const checkAuth = () => {
@@ -46,6 +48,7 @@ export const Header = observer(() => {
 
   useEffect(()=>{
     checkAuth();
+    console.log(location)
   },[])
 
   const healthCheck = () => {
@@ -71,14 +74,10 @@ export const Header = observer(() => {
     <Container>
       <FlexContainer>
         <div>
-          <Title style={{margin: 0,}}>
-            foodtruck 🚚
-          </Title>
-          <Link onClick={()=>{healthCheck()}}>DEV</Link>
+          <Link href="/" style={{padding: 0}}><AnimatedTitle /></Link>
         </div>
         <div>
-          <Link href="/">home</Link>
-          <Link href="/guide">guide</Link>
+          {location.pathname === '/' ? <></> :  <Link href="/">메인으로 가기</Link>}
           {
             mainStore.isLoggedIn === true ? 
             <>
@@ -86,8 +85,8 @@ export const Header = observer(() => {
               <Link href="#" onClick={handleLogout}>로그아웃</Link>
             </>
             :<>
-              <Link href="/login">로그인</Link>
-              <Link href="/signup">회원가입</Link>
+              {location.pathname === '/login' ? <></> : <Link href="/login">로그인</Link>}
+              {location.pathname === '/signup' ? <></> : <Link href="/signup">회원가입</Link>}
             </>
           }
         </div>
