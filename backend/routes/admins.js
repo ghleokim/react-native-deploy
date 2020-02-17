@@ -6,7 +6,7 @@ const sequelize = require("sequelize");
 const {isLoggedIn, isLoggedInByUser, isLoggedInBySeller, isLoggedInByAdmin} = require('./middlewares');
 
 
-router.get("/", function(req, res, next) {
+router.get("/", isLoggedInByAdmin, function(req, res, next) {
     res.json({ health: "OK" });
   });
 
@@ -54,19 +54,12 @@ router.delete("/delete/truck/:truckId", isLoggedInByAdmin, async function(req, r
 });
 
 router.post('/approval', isLoggedInByAdmin, async function(req, res, next){
-    let truckId = req.body.truckId;
-
-    let resultTruck = await truck.findOne({
-      where: {
-          id: req.body.truckId
-      }
-    });
 
     let resultAuth = await authorities.update({
       authority : "ROLE_SELLER"
     }, {
       where: {
-        userEmail: resultTruck.email
+        userEmail: req.body.userEmail
       }
     })
 
