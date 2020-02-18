@@ -236,6 +236,10 @@ router.post("/", isLoggedInBySeller, async function(req, res, next) {
     }
   });
 
+  req.session.save(function() {
+    req.session.truckId = getTruck.id;
+  });
+
   let resultSeller = await models.seller.update(
     {
       truckId: getTruck.id
