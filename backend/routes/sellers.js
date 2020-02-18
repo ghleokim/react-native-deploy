@@ -101,7 +101,7 @@ router.get("/myTrucks", isLoggedInBySeller, async function(req, res, next) {
   res.json(result);
 });
 
-router.post("/approve", isLoggedInBySeller, async function(req, res, next){
+router.post("/approve", async function(req, res, next){
   let resultSeller = await models.seller.findOne({
     where: {
       businessRegistrationNumber: req.body.businessRegistrationNumber
