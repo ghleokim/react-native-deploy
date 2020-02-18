@@ -26,6 +26,9 @@
     "mysql2": "^2.1.0",
     "pug": "^2.0.4",
     "react-native-keychain": "^4.0.5",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5",
+    "request-promise-native": "^1.0.8",
     "sequelize": "^5.21.3",
     "voca": "^1.4.0"
   }
