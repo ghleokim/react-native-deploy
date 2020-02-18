@@ -63,14 +63,11 @@ export default (props: IProps) => {
         <OperationTime />
       }
 
-      {props.data.starRatingAVG !== null ?
-        <View style={{flexDirection: 'row'}}>
-          <Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')}
-            style={{ height: 20, width: 20, tintColor: '#feb246' }} />
-          <Text>{props.data.starRatingAVG}</Text>
-        </View>
-        : <></>
-      }
+      <View style={{flexDirection: 'row'}}>
+        <Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')}
+          style={{ height: 20, width: 20, tintColor: '#feb246' }} />
+        <Text>{props.data.starRatingAVG !== null ? props.data.starRatingAVG : '0.0'}</Text>
+      </View>
       <TruckSaleHistoryDetail truckId={props.id}></TruckSaleHistoryDetail>
     </View>
   );
