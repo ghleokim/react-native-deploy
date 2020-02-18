@@ -3,7 +3,7 @@ import { createContext } from 'react';
 
 class SearchStore {
   // Login info
-  @observable searchPlaceholder: string = '검색어를 입력해주세요 (\'타코\', \'찹스테이크\', ...)';
+  @observable searchPlaceholder: string = '검색어를 입력해주세요 (\'스테이크\', \'밥\', ...)';
   @observable searchKeyword: string;
 }
 
