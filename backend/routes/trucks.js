@@ -282,8 +282,42 @@ router.put("/update/notice/:truckId", isLoggedInBySeller, async function(req, re
     });
     res.json(resultTruck);
   }
+})
+
+
+router.put('/update/notice', isLoggedInBySeller, async function(req, res, next){
+  let findTruck = await models.truck.findOne({
+   where: {
+     email: req.session.email
+   }
+ });
+
+ if (findTruck == null) {
+   res.status(401).send({
+     code: 0,
+     message: "본인의 트럭만 수정 가능합니다."
+   });
+ } else {
+
+   let result = await models.truck.update({
+     truckNotice: req.body.notice
+   }, {
+     where:{
+       email : req.session.email
+     }
+   })
+   
+   let resultTruck = await models.truck.findOne({
+     where: {
+       email : req.session.email
+     }
+   });
+   
+   res.json(resultTruck);
+ }
 
 })
+
 router.put("/update/:truckId", isLoggedInBySeller, async function(req, res, next) {
   let findTruck = await models.truck.findOne({
     where: {
