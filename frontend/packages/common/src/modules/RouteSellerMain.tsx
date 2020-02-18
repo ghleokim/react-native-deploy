@@ -6,6 +6,7 @@ import { mainStoreContext } from '../store/MainStore';
 import SellerMain from '../components/seller/SellerMain';
 import { RouteComponentProps } from 'react-router-dom';
 import { CustomStyle } from '../static/CustomStyle';
+import UnAuthorizedSellerMain from '../components/seller/UnAuthorizedSellerMain'
 
 interface Props extends RouteComponentProps {}
 
@@ -14,7 +15,10 @@ export const RouteSellerMain : React.FC<Props> = observer(({history}) => {
 
   return (
     <View style={{flex: 1}}>
-      {mainStore.isSeller === true ? <SellerMain /> : <>{history.push('/')}</>}
+      {console.log('seller authorized : ', mainStore.isSellerAuthorized)}
+      {mainStore.isSeller === true ? 
+      mainStore.isSellerAuthorized === true ? 
+      <SellerMain /> : <UnAuthorizedSellerMain history={history}/> : <>{history.push('/')}</>}
     </View>
   )
 })
