@@ -21,6 +21,8 @@ import SellerState from './SellerState';
 import ReviewList from '../foodtruckDetail/ReviewList';
 import { IReview, IReply } from './../foodtruckDetail/TruckInterface';
 import Dropzone from 'react-dropzone'
+import { History, LocationState } from 'history';
+
 interface IState {
   id: Number,
   imgURL: string,
@@ -55,7 +57,6 @@ const LocalStyles = StyleSheet.create({
     marginLeft: 10
   }
 });
-
 
 export default () => {
   const [data, setData] = useState({ id: '', imgURL: '', title: '', contents: '', latitude: 0, longitude: 0, state: '', menus: [] });
@@ -292,22 +293,23 @@ export default () => {
     )
   }
 
-  return (
-    <View>
-      <View style={{ flex: 1 }}>
+  const ShowList: React.FC = () => {
+    return (
+      <View>
+        <View style={{ flex: 1 }}>
           <Dropzone onDrop={acceptedFiles => submitImage(acceptedFiles)}>
-                {({getRootProps, getInputProps}) => (
-                        <section>
-                            <div {...getRootProps()}>
-                                <input {...getInputProps()} />
-                                <Image
-                                style={{ width: '100%', height: 150, marginBottom: -30 }}
-                                source={{ uri: data.imgURL }}
-                                defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}
-                              />
-                            </div>
-                      </section>
-                )}
+            {({ getRootProps, getInputProps }) => (
+              <section>
+                <div {...getRootProps()}>
+                  <input {...getInputProps()} />
+                  <Image
+                    style={{ width: '100%', height: 150, marginBottom: -30 }}
+                    source={{ uri: data.imgURL }}
+                    defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}
+                  />
+                </div>
+              </section>
+            )}
           </Dropzone>
 
           <View style={{ paddingBottom: 10, backgroundColor: '#edaa11', width: '70%', alignSelf: 'center', borderRadius: 9, marginBottom: 5 }}>
@@ -324,8 +326,11 @@ export default () => {
           <DetailNavContents />
           {/* <SellerState/> */}
         </View>
-    </View>
-  )
+      </View>
+    )
+  }
+  
+  return <ShowList />
 }
 
 const localStyle = StyleSheet.create({
