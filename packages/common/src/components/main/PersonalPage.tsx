@@ -45,8 +45,10 @@ export const PersonalPage: React.FC<Props> = ({history}) => {
     .catch(err=>console.log(err))
   }
 
-  useEffect(()=>{getFollowingTrucks()},[])  
-
+  useEffect(()=>{
+    if(localStorage.getItem('userEmail') !== null)
+      getFollowingTrucks()
+    },[])
   const sampleItemList: TruckItem[] = [
     {
       id: 0,
