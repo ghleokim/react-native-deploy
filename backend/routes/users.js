@@ -19,8 +19,8 @@ router.get("/sign_up", function(req, res, next) {
 
 // 회원가입 POST
 router.post("/sign_up", async function(req, res, next) {
-  const USER_NAME = req.body.userName.trim();
-  const USER_EMAIL = req.body.userEmail.trim();
+  const USER_NAME = (req.body.userName.trim()).toLowerCase();
+  const USER_EMAIL = (req.body.userEmail.trim()).toLowerCase();
   const USER_PASSWORD = req.body.userPassword.trim();
 
   if (USER_NAME == undefined) {
@@ -108,7 +108,7 @@ router.get("/getUser", isLoggedIn, async function(req, res, next) {
 router.post("/login", async function(req, res, next) {
   console.log(req.body.userEmail);
   console.log(req.body.userPassword);
-  const USER_EMAIL = req.body.userEmail.trim();
+  const USER_EMAIL = (req.body.userEmail.trim()).toLowerCase();
   const USER_PASSWORD = req.body.userPassword.trim();
 
   let result = await models.user.findOne({

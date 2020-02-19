@@ -12,7 +12,9 @@ router.get("/sign_up", function(req, res, next) {
 // 회원가입!
 router.post("/sign_up", async function(req, res, next) {
   let body = req.body;
-  let inputPassword = body.sellerPassword;
+  let inputPassword = body.sellerPassword.trim();
+  let SELLER_NAME = body.sellerName.trim();
+  let SELLER_EMAIL = (body.sellerEmail.trim()).toLowerCase();
   let salt = Math.round(new Date().valueOf() * Math.random()) + "";
   let hashPassword = crypto
     .createHash("sha512")
@@ -20,8 +22,8 @@ router.post("/sign_up", async function(req, res, next) {
     .digest("hex");
 
   let resultUser = await models.user.create({
-    name: body.sellerName,
-    email: body.sellerEmail,
+    name: SELLER_NAME,
+    email: SELLER_EMAIL,
     password: hashPassword,
     salt: salt,
     isSeller: 1 // true
@@ -29,14 +31,14 @@ router.post("/sign_up", async function(req, res, next) {
 
   let resultAuth = await models.authorities.create({
     authority: "ROLE_USER",
-    userEmail: body.sellerEmail
+    userEmail: SELLER_EMAIL
   });
   console.log(resultAuth);
 
   console.log("user 회원가입");
 
   let resultSeller = await models.seller.create({
-    userEmail: body.sellerEmail, // fk (user의 pk)
+    userEmail: SELLER_EMAIL, // fk (user의 pk)
     businessRegistrationNumber: body.sellerBusinessRegistrationNumber
   });
   console.log("seller 회원가입");
