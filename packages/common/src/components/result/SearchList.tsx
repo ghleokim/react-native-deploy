@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useState } from 'react'
-import { View, Image, StyleSheet, Text, Button } from 'react-native'
+import { View, Image, StyleSheet, Text, Button, TouchableOpacity } from 'react-native'
 import { ListView } from './ListView'
 import { CustomStyle } from '../../static/CustomStyle'
 import { Colors, COLOR_DARKGRAY } from '../../static/CustomColor'
@@ -40,8 +40,9 @@ export const SearchList: React.FC<Props> = ({ history, isDefault, searchKeyword,
     }
   })
 
-  return (
-    <View>
+  const ShowTruckList: React.FC = () => {
+    return (
+      <View>
       {trucks.map((truck: SearchResultItem, index: number) => {
         if (truck.currentStatus !== 'closed') {
           return <ListView
@@ -58,8 +59,27 @@ export const SearchList: React.FC<Props> = ({ history, isDefault, searchKeyword,
         }
       })}
     </View>
+    )
+  }
+  // 디자인 수정 필요
+  const ShowNoResult: React.FC = () => {
+    return (
+      <View style={{top: '10px', alignSelf: 'center'}} >
+        <Text>검색 결과가 없습니다.</Text>
+        <BackPressButton></BackPressButton>
+      </View>
+    )
+  }
+  const BackPressButton: React.FC = () => {
+    return (
+      <TouchableOpacity style={{alignSelf: 'center', paddingTop:'5px'}} onPress={() => history.goBack()}>
+        <Text style={{color: '#000000', backgroundColor:'#f5ebde', 
+        paddingLeft: '3px', paddingRight: '3px', paddingTop: '3px', paddingBottom: '3px'}}>뒤로가기</Text>
+      </TouchableOpacity>
+    )
+  }
 
-  )
+  return trucks.length !== 0 ? <ShowTruckList /> : <ShowNoResult />
 }
 
 const localStyle = StyleSheet.create({

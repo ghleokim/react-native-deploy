@@ -79,7 +79,7 @@ export default (props: IProps) => {
 
   const historiesBox = (histories) => {
     return (
-      <View style={styles.historiesBox}>
+      <View style={styles.historiesBox} key={histories[0]}>
           <View style={{flexDirection: 'row'}}>            
             <Text style={{flex: 5}}></Text>
             <Text style={styles.historiesBoxDate}>{YYYYMMDD_korean_day(histories[0])}</Text>
