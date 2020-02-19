@@ -10,7 +10,7 @@ import {
 } from "react-native";
 
 import MenuList from './MenuList';
-import InfoList from './InfoList';
+import TruckInfo from './TruckInfo';
 import Line from '../Line'
 import axios from 'axios'
 
@@ -59,7 +59,7 @@ const LocalStyles = StyleSheet.create({
 });
 
 export default () => {
-  const [data, setData] = useState({ id: '', imgURL: '', title: '', contents: '', latitude: 0, longitude: 0, state: '', menus: [] });
+  const [data, setData] = useState({ id: '', imgURL: '', title: '', contents: '', latitude: 0, longitude: 0, state: '', truckNotice: '', menus: [] });
   const [isEditing, setIsEditing] = useState({ id: false, imgURL: false, title: false, contents: false, latitude: false, longitude: false, state: false, menus: [] });
   const [editText, setEditText] = useState({ id: '', imgURL: '', title: '', contents: '', latitude: 0, longitude: 0, state: '' })
   const [navState, setNavState] = useState({
@@ -285,7 +285,7 @@ export default () => {
     return (
       <View style={{ paddingTop: 10 }}>
         {navState.nav === 'menu' ? <MenuList menulist={data.menus} handleUpdateMenu={handleUpdateMenu} handleDeleteMenu={handleDeleteMenu} handleAddMenuSubmit={handleAddMenuSubmit} />
-          : navState.nav === 'info' ? <InfoList data={infoData}></InfoList>
+          : navState.nav === 'info' ? <TruckInfo notice={data.truckNotice} truckId={Number(myTruckId)}></TruckInfo>
             : navState.nav === 'review' ? <ReviewList reviewList={review.sort((a,b)=> Date.parse(b.updatedAt) - Date.parse(a.updatedAt))} truckId={infoData.id} onDelete={() => {}} ></ReviewList>
               : <></>
         }

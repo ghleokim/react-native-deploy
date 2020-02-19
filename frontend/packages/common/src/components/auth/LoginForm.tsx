@@ -7,6 +7,7 @@ import { loginStoreContext } from "../../store/LoginStore";
 import { CustomStyle, CustomText } from "../../static/CustomStyle";
 import { Colors } from "../../static/CustomColor";
 import { History, LocationState } from 'history';
+import LoadingBar from "../../common/LoadingBar";
 
 interface Props {
   history: History<LocationState>;

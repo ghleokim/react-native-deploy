@@ -28,22 +28,26 @@ export const RouteLogin: React.FC<Props> = observer(({ history, location, match 
   const mainStore = useContext(mainStoreContext);
   const loginStore = useContext(loginStoreContext)
 
-  const handleTapPage = () => {
-    if (location.pathname === '/login') {
-      history.replace('/signup')
-    } else {
+  const handleLoginBtn = () => {
+    if (location.pathname !== '/login') {
       history.replace('/login')
+    }
+  }
+
+  const handleSignUpBtn = () => {
+    if (location.pathname !== '/signup') {
+      history.replace('/signup')
     }
   }
 
   const LoginNavBar: React.FC = () => {
     return (
       <View style={{ flexDirection: 'row', backgroundColor: '#ffffff' }}>
-        <TouchableOpacity onPress={handleTapPage} style={[{ flex: 1, alignItems: 'center', paddingVertical: 10 },
+        <TouchableOpacity onPress={handleLoginBtn} style={[{ flex: 1, alignItems: 'center', paddingVertical: 10 },
         location.pathname === '/login' ? { borderBottomColor: Colors.deepcoral, borderBottomWidth: 3 } : {}]}>
           <Text style={[CustomText.title, { fontSize: 18 }]}>로그인</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleTapPage} style={[{ flex: 1, alignItems: 'center', paddingVertical: 10 },
+        <TouchableOpacity onPress={handleSignUpBtn} style={[{ flex: 1, alignItems: 'center', paddingVertical: 10 },
         location.pathname === '/signup' ? { borderBottomColor: Colors.deepcoral, borderBottomWidth: 3 } : {}]}>
           <Text style={[CustomText.title, { fontSize: 18 }]}>회원가입</Text>
         </TouchableOpacity>

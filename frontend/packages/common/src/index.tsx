@@ -11,6 +11,9 @@ import { CustomStyle } from './static/CustomStyle';
 import axios from 'axios';
 import { Modal } from './components/main/Modal';
 import { BannerStoreContext } from './store/BannerStore';
+import { LoadingStoreContext } from './store/LoadingStore';
+import LoadingBar from './common/LoadingBar';
+import LoadingPage from './common/LoadingPage';
 
 const HTTPS_AWS='https://food-truck.shop/api'
 const AWS = 'http://54.180.141.50:8001/api';
@@ -21,6 +24,8 @@ axios.defaults.baseURL=HTTPS_AWS;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 axios.defaults.headers.common['Accept'] = 'application/json';
 axios.defaults.withCredentials = true;
+axios.defaults.timeout = 2000;
+
 axios.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
@@ -28,7 +33,6 @@ axios.interceptors.response.use(function (response) {
     alert('잘못된 로그인 정보입니다. 다시 시도해주십시오.')
     return Promise.reject(error)
   } else if (401 === error.response.status) {
-    console.log(error.response)
     alert('로그인 후 이용 가능한 기능입니다.')
     history.go(-1)
     return Promise.reject(error);
@@ -40,15 +44,27 @@ axios.interceptors.response.use(function (response) {
 export const App: React.FC = observer(() => {
   const mainStore = useContext(mainStoreContext);
   const bannerStore = useContext(BannerStoreContext);
+  const loadingStore = useContext(LoadingStoreContext);
+
+  axios.interceptors.request.use(function (config) {
+    loadingStore.increase()
+    return config;
+  }, function (error) {
+    loadingStore.decrease()
+    return Promise.reject(error);
+  });
+
+axios.interceptors.response.use(function (response) {
+  loadingStore.decrease()
+  return response;
+  }, function (error) {
+    loadingStore.decrease()
+    return Promise.reject(error);
+  }); 
 
   mainStore.screenWidth = Dimensions.get('window').width;
   mainStore.screenHeight = Dimensions.get('window').height;
   mainStore.scrollviewHeight = mainStore.screenHeight - mainStore.footerHeight - mainStore.headerHeight;
-
-  console.log(mainStore)
-  console.log(`isloggedin ${mainStore.isLoggedIn} isSeller ${mainStore.isSeller}`)
-  console.log(`screenheight ${mainStore.screenHeight} scrollviewheight ${mainStore.scrollviewHeight}`)
-  console.log(`proxy ${axios.defaults.baseURL}`)
 
   const getDimension = () => {
     mainStore.screenWidth = Dimensions.get('window').width;
@@ -57,7 +73,6 @@ export const App: React.FC = observer(() => {
   }
 
   const getModal = () => {
-    // console.log(BannerStore.pageIndex + " page ", modalData);
     if (bannerStore.active === true) {
       if (mainStore.modalData.category === 'banner') {
         return <Modal imgURL={mainStore.modalData.imgURL}/>
@@ -73,6 +88,8 @@ export const App: React.FC = observer(() => {
 
   return (
     <View style={{ height: mainStore.screenHeight, flex: 1 }} onLayout={()=>getDimension()}>
+      <LoadingBar></LoadingBar>
+      <LoadingPage></LoadingPage>
       <Routes height={mainStore.scrollviewHeight} headerHeight={mainStore.headerHeight} footerHeight={mainStore.footerHeight} />
       {getModal()}
     </View>
