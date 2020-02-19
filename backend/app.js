@@ -6,13 +6,12 @@ var logger = require('morgan');
 var methodOverride = require('method-override');
 
 var multer = require('multer');
+var sharp = require('sharp')
+var fs = require('fs')
+
 var storage = multer.diskStorage({
   // 어디에 저장할것인가!
-  destination: function (req, file, cb) {
-    //if(type 이 img 면)
-    cb(null, 'uploads/')
-    // else if(...)
-  },
+  destination: path.resolve(__dirname, ".","uploads"),
   //파일명 뭐라 할것인가
   filename: function (req, file, cb) {
     // 파일 이름 중복 방지 위해 date()값을 넣음
@@ -62,7 +61,7 @@ const models = require("./models/index.js");
 
 // localhost:8001/api/user/file_name.jpg
 // 위 경로로 사용자가 이미지를 불러올수 있다.
-app.use('/api/user', express.static('uploads'));
+app.use('/api/user', express.static('uploads/resized'));
 
 models.sequelize.sync().then( () => {
   console.log(" DB 연결 성공");
@@ -112,10 +111,20 @@ app.get('/api/upload', function(req, res, next){
 
 // single(' ? ') -> user input name과 같아야 함
 // upload.single('userfile'),
-app.post('/api/upload', upload.single('userfile'), function(req, res, next){
+app.post('/api/upload', upload.single('userfile'), async function(req, res, next){
   console.log(req.file);
+  const { filename: image } = req.file 
+
+  await sharp(req.file.path)
+  .resize(400)
+  .jpeg({quality: 70})
+  .toFile(
+      path.resolve(req.file.destination, 'resized', image)
+  )
+  fs.unlinkSync(req.file.path)
+
   body = {
-    "imgURL" : `https://food-truck.shop/api/user/${req.file.filename}`
+    "imgURL" : `https://food-truck.shop/api/user/${image}`
   }
   res.json(body);
 });
