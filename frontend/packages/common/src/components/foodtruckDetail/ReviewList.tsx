@@ -21,6 +21,8 @@ interface IProps {
 export default (props: IProps) => {
   const userEmail = localStorage.getItem('userEmail')
   const sellerState = localStorage.getItem('isSeller')
+  const targetId = props.truckId
+  const nowId = localStorage.getItem('truckId')
 
   return (
     <View style={styles.menuListContainer}>
@@ -28,7 +30,8 @@ export default (props: IProps) => {
         <View style={styles.menuListTitle}>
           <Text style={[CustomText.textCenter, CustomText.titleHN, { fontSize: 22 }]}>리뷰</Text>
         </View>
-        {!!userEmail && sellerState === 'false' ?
+
+        {!!userEmail && targetId !== Number(nowId) ?
           <ReviewPost truckId={props.truckId} /> : <></>}
         {props.reviewList.length === 0 ?
           <View style={{paddingHorizontal: 20, paddingTop: 10,}}>
