@@ -139,8 +139,8 @@ export const Header: React.FC<Props> = observer(({ history }) => {
     Animated.parallel([
       Animated.timing(posA,{ toValue: posA._value === 0 ? -200 : 0, duration: 300 }),
       Animated.timing(posB,{ toValue: posB._value === 0 ? -200 : 0, duration: 300, }),
-      Animated.timing(opcA,{ toValue: opcA._value === 0 ? 1 : 0, duration: 300, }),
-      Animated.timing(opcB,{ toValue: opcB._value === 0 ? 1 : 0, duration: 300, })
+      Animated.timing(opcA,{ toValue: opcA._value <= 0.5 ? 1 : 0, duration: 300, }),
+      Animated.timing(opcB,{ toValue: opcB._value <= 0.5 ? 1 : 0, duration: 300, })
     ]).start()
   },5000)
 
