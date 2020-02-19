@@ -160,7 +160,7 @@ export const Maps = observer(({ history }) => {
     mapStore.center = center;
     console.log("mapStore.center : ", mapStore.center);
     if (mapStore.stat != -1) getMarkersFromLocation(mapStore.bounds);
-    else mapStore.stat = -1;
+    mapStore.stat = -1;
   }
 
   const newOverlay = () => {

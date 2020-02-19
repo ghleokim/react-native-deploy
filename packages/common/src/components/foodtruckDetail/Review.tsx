@@ -62,7 +62,7 @@ export default (props: IProps) => {
         </View>
         <Text style={[CustomText.title, { fontSize: 16 }]}>{props.content}</Text>
       </View>
-      <ReviewReply replies={props.replies} reviewId={props.id}/>
+      <ReviewReply replies={props.replies} reviewId={props.id} writer={props.userEmail} truckId={String(props.truckId)} />
     </View>
   );
 
