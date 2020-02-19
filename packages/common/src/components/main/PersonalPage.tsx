@@ -155,7 +155,7 @@ export const PersonalPage: React.FC<Props> = ({history}) => {
     <>
       <SampleList />
       <View style={{width: '100%', height: '100%', backgroundColor: 'rgba(255,255,255,0.7)', justifyContent: 'center', alignItems: 'center', position: 'absolute', zIndex: 2}}>
-        <Text>로그인하시면 내 팔로우 트럭을 볼 수 있어요.</Text>
+        <Text>로그인하시면 내가 찜한 트럭을 볼 수 있어요.</Text>
         <TouchableOpacity onPress={()=>history.push('/login')}><Text style={{textDecorationLine: 'underline'}}>로그인 하러 가기</Text></TouchableOpacity>
       </View>
     </>
