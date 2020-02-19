@@ -30,7 +30,7 @@ export const ListView: React.FC<Props> = ({ history, id, imageUri, title, conten
 				<Image style={{ borderRadius: 30, width: 60, height: 60 }} defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')} source={{ uri: imageUri }} />
 			</View>
 			<View style={{ flex: 3, justifyContent: 'center' }}>
-				<Text style={[CustomText.title, isOpen() ? { color: Colors.black } : { color: Colors.gray }]}>id {id} | {title}</Text>
+				<Text style={[CustomText.title, isOpen() ? { color: Colors.black } : { color: Colors.gray }]}>{title}</Text>
 				<Text style={[CustomText.body, isOpen() ? { color: Colors.black } : { color: Colors.gray }]}>{contents}</Text>
 				<Text style={[CustomText.body, isOpen() ? { color: Colors.black } : { color: Colors.gray }]}>{currentStatus}</Text>
 			</View>

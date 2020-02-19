@@ -7,8 +7,8 @@ import {
 } from "react-native";
 import InfoStaticMaps from './../map/InfoStaticMaps';
 import OpeningState from './../seller/OpeningState';
-import axios from 'axios';
 import TruckSaleHistoryDetail from "./TruckSaleHistoryDetail";
+import { CustomText } from '../../static/CustomStyle';
 
 interface IState {
   id: number,
@@ -19,7 +19,8 @@ interface IState {
   longitude: Number,
   state: string,
   menus: [],
-  starRatingAVG: number
+  starRatingAVG: number,
+  truckNotice: string,
 }
 
 interface IProps {
@@ -28,17 +29,6 @@ interface IProps {
 }
 
 export default (props: IProps) => {
-  useEffect(() => {
-    console.log('props : ', props)
-    axios.get(`openingHours/getTime/${props.id}`)
-      .then((response) => {
-        console.log('getTime : ', response);
-        if( response.data.beginTime !== null)
-          setOTime({ beginTime: response.data.beginTime, endTime: response.data.endTime });
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
   const [mapState, setMapState] = useState({ id: props.id, _lat: props.data.latitude, _lng: props.data.longitude, state: props.data.state });
   const [oTime, setOTime] = useState({ beginTime: '', endTime: '' });
 
@@ -53,25 +43,25 @@ export default (props: IProps) => {
 
   return (
     <View style={styles.menuListContainer}>
-      {props.data.state !== 'closed' && props.data.state !== 'CLOSED' && 
-        <InfoStaticMaps data={mapState}></InfoStaticMaps>
-      }
+    <View style={styles.menuListContentContainer}>
+    <View style={styles.menuListTitle}>
+      <Text style={[CustomText.textCenter, CustomText.titleHN, { fontSize: 22 }]}>정보</Text>
+    </View>
+    <View style={styles.truckInfoContent}>
+    
+      <View style={styles.truckInfoCard}>
+        <Text style={styles.truckInfoSubTitle}>가게 소개</Text>
+        <Text style={{color:'#AAAAAA', lineHeight: 25, fontSize: 12}}>{props.data.truckNotice}</Text>
+      </View>
+      
 
-      <OpeningState state={props.data.state}></OpeningState>
+      <View style={styles.truckInfoCard}>
+      <TruckSaleHistoryDetail truckId={props.id} mapState={mapState}></TruckSaleHistoryDetail>
+      </View>
+      
 
-      { oTime.beginTime !== '' &&
-        <OperationTime />
-      }
-
-      {props.data.starRatingAVG !== null ?
-        <View style={{flexDirection: 'row'}}>
-          <Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')}
-            style={{ height: 20, width: 20, tintColor: '#feb246' }} />
-          <Text>{props.data.starRatingAVG}</Text>
-        </View>
-        : <></>
-      }
-      <TruckSaleHistoryDetail truckId={props.id}></TruckSaleHistoryDetail>
+    </View>
+    </View>
     </View>
   );
 
@@ -97,5 +87,16 @@ const styles = StyleSheet.create({
   },
   menuListTitle: {
     alignSelf: 'center',
-  }
+  },
+  truckInfoCard: {
+    paddingVertical: 20
+  },
+  truckInfoSubTitle: {
+    fontSize: 16,
+    fontWeight: '800',
+    paddingVertical: 10
+  },
+  truckInfoContent: {
+    marginHorizontal: 10
+  },
 })

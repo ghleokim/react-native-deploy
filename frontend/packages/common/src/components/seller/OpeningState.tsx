@@ -24,7 +24,7 @@ export default (props: IState) => {
     return (
         <View style={styles.menuContainer}>
             {/* TODO : 스타일을 정해야 함 */}
-            <Text style={[CustomText.body, { flex: 1, textAlign: 'center', fontSize: 14}]}>영업 상태</Text>
+            <Text style={[CustomText.body, { flex: 1, textAlign: 'center', fontSize: 14 }]}>영업 상태</Text>
             <Text style={[CustomText.body, { flex: 1, textAlign: 'center',  color: getState(props.state).color, fontSize: 14 }]}>{getState(props.state).message}</Text>
         </View>
     )
@@ -32,11 +32,10 @@ export default (props: IState) => {
 
 const styles = StyleSheet.create({
     menuContainer: {
-      borderBottomColor: '#969698',
+      marginVertical: 10,
+      borderColor: '#AAAAAA',
       borderBottomWidth: 1,
-      paddingVertical: 12,
-      paddingHorizontal: 16,
       flexDirection: 'row',
-      flex: 1
+      flex: 1,
     }
   })
