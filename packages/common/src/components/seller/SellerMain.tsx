@@ -10,7 +10,7 @@ import {
 } from "react-native";
 
 import MenuList from './MenuList';
-import InfoList from './InfoList';
+import TruckInfo from './TruckInfo';
 import Line from '../Line'
 import axios from 'axios'
 
@@ -21,6 +21,8 @@ import SellerState from './SellerState';
 import ReviewList from '../foodtruckDetail/ReviewList';
 import { IReview, IReply } from './../foodtruckDetail/TruckInterface';
 import Dropzone from 'react-dropzone'
+import { History, LocationState } from 'history';
+
 interface IState {
   id: Number,
   imgURL: string,
@@ -56,9 +58,8 @@ const LocalStyles = StyleSheet.create({
   }
 });
 
-
 export default () => {
-  const [data, setData] = useState({ id: '', imgURL: '', title: '', contents: '', latitude: 0, longitude: 0, state: '', menus: [] });
+  const [data, setData] = useState({ id: '', imgURL: '', title: '', contents: '', latitude: 0, longitude: 0, state: '', truckNotice: '', menus: [] });
   const [isEditing, setIsEditing] = useState({ id: false, imgURL: false, title: false, contents: false, latitude: false, longitude: false, state: false, menus: [] });
   const [editText, setEditText] = useState({ id: '', imgURL: '', title: '', contents: '', latitude: 0, longitude: 0, state: '' })
   const [navState, setNavState] = useState({
@@ -284,7 +285,7 @@ export default () => {
     return (
       <View style={{ paddingTop: 10 }}>
         {navState.nav === 'menu' ? <MenuList menulist={data.menus} handleUpdateMenu={handleUpdateMenu} handleDeleteMenu={handleDeleteMenu} handleAddMenuSubmit={handleAddMenuSubmit} />
-          : navState.nav === 'info' ? <InfoList data={infoData}></InfoList>
+          : navState.nav === 'info' ? <TruckInfo notice={data.truckNotice} truckId={Number(myTruckId)}></TruckInfo>
             : navState.nav === 'review' ? <ReviewList reviewList={review.sort((a,b)=> Date.parse(b.updatedAt) - Date.parse(a.updatedAt))} truckId={infoData.id} onDelete={() => {}} ></ReviewList>
               : <></>
         }
@@ -292,22 +293,23 @@ export default () => {
     )
   }
 
-  return (
-    <View>
-      <View style={{ flex: 1 }}>
+  const ShowList: React.FC = () => {
+    return (
+      <View>
+        <View style={{ flex: 1 }}>
           <Dropzone onDrop={acceptedFiles => submitImage(acceptedFiles)}>
-                {({getRootProps, getInputProps}) => (
-                        <section>
-                            <div {...getRootProps()}>
-                                <input {...getInputProps()} />
-                                <Image
-                                style={{ width: '100%', height: 150, marginBottom: -30 }}
-                                source={{ uri: data.imgURL }}
-                                defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}
-                              />
-                            </div>
-                      </section>
-                )}
+            {({ getRootProps, getInputProps }) => (
+              <section>
+                <div {...getRootProps()}>
+                  <input {...getInputProps()} />
+                  <Image
+                    style={{ width: '100%', height: 150, marginBottom: -30 }}
+                    source={{ uri: data.imgURL }}
+                    defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}
+                  />
+                </div>
+              </section>
+            )}
           </Dropzone>
 
           <View style={{ paddingBottom: 10, backgroundColor: '#edaa11', width: '70%', alignSelf: 'center', borderRadius: 9, marginBottom: 5 }}>
@@ -324,8 +326,11 @@ export default () => {
           <DetailNavContents />
           {/* <SellerState/> */}
         </View>
-    </View>
-  )
+      </View>
+    )
+  }
+  
+  return <ShowList />
 }
 
 const localStyle = StyleSheet.create({

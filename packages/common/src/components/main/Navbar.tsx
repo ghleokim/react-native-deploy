@@ -74,8 +74,9 @@ export const Navbar: React.FC<Props> = observer(({ history }) => {
         <Text style={styles.navButtonText}>Map</Text>
       </TouchableOpacity>
       {AuthButton()}
-      { history.location.pathname === '/seller' || history.location.pathname === '/mypage' && mainStore.isSeller === true && mainStore.isLoggedIn === true ? 
+      {(mainStore.isSellerAuthorized === true) && (history.location.pathname === '/seller' || history.location.pathname === '/mypage') && mainStore.isSeller === true && mainStore.isLoggedIn === true ? 
       <View style={{position: 'absolute', right: 0, height: 0, width: '100%' }}>
+        {console.log('isSellerAuthor : ', mainStore.isSellerAuthorized)}
         <SellerState />
       </View>
       : <></>}
