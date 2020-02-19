@@ -6,15 +6,23 @@ import axios from 'axios';
 
 interface Props {
   replies: IReply[],
-  reviewId: number
+  reviewId: number,
+  writer: String,
+  truckId: String,
 }
 
 interface ReplyProps {
   item: IReply;
 }
 
-export const ReviewReply: React.FC<Props> = ({ replies, reviewId }) => {
+export const ReviewReply: React.FC<Props> = ({ replies, reviewId, writer, truckId }) => {
+  const [state, setState] = useState({ detail: false })
+  const [edit, setEdit] = useState(false);
+  const [content, setContent] = useState({ content: '', reviewId: 0 });
+
   const myEmail = localStorage.getItem('userEmail')
+  const myTruckId = localStorage.getItem('truckId')
+
   const formatDate = (date) => {
     const day = date.getDate();
     const month = date.getMonth() + 1;
@@ -22,6 +30,7 @@ export const ReviewReply: React.FC<Props> = ({ replies, reviewId }) => {
 
     return `${year}년 ${month}월 ${day}일`;
   }
+
   const DeleteButton = (replyId) => {
     console.log('data : ', replyId)
     const handleDelete = () => {
@@ -37,8 +46,6 @@ export const ReviewReply: React.FC<Props> = ({ replies, reviewId }) => {
       <Text style={{ color: '#ffffff', fontSize: 13, fontWeight: '700' }}>삭제하기</Text>
     </TouchableOpacity>
   }
-
-  const [state, setState] = useState({ detail: false })
 
   const ReplyItem: React.FC<ReplyProps> = ({ item }) => {
     return <View>
@@ -61,14 +68,10 @@ export const ReviewReply: React.FC<Props> = ({ replies, reviewId }) => {
     </View>
   }
 
-  const [edit, setEdit] = useState(false);
-
   const togleEdit = () => {
     setEdit(!edit);
     console.log('edit : ', edit)
   }
-
-  const [content, setContent] = useState({ content: '', reviewId: 0 });
 
   const sendReply = () => {
     console.log('reviewId : ', reviewId);
@@ -84,13 +87,18 @@ export const ReviewReply: React.FC<Props> = ({ replies, reviewId }) => {
       alert('내용을 입력해주세요.')
     }
   }
+
   return (
     <View>
-      <TouchableOpacity
-        style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingRight: 8 }}
-        onPress={togleEdit}>
-        <Text style={{ fontSize: 13.5 }}>{edit === true ? '닫기' : '답글 달기'}</Text>
-      </TouchableOpacity>
+      { myEmail === writer || myTruckId === truckId
+      ? <TouchableOpacity
+          style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingRight: 8 }}
+          onPress={togleEdit}>
+          <Text style={{ fontSize: 13.5 }}>{edit === true ? '닫기' : '답글 달기'}</Text>
+        </TouchableOpacity>
+      : <></>
+      }
+      
       {edit === true &&
         <View>
           <TextInput onChangeText={(text) => setContent({ content: text, reviewId: 0 })} multiline={true} numberOfLines={5}>

@@ -14,6 +14,7 @@ import ReviewList from './ReviewList';
 import TruckInfo from './TruckInfo';
 import { Colors } from '../../static/CustomColor';
 import { mainStoreContext } from '../../store/MainStore';
+import OpeningState from './../seller/OpeningState';
 
 interface IState {
   id: number,
@@ -24,7 +25,8 @@ interface IState {
   longitude: number,
   state: string,
   menus: [],
-  starRatingAVG: number
+  starRatingAVG: number,
+  truckNotice: string,
 }
 
 interface IFollow {
@@ -65,7 +67,7 @@ export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
   })
 
   const [data, setData] = useState<IState>({
-    id: 0, imgURL: '', title: '', contents: '', menus: [], latitude: 0.0, longitude: 0.0, state: '', starRatingAVG: 0.0})
+    id: 0, imgURL: '', title: '', contents: '', menus: [], latitude: 0.0, longitude: 0.0, state: '', starRatingAVG: 0.0, truckNotice: ''})
 
   const [follow, setFollow] = useState<IFollow>({
     isFollow: true
@@ -119,7 +121,7 @@ export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
     }
 
     return (
-      <View style={{paddingTop: 10}}>
+      <View style={{paddingTop: 20}}>
         {state.nav === 'menu' ? <MenuList menulist={data.menus} />
           : state.nav === 'info' ? <TruckInfo id={targetId} data={data} />
             : <ReviewList reviewList={review.sort((a,b)=> Date.parse(b.updatedAt) - Date.parse(a.updatedAt))} truckId={targetId} onDelete={handleDeleteReview}/>}
@@ -171,7 +173,7 @@ export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
         source={{ uri: data.imgURL ? data.imgURL : '' }}
         defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}
       />
-      {isLoggedIn ? 
+        {isLoggedIn ? 
       <TouchableOpacity
         style={{ position: 'absolute', right: 2 + followButtonInfo.offset/ 2, top: 120 + followButtonInfo.offset / 2, alignSelf: 'center', height: followButtonInfo.height, width: followButtonInfo.width, borderRadius: followButtonInfo.offset, borderColor: '#FFFFFF', borderWidth: 1.2, alignItems: 'center', justifyContent: 'center', backgroundColor: follow.isFollow === true ? '#ec585c': '#c0c0c0' }}
         onPress={() => clickedFollowButton()} >
@@ -180,14 +182,18 @@ export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
         source={require('@foodtruckmap/common/src/static/icon_processed/noun_Heart_1015352.png')} />
       </TouchableOpacity>
       : <></>}
-      <View style={{ paddingBottom: 10, backgroundColor: '#edaa11', width: '70%', alignSelf: 'center', borderRadius: 9, marginBottom: 5 }}>
+    <View style={{ paddingBottom: 10, backgroundColor: '#edaa11', width: '70%', alignSelf: 'center', borderRadius: 9, marginBottom: 5 }}>
         <View style={{ width: '100%', backgroundColor: '#f2be46', paddingHorizontal: 15, paddingVertical: 8, borderRadius: 9, alignItems: 'center' }}>
           <Text style={[styles.titleHN, { fontSize: 24 }]}>{data.title}</Text>
         </View>
       </View>
+      
       <View style={styles.truckContentsContainer}>
         <Text style={[CustomText.italic, CustomText.body, CustomText.textCenter, { fontSize: 16 }]}>{data.contents}</Text>
       </View>
+
+      <OpeningState state={data.state}></OpeningState>
+
       <DetailNavBar />
       <DetailNavContents />
     </View>
@@ -212,7 +218,7 @@ const localStyle = StyleSheet.create({
     fontSize: 10
   },
   truckContentsContainer: {
-    paddingBottom: 10,
+    paddingVertical: 10,
   },
 })
 

@@ -4,6 +4,7 @@ import { CustomStyle, CustomText } from '../../static/CustomStyle';
 import { mainStoreContext } from '../../store/MainStore';
 import axios from 'axios';
 import { History, LocationState } from 'history'
+import { numberWithFirstDecimal } from '../../lib/stringParser'
 
 interface TruckItem {
   id: number,
@@ -105,10 +106,16 @@ export const PersonalPage: React.FC<Props> = ({history}) => {
             ? <Image style={{width: '100%', height: '100%', borderRadius: 20}} source={{uri: truck.imgURL}} defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}/>
             : <TruckIconBW />}
           </View>
-          <View style={{position: 'absolute', top: 10, left: 10, zIndex: 4, backgroundColor: '#ffff00', paddingHorizontal: 4, paddingVertical: 2}}><Text style={{fontWeight: '700'}}>{truck.starRatingAVG}</Text></View>
-          <View style={{position: 'absolute', top: 10, right: 10, zIndex: 4, backgroundColor: stateProp.color, paddingHorizontal: 4, paddingVertical: 2}}><Text style={{fontWeight: '700', color: '#ffffff'}}>{stateProp.message}</Text></View>
-          <View style={{paddingTop: 5, paddingHorizontal: 3}}>
-            <Text style={CustomText.title} numberOfLines={1} ellipsizeMode='clip'>{truck.title}</Text>
+          <View style={{position: 'absolute', top: 10, left: 10, zIndex: 4, backgroundColor: stateProp.color, paddingHorizontal: 4, paddingVertical: 2, opacity: 0.9, borderRadius: 20}}><Text style={{fontWeight: '700', color: '#ffffff'}}>{stateProp.message}</Text></View>
+          <View style={{flexDirection: 'row', paddingTop: 5, paddingHorizontal: 3, justifyContent: 'space-between'}}>
+            <View>
+              <Text style={[CustomText.title, {marginRight: 3, }]} numberOfLines={1} ellipsizeMode='clip'>{truck.title}</Text>
+            </View>
+            <View style={{flexDirection: 'row', }}>
+              <Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')}
+                style={{ height: 20, width: 20, tintColor: '#feb246' }} />
+              <Text style={CustomText.title}>{truck.starRatingAVG !== null ? numberWithFirstDecimal(truck.starRatingAVG) : '0.0'}</Text>
+            </View>
           </View>
         </View>
       </TouchableOpacity>
@@ -148,7 +155,7 @@ export const PersonalPage: React.FC<Props> = ({history}) => {
     <>
       <SampleList />
       <View style={{width: '100%', height: '100%', backgroundColor: 'rgba(255,255,255,0.7)', justifyContent: 'center', alignItems: 'center', position: 'absolute', zIndex: 2}}>
-        <Text>로그인하시면 내 팔로우 트럭을 볼 수 있어요.</Text>
+        <Text>로그인하시면 내가 찜한 트럭을 볼 수 있어요.</Text>
         <TouchableOpacity onPress={()=>history.push('/login')}><Text style={{textDecorationLine: 'underline'}}>로그인 하러 가기</Text></TouchableOpacity>
       </View>
     </>
@@ -204,10 +211,16 @@ export const PersonalPage: React.FC<Props> = ({history}) => {
             ? <Image style={{width: '100%', height: '100%', borderRadius: 20}} source={{uri: truck.imgURL}} defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}/>
             : <TruckIconBW />}
           </View>
-          <View style={{position: 'absolute', top: 10, left: 10, zIndex: 4, backgroundColor: '#ffff00', paddingHorizontal: 4, paddingVertical: 2}}><Text style={{fontWeight: '700'}}>{ !!truck.starRatingAVG ? truck.starRatingAVG : '-'}</Text></View>
-          <View style={{position: 'absolute', top: 10, right: 10, zIndex: 4, backgroundColor: stateProp.color, paddingHorizontal: 4, paddingVertical: 2}}><Text style={{fontWeight: '700', color: '#ffffff'}}>{stateProp.message}</Text></View>
-          <View style={{paddingTop: 5, paddingHorizontal: 3}}>
-            <Text style={CustomText.title} numberOfLines={1} ellipsizeMode='clip'>{truck.title}</Text>
+          <View style={{position: 'absolute', top: 10, left: 10, zIndex: 4, backgroundColor: stateProp.color, paddingHorizontal: 4, paddingVertical: 2, opacity: 0.9, borderRadius: 20}}><Text style={{fontWeight: '700', color: '#ffffff'}}>{stateProp.message}</Text></View>
+          <View style={{flexDirection: 'row', paddingTop: 5, paddingHorizontal: 3, justifyContent: 'space-between'}}>
+            <View>
+              <Text style={[CustomText.title, {marginRight: 3, }]} numberOfLines={1} ellipsizeMode='clip'>{truck.title}</Text>
+            </View>
+            <View style={{flexDirection: 'row', }}>
+              <Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')}
+                style={{ height: 20, width: 20, tintColor: '#feb246' }} />
+              <Text style={CustomText.title}>{truck.starRatingAVG !== null ? numberWithFirstDecimal(truck.starRatingAVG) : '0.0'}</Text>
+            </View>
           </View>
         </View>
       </TouchableOpacity>

@@ -11,6 +11,8 @@ import { Colors } from '../../static/CustomColor';
 export const Maps = observer(({ history }) => {
   const mainStore = useContext(mainStoreContext);
   const mapStore = useContext(MapStoreContext);
+  
+  const isFirstLoading = true;
 
   const getDistance = (point1, point2, raw) => {
     const toRadians = (value) => value * Math.PI / 180
@@ -62,7 +64,7 @@ export const Maps = observer(({ history }) => {
             new naver.maps.LatLng(mapStore.center.lat + 0.0161, mapStore.center.lng + 0.02764)
           )
           mapStore.bounds = bounds
-          console.log(mapStore.bounds)
+          console.log('getMyLocation bounds : ', bounds)
 
           resolve(bounds)
           mapStore.zoom = 14; // 내 위치를 누르면 default zoom으로 복귀
@@ -121,7 +123,10 @@ export const Maps = observer(({ history }) => {
       }
       mapStore.markers = incoming.data === undefined ? [] : incoming.data;
       console.log("mapStore.markers : ", mapStore.markers);
-      if (mapStore.markers.length === 0) alert("결과가 없습니다.");
+      if (mapStore.markers.length === 0) {
+        if(isFirstLoading === false) isFirstLoading = true;
+        else alert("결과가 없습니다.");
+      }
     })
       .catch(function (error) {
         console.log(error);
@@ -131,7 +136,7 @@ export const Maps = observer(({ history }) => {
   useEffect(() => { // 라이프사이클 주기때문에 이렇게 하지 않으면, 렌더할 때 무한히 돈당..
     getMyLocation()
       .then((bounds) => {
-        mapStore.loading = false;
+
         mapStore.myPosState = true;
         mapStore.boundsChanged = false;
         getMarkersFromLocation(bounds)
@@ -143,10 +148,6 @@ export const Maps = observer(({ history }) => {
     mapStore.boundsChanged = true
     mapStore.bounds = bounds;
     console.log("mapStore.bounds : ", mapStore.bounds);
-    // console.log('diff sw x', mapStore.center.x - mapStore.bounds._sw.x )
-    // console.log('diff sw y', mapStore.center.y - mapStore.bounds._sw.y )
-    // console.log('diff ne x', mapStore.center.x - mapStore.bounds._ne.x )
-    // console.log('diff ne y', mapStore.center.y - mapStore.bounds._ne.y )
   }
 
   const handleZoomChanged = (zoom) => {
@@ -155,8 +156,6 @@ export const Maps = observer(({ history }) => {
   }
 
   const handleCenter = (center) => {
-    // const difference = Math.sqrt( Math.pow((mapStore.center._lat - center._lat),2) + Math.pow((mapStore.center._lng - center._lng),2))
-    // console.log(difference, !!difference)
     mapStore.center = center;
     console.log("mapStore.center : ", mapStore.center);
     if (mapStore.stat != -1) getMarkersFromLocation(mapStore.bounds);

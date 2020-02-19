@@ -7,6 +7,7 @@ import { loginStoreContext } from "../../store/LoginStore";
 import { CustomStyle, CustomText } from "../../static/CustomStyle";
 import { Colors } from "../../static/CustomColor";
 import { History, LocationState } from 'history';
+import LoadingBar from "../../common/LoadingBar";
 
 interface Props {
   history: History<LocationState>;
@@ -53,6 +54,8 @@ export const NewLoginForm: React.FC<Props> = observer(({ history }) => {
         console.log(response);
         // 현재 내부 state에서 필요한 값을 유지하도록 구현하였다. 라우팅할 때 쓰일 수 있을 듯.
         mainStore.isSeller = response.data.isSeller.status;
+        console.log('response data authority : ', response.data.authority)
+        mainStore.isSellerAuthorized = response.data.authority.trim() === 'ROLE_SELLER' ? true : false;
         console.log('isSeller:', mainStore.isSeller)
 
         // session 로컬 스토리지에 저장하기
@@ -62,6 +65,7 @@ export const NewLoginForm: React.FC<Props> = observer(({ history }) => {
           localStorage.setItem('isSeller', 'true')
           localStorage.setItem('truckIdList', response.data.isSeller.truckIdList)
           localStorage.setItem('truckId', response.data.truckId)
+          localStorage.setItem('authority', response.data.authority)
         } else {
           localStorage.setItem('isSeller', 'false')
         }
