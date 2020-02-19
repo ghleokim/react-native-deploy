@@ -79,10 +79,10 @@ export const MyPageTrucks : React.FC<Props> = ({history, myInfo}) => {
 
   const customerTruck = () => {
     return <View>
-      <Text style={[CustomText.titleHN, {marginBottom: 10, fontSize: 22}]}>내가 팔로우 중인 트럭</Text>
-      <Text>팔로우 { data.following.length } 개</Text>
+      <Text style={[CustomText.titleHN, {marginBottom: 10, fontSize: 22}]}>내가 찜한 트럭</Text>
+      <Text>찜 { data.following.length } 개</Text>
       { data.following.length === 0 ? 
-        <Text>팔로우중인 트럭이 없습니다. </Text>
+        <Text>찜한 트럭이 없습니다. </Text>
       : <FlatList<TruckProps>
         data={data.following}
         renderItem={({item}) =>
