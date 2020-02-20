@@ -133,7 +133,7 @@ export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
     console.log("clickedFollowButton", data);
 
     // follow 상태를 바꾸는 api 전송
-    axios.post(`/follows/follow/`, {
+    axios.post(`/follows/follow/`, {     
       truckId: targetId
     }).then((response) => {
       console.log("follow response : ", response.data);
