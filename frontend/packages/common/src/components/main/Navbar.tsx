@@ -42,7 +42,7 @@ export const Navbar: React.FC<Props> = observer(({ history }) => {
           style={styles.navButtonImage}
           source={require('@foodtruckmap/common/src/static/icon_processed/noun_User_1485759.png')}
         />
-        <Text style={styles.navButtonText}>Login</Text>
+        <Text style={styles.navButtonText}>로그인</Text>
       </TouchableOpacity>
     } else {
       return <TouchableOpacity onPress={() => history.push('/mypage')} style={styles.navButton}>
@@ -50,7 +50,7 @@ export const Navbar: React.FC<Props> = observer(({ history }) => {
         style={styles.navButtonImage}
         source={require('@foodtruckmap/common/src/static/icon_processed/noun_User_1485759.png')}
       />
-      <Text style={styles.navButtonText}>Mypage</Text>
+      <Text style={styles.navButtonText}>마이페이지</Text>
     </TouchableOpacity>
     }
   }
@@ -59,19 +59,20 @@ export const Navbar: React.FC<Props> = observer(({ history }) => {
 
   return (
     <View style={[styles.footer]}>
+      {history.location.pathname === '/' ? <></> : 
+      <TouchableOpacity onPress={() => history.replace('/')} style={styles.navButton}>
+        <Image
+          style={styles.navButtonImage}
+          source={require('@foodtruckmap/common/src/static/icon_processed/noun_back_1015371.png')}
+        />
+        <Text style={styles.navButtonText}>뒤로가기</Text>
+      </TouchableOpacity>}
       <TouchableOpacity onPress={() => history.replace('/')} style={styles.navButton}>
         <Image
           style={styles.navButtonImage}
           source={require('@foodtruckmap/common/src/static/icon_processed/noun_main_1902023.png')}
         />
-        <Text style={styles.navButtonText}>Main</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => history.push('/map')} style={styles.navButton}>
-        <Image
-          style={styles.navButtonImage}
-          source={require('@foodtruckmap/common/src/static/icon_processed/noun_Map_1485766.png')}
-          />
-        <Text style={styles.navButtonText}>Map</Text>
+        <Text style={styles.navButtonText}>홈</Text>
       </TouchableOpacity>
       {AuthButton()}
       {(mainStore.isSellerAuthorized === true) && (history.location.pathname === '/seller' || history.location.pathname === '/mypage') && mainStore.isSeller === true && mainStore.isLoggedIn === true ? 
