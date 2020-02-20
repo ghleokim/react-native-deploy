@@ -5,9 +5,11 @@ import {
     Text,
 } from "react-native";
 import { CustomText } from '../../static/CustomStyle';
+import { StarYellow, StarYellowOutline } from '../foodtruckDetail/Stars';
 
 interface IState {
-    state: string
+    state: string,
+    star: number,
 }
 
 export default (props: IState) => {
@@ -15,7 +17,7 @@ export default (props: IState) => {
         if (state === 'open' || state === 'OPEN') {
           return {message:'영업중', color: '#008000'}
         } else if (state === 'prepare' || state === 'PREPARE') {
-          return {message:'영업 준비중', color: '#e0c000'}
+          return {message:'영업 준비중', color: '#d37f00'}
         } else {
           return {message:'영업 종료', color: '#608080'}
         }
@@ -23,18 +25,15 @@ export default (props: IState) => {
 
     return (
         <View style={styles.menuContainer}>
-            {/* TODO : 스타일을 정해야 함 */}
-            <Text style={[CustomText.body, { flex: 1, textAlign: 'center', fontSize: 14 }]}>영업 상태</Text>
-            <Text style={[CustomText.body, { flex: 1, textAlign: 'center',  color: getState(props.state).color, fontSize: 14 }]}>{getState(props.state).message}</Text>
+          {/* TODO : 스타일을 정해야 함 */}
+          <Text style={[CustomText.body, { flex: 1, textAlign: 'center', fontSize: 14, display: 'flex', justifyContent: 'center', alignItems: 'center' }]}><StarYellowOutline height={25} width={25} /><Text style={{textAlignVertical: 'top', fontWeight: '700'}}> {props.star}</Text></Text>
+          <Text style={[CustomText.body, { flex: 1, textAlign: 'center',  color: getState(props.state).color, fontSize: 14, display: 'flex', justifyContent: 'center', alignItems: 'center' }]}>{getState(props.state).message}</Text>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     menuContainer: {
-      marginVertical: 10,
-      borderColor: '#AAAAAA',
-      borderBottomWidth: 1,
       flexDirection: 'row',
       flex: 1,
     }

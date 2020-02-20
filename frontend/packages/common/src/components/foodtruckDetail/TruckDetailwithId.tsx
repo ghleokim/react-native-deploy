@@ -15,6 +15,7 @@ import TruckInfo from './TruckInfo';
 import { Colors } from '../../static/CustomColor';
 import { mainStoreContext } from '../../store/MainStore';
 import OpeningState from './../seller/OpeningState';
+import { StarYellow } from './Stars';
 
 interface IState {
   id: number,
@@ -183,9 +184,12 @@ export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
         source={require('@foodtruckmap/common/src/static/icon_processed/noun_Heart_1015352.png')} />
       </TouchableOpacity>
       : <></>}
-    <View style={{ paddingBottom: 10, backgroundColor: '#edaa11', width: '70%', alignSelf: 'center', borderRadius: 9, marginBottom: 5 }}>
+    <View style={{ paddingBottom: 8, backgroundColor: '#edaa11', width: '70%', alignSelf: 'center', borderRadius: 9, marginBottom: 5 }}>
+    {/* backgroundColor: '#edaa11' */}
         <View style={{ width: '100%', backgroundColor: '#f2be46', paddingHorizontal: 15, paddingVertical: 8, borderRadius: 9, alignItems: 'center' }}>
+          {/* backgroundColor: '#f2be46' */}
           <Text style={[styles.titleHN, { fontSize: 24 }]}>{data.title}</Text>
+          <View style={{width: '100%'}}><OpeningState state={data.state} star={data.starRatingAVG}></OpeningState></View>
         </View>
       </View>
       
@@ -193,7 +197,7 @@ export const TruckDetailwithId: React.FC<Props> = ({ targetId }) => {
         <Text style={[CustomText.italic, CustomText.body, CustomText.textCenter, { fontSize: 16 }]}>{data.contents}</Text>
       </View>
 
-      <OpeningState state={data.state}></OpeningState>
+      {/* <OpeningState state={data.state}></OpeningState> */}
 
       <DetailNavBar />
       <DetailNavContents />
