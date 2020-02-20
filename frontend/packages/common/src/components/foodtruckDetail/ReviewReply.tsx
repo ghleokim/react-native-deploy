@@ -9,13 +9,14 @@ interface Props {
   reviewId: number,
   writer: String,
   truckId: String,
+  truckEmail?: String, 
 }
 
 interface ReplyProps {
   item: IReply;
 }
 
-export const ReviewReply: React.FC<Props> = ({ replies, reviewId, writer, truckId }) => {
+export const ReviewReply: React.FC<Props> = ({ replies, reviewId, writer, truckId, truckEmail }) => {
   const [state, setState] = useState({ detail: false })
   const [edit, setEdit] = useState(false);
   const [content, setContent] = useState({ content: '', reviewId: 0 });
@@ -49,12 +50,15 @@ export const ReviewReply: React.FC<Props> = ({ replies, reviewId, writer, truckI
 
   const ReplyItem: React.FC<ReplyProps> = ({ item }) => {
     return <View>
-      {console.log('item.userEmail : ', item.userEmail)}
+      {console.log('item.userEmail : ', item.userEmail, truckEmail)}
       <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
-        {myEmail === item.userEmail ? <DeleteButton replyId={item.id} /> : <></>}
-        <Text style={{ alignSelf: 'flex-end' }}>{formatDate(new Date(Date.parse(item.createdAt)))} <Text style={CustomText.italic}>{item.userEmail === null ? '' : (item.userEmail).split('@')[0]}</Text></Text>
+        <Text style={{ alignSelf: 'flex-end', color: '#505050', display: 'flex', width: '100%', flexDirection: 'row', justifyContent: "space-between" }}>
+        <Text style={CustomText.italic}>{item.userEmail === truckEmail ? <Text style={{color: '#008000'}}>사장님 답글</Text> : item.userEmail === null ? '' : (item.userEmail).split('@')[0]}</Text>
+          <Text>{formatDate(new Date(Date.parse(item.createdAt)))}</Text>
+        </Text>
       </View>
-      <Text style={[CustomText.title, { fontSize: 16 }]}>{item.content}</Text>
+      <Text style={[CustomText.body, { color: '#303030', fontSize: 16 }]}>{item.content}</Text>
+      {myEmail === item.userEmail ? <DeleteButton replyId={item.id} /> : <></>}
     </View>
   }
 
@@ -92,7 +96,7 @@ export const ReviewReply: React.FC<Props> = ({ replies, reviewId, writer, truckI
     <View>
       { myEmail === writer || myTruckId === truckId
       ? <TouchableOpacity
-          style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingRight: 8 }}
+          style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingRight: 8, marginTop: 2}}
           onPress={togleEdit}>
           <Text style={{ fontSize: 13.5 }}>{edit === true ? '닫기' : '답글 달기'}</Text>
         </TouchableOpacity>
@@ -101,7 +105,7 @@ export const ReviewReply: React.FC<Props> = ({ replies, reviewId, writer, truckI
       
       {edit === true &&
         <View>
-          <TextInput onChangeText={(text) => setContent({ content: text, reviewId: 0 })} multiline={true} numberOfLines={5}>
+          <TextInput style={{borderColor: '#F3BE46', borderWidth: 1, borderRadius: 3}} onChangeText={(text) => setContent({ content: text, reviewId: 0 })} multiline={true} numberOfLines={5}>
           </TextInput>
           <TouchableOpacity
             style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingRight: 8 }}
@@ -113,7 +117,7 @@ export const ReviewReply: React.FC<Props> = ({ replies, reviewId, writer, truckI
       {replies.length === 0 ? <></>
         : <View style={styles.reviewContainer}>
           {state.detail === true ? <ReplyDetail /> : <ReplyItem item={replies[0]} />}
-          {replies.length === 1 ? <></> : <TouchableOpacity onPress={() => setState({ detail: !state.detail })}><Text>{state.detail === true ? '닫기' : '더 보기'}</Text></TouchableOpacity>}
+          {replies.length === 1 ? <></> : <TouchableOpacity onPress={() => setState({ detail: !state.detail })}><Text style={{ textAlign: 'right'}}>{state.detail === true ? '닫기' : '더 보기'}</Text></TouchableOpacity>}
         </View>
       }
     </View>

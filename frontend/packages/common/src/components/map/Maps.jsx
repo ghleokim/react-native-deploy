@@ -363,7 +363,7 @@ export const Maps = observer(({ history }) => {
             resizeMode: 'cover',
             overflow: 'hidden'
           }}
-          source={require('@foodtruckmap/common/src/static/icon_processed/noun_Pin_1015369.png')}
+          source={require('@foodtruckmap/common/src/static/icon_processed/noun_Pin_1015369-white.png')}
         />
       </View>
 
@@ -383,7 +383,7 @@ export const Maps = observer(({ history }) => {
             resizeMode: 'cover',
             overflow: 'hidden'
           }}
-          source={require('@foodtruckmap/common/src/static/icon_processed/noun_reload_1485755.png')}
+          source={require('@foodtruckmap/common/src/static/icon_processed/noun_reload_1485755-blue.png')}
         />
         <Text style={[CustomText.title, { alignSelf: 'center', color: '#4177c9', marginBottom: 3, paddingRight: 3 }]}>재검색</Text>
       </TouchableOpacity>

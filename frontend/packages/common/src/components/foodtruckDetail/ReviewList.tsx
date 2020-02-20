@@ -15,6 +15,7 @@ import { IReview, IReply } from './TruckInterface';
 interface IProps {
   reviewList: IReview[],
   truckId: number,
+  truckEmail?: String,
   onDelete: Function,
 }
 
@@ -50,6 +51,7 @@ export default (props: IProps) => {
                 userEmail={item.userEmail}
                 replies={item.replies}
                 onDelete={props.onDelete}
+                truckEmail={props.truckEmail}
               />}
             keyExtractor={item => `${item.userEmail}${item.id}`}
           />
