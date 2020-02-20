@@ -50,86 +50,6 @@ export const Header: React.FC<Props> = observer(({ history }) => {
     opacity: new Animated.Value(1),
   }
 
-  // useInterval(()=>{
-  //   console.log(duck, stA, stB)
-  //   Animated.parallel([
-  //     Animated.timing(stA.pos, {
-  //       toValue: stA.pos._value ? 0 : -10,
-  //       duration: 1000
-  //     }),
-  //     Animated.timing(stB.pos, {
-  //       toValue: stB.pos._value ? 0 : -10,
-  //       duration: 1000
-  //     }),
-  //     Animated.timing(stA.width, {
-  //       toValue: stA.width._value === 10? 0 : 10,
-  //       duration: 1000
-  //     }),
-  //     Animated.timing(stB.width, {
-  //       toValue: stB.width._value === 10? 0 : 10,
-  //       duration: 1000
-  //     }),
-  //     Animated.timing(stA.height, {
-  //       toValue: stA.height._value === 10? 0 : 10,
-  //       duration: 1000
-  //     }),
-  //     Animated.timing(stB.height, {
-  //       toValue: stB.height._value === 10? 0 : 10,
-  //       duration: 1000
-  //     }),
-  //     Animated.timing(stA.opacity, {
-  //       toValue: stA.opacity._value === 1 ? 0 : 1,
-  //       duration: 1000
-  //     }),
-  //     Animated.timing(stB.opacity, {
-  //       toValue: stB.opacity._value === 1 ? 0 : 1,
-  //       duration: 1000
-  //     }),
-  //   ]).start()
-  // }, 2000)
-
-  // useEffect(()=>{
-  //   console.log(duck)
-  //   Animated.parallel([
-  //     Animated.timing(stA.pos, {
-  //       toValue: duck ? 0 : -10,
-  //       duration: 1000
-  //     }),
-  //     Animated.timing(stB.pos, {
-  //       toValue: !duck ? 0 : -10,
-  //       duration: 1000
-  //     }),
-  //     Animated.timing(stA.width, {
-  //       toValue: duck ? 0 : 10,
-  //       duration: 1000
-  //     }),
-  //     Animated.timing(stB.width, {
-  //       toValue: !duck ? 0 : 10,
-  //       duration: 1000
-  //     }),
-  //     Animated.timing(stA.height, {
-  //       toValue: duck ? 0 : 10,
-  //       duration: 1000
-  //     }),
-  //     Animated.timing(stB.height, {
-  //       toValue: !duck ? 0 : 10,
-  //       duration: 1000
-  //     }),
-  //     Animated.timing(stA.opacity, {
-  //       toValue: duck == true ? 0 : 1,
-  //       duration: 1000
-  //     }),
-  //     Animated.timing(stB.opacity, {
-  //       toValue: duck == false ? 0 : 1,
-  //       duration: 1000
-  //     }),
-  //   ]).start()
-  // }, [duck])
-
-  // useInterval(()=>{
-  //   setDuck(!duck)
-  // },2000)
-
   const posA:any = new Animated.Value(-10)
   const posB:any = new Animated.Value(0)
   const opcA:any = new Animated.Value(0)
@@ -145,16 +65,16 @@ export const Header: React.FC<Props> = observer(({ history }) => {
   },5000)
 
 
-  const transitionText = (textA, textB) => {
+  const transitionText = (textA, textB, style?) => {
     return <>
-      <Animated.Text style={{opacity: opcA, position: 'absolute',}}><Text style={{textAlign: 'right'}}>{textA}</Text></Animated.Text>
-      <Animated.Text style={{opacity: opcB, position: 'absolute',}}><Text style={{marginLeft: 3, textAlign: 'right'}}>{textB}</Text></Animated.Text>
+      <Animated.Text style={{opacity: opcA, position: 'absolute', top: style ? style.top: 'auto' }}><Text style={{textAlign: 'right'}}>{textA}</Text></Animated.Text>
+      <Animated.Text style={{opacity: opcB, position: 'absolute', top: style ? style.top: 'auto'}}><Text style={{marginLeft: 3, textAlign: 'right'}}>{textB}</Text></Animated.Text>
     </>
   }
 
 return (
   <View style={[styles.header, { height: mainStore.headerHeight }]}>
-    <Text style={styles.headerText} onPress={()=>history.replace('/')}>food{transitionText('tr', 'd')}<View style={{width: 18}}></View>uck {transitionText('🚚', '🦆')}</Text>
+    <Text style={styles.headerText} onPress={()=>history.replace('/')}>food{transitionText('tr', 'd')}<View style={{width: 18}}></View>uck {transitionText('🚚', '🦆', {top: mainStore.headerHeight / 2 - 16})}</Text>
     {sellerButton()}
   </View>
 )
