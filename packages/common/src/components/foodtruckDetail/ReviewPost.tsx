@@ -8,6 +8,7 @@ import {
   Image,
 } from "react-native";
 import axios from 'axios';
+import { StarYellow, StarGray } from './Stars';
 
 interface Props {
   truckId: number;
@@ -48,11 +49,11 @@ export const ReviewPost: React.FC<Props> = ({truckId}) => {
     return (
       <View>
         <View style={{ flexDirection: 'row', alignContent: 'center', alignSelf: 'center', paddingVertical: 10}}>
-          <TouchableOpacity onPress={()=>setContent({...content, starRating: 1})}><Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 35, width: 35, tintColor: content.starRating > 0 ? '#feb246' : '#c0c0c0'}}/></TouchableOpacity>
-          <TouchableOpacity onPress={()=>setContent({...content, starRating: 2})}><Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 35, width: 35, tintColor: content.starRating > 1 ? '#feb246' : '#c0c0c0'}}/></TouchableOpacity>
-          <TouchableOpacity onPress={()=>setContent({...content, starRating: 3})}><Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 35, width: 35, tintColor: content.starRating > 2 ? '#feb246' : '#c0c0c0'}}/></TouchableOpacity>
-          <TouchableOpacity onPress={()=>setContent({...content, starRating: 4})}><Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 35, width: 35, tintColor: content.starRating > 3 ? '#feb246' : '#c0c0c0'}}/></TouchableOpacity>
-          <TouchableOpacity onPress={()=>setContent({...content, starRating: 5})}><Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')} style={{ height: 35, width: 35, tintColor: content.starRating > 4 ? '#feb246' : '#c0c0c0'}}/></TouchableOpacity>
+          <TouchableOpacity onPress={()=>setContent({...content, starRating: 1})}>{content.starRating > 0 ? <StarYellow /> : <StarGray /> }</TouchableOpacity>
+          <TouchableOpacity onPress={()=>setContent({...content, starRating: 2})}>{content.starRating > 1 ? <StarYellow /> : <StarGray /> }</TouchableOpacity>
+          <TouchableOpacity onPress={()=>setContent({...content, starRating: 3})}>{content.starRating > 2 ? <StarYellow /> : <StarGray /> }</TouchableOpacity>
+          <TouchableOpacity onPress={()=>setContent({...content, starRating: 4})}>{content.starRating > 3 ? <StarYellow /> : <StarGray /> }</TouchableOpacity>
+          <TouchableOpacity onPress={()=>setContent({...content, starRating: 5})}>{content.starRating > 4 ? <StarYellow /> : <StarGray /> }</TouchableOpacity>
         </View>
         <TextInput onChangeText={(text) => onChangeText(text)} onSubmitEditing={handleReviewPost} style={styles.reviewInput} defaultValue={content.content} />
         <View style={{alignSelf: 'flex-end', flexDirection: 'row'}}>
