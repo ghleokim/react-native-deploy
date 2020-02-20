@@ -550,7 +550,7 @@ router.get("/:truckId/history", async function(req, res, next) {
       truckId: TRUCK_ID,
       endTime: { [Op.ne]: null }
     },
-    order: [ [ 'id', 'DESC' ]],
+    order: [ [ 'beginTime', 'DESC' ]],
   });
   res.json(responseDto);
 });
