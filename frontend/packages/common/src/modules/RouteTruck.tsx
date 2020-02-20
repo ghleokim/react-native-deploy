@@ -22,7 +22,7 @@ export const RouteTruck: React.FC<Props> = observer(({ history, match }) => {
     return <TouchableOpacity onPress={() => { history.goBack() }}>
       <Image
         style={styles.closeButton}
-        source={require('@foodtruckmap/common/src/static/icon_processed/noun_Close_1015372.png')}
+        source={require('@foodtruckmap/common/src/static/icon_processed/noun_Close_1015372-whiteline.png')}
       />
     </TouchableOpacity>
   }
