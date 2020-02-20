@@ -6,6 +6,7 @@ import {
 } from "react-native";
 import { CustomText } from '../../static/CustomStyle';
 import { StarYellow, StarYellowOutline } from '../foodtruckDetail/Stars';
+import { numberWithFirstDecimal } from '../../lib/stringParser'
 
 interface IState {
     state: string,
@@ -26,7 +27,7 @@ export default (props: IState) => {
     return (
         <View style={styles.menuContainer}>
           {/* TODO : 스타일을 정해야 함 */}
-          <Text style={[CustomText.body, { flex: 1, textAlign: 'center', fontSize: 14, display: 'flex', justifyContent: 'center', alignItems: 'center' }]}><StarYellowOutline height={25} width={25} /><Text style={{textAlignVertical: 'top', fontWeight: '700'}}> {props.star}</Text></Text>
+          <Text style={[CustomText.body, { flex: 1, textAlign: 'center', fontSize: 14, display: 'flex', justifyContent: 'center', alignItems: 'center' }]}><StarYellowOutline height={25} width={25} /><Text style={{textAlignVertical: 'top', fontWeight: '700'}}>{numberWithFirstDecimal(props.star)}</Text></Text>
           <Text style={[CustomText.body, { flex: 1, textAlign: 'center',  color: getState(props.state).color, fontSize: 14, display: 'flex', justifyContent: 'center', alignItems: 'center' }]}>{getState(props.state).message}</Text>
         </View>
     )
