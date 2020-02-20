@@ -26,7 +26,6 @@ export const Maps = observer(({ history }) => {
     const φ2 = toRadians(lat2);
     const Δφ = toRadians(lat2 - lat1);
     const Δλ = toRadians(lon2 - lon1);
-    // console.log(point1, point2)
 
     const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
       Math.cos(φ1) * Math.cos(φ2) *
@@ -57,14 +56,11 @@ export const Maps = observer(({ history }) => {
             _lng: position.coords.longitude
           };
           mapStore.center = mapStore.userCenter;
-          console.log("mapStore", mapStore);
-          console.log("mapStore.userCenter : ", mapStore.userCenter);
           const bounds = new naver.maps.LatLngBounds(
-            new naver.maps.LatLng(mapStore.center.lat - 0.0161, mapStore.center.lng - 0.02764),
-            new naver.maps.LatLng(mapStore.center.lat + 0.0161, mapStore.center.lng + 0.02764)
+            new naver.maps.LatLng(mapStore.center._lat - 0.0161, mapStore.center._lng - 0.02764),
+            new naver.maps.LatLng(mapStore.center._lat + 0.0161, mapStore.center._lng + 0.02764)
           )
           mapStore.bounds = bounds
-          console.log('getMyLocation bounds : ', bounds)
 
           resolve(bounds)
           mapStore.zoom = 14; // 내 위치를 누르면 default zoom으로 복귀
@@ -77,14 +73,11 @@ export const Maps = observer(({ history }) => {
           };
 
           mapStore.center = mapStore.userCenter;
-          console.log("mapStore", mapStore);
-          console.log("defaultCenter : ", mapStore.userCenter);
           const bounds = new naver.maps.LatLngBounds(
-            new naver.maps.LatLng(mapStore.userCenter.lat - 0.0161, mapStore.userCenter.lng - 0.02764),
-            new naver.maps.LatLng(mapStore.userCenter.lat + 0.0161, mapStore.userCenter.lng + 0.02764)
+            new naver.maps.LatLng(mapStore.userCenter._lat - 0.0161, mapStore.userCenter._lng - 0.02764),
+            new naver.maps.LatLng(mapStore.userCenter._lat + 0.0161, mapStore.userCenter._lng + 0.02764)
           )
           mapStore.bounds = bounds
-          console.log('mapstore.bounds : ', mapStore.bounds)
 
           resolve(bounds)
           mapStore.zoom = 14; // 내 위치를 누르면 default zoom으로 복귀
@@ -122,7 +115,6 @@ export const Maps = observer(({ history }) => {
           .filter((element) => element.state !== 'closed')
       }
       mapStore.markers = incoming.data === undefined ? [] : incoming.data;
-      console.log("mapStore.markers : ", mapStore.markers);
       if (mapStore.markers.length === 0) {
         if(isFirstLoading === false) isFirstLoading = true;
         else alert("결과가 없습니다.");
@@ -147,25 +139,20 @@ export const Maps = observer(({ history }) => {
     mapStore.myPosState = false
     mapStore.boundsChanged = true
     mapStore.bounds = bounds;
-    console.log("mapStore.bounds : ", mapStore.bounds);
   }
 
   const handleZoomChanged = (zoom) => {
     mapStore.zoom = zoom;
-    console.log("mapStore.zoom : ", mapStore.zoom);
   }
 
   const handleCenter = (center) => {
     mapStore.center = center;
-    console.log("mapStore.center : ", mapStore.center);
     if (mapStore.stat != -1) getMarkersFromLocation(mapStore.bounds);
     mapStore.stat = -1;
   }
 
   const newOverlay = () => {
     if (mapStore.selectedId === -1) return;
-    console.log("mapStore.stat : ", mapStore.stat);
-    console.log("markers data : ", mapStore.markerData);
     return <View style={{
       position: 'absolute',
       left: mapStore.markerData.domEvent.clientX + 150 <= mainStore.screenWidth ?
@@ -189,13 +176,11 @@ export const Maps = observer(({ history }) => {
         mapStore.markerData = e;
         mapStore.stat = index;
         mapStore.selectedId = element.id - 1;
-        console.log("e : ", e);
       }}
     />
   });
 
   const handleListMarkerTrace = (el) => {
-    console.log("choiced element : ", el);
 
     let defaultDistance = {
       y: mapStore.bounds._max.y - mapStore.bounds._min.y,
@@ -268,7 +253,6 @@ export const Maps = observer(({ history }) => {
       </Text>
     }
 
-    // console.log("element : ", element);
     return (
       <TouchableOpacity
         style={[{
