@@ -7,7 +7,7 @@ import {
  const styles = StyleSheet.create({
     line: {
       borderBottomWidth: 1,
-      borderColor: '#eeeeee',
+      borderColor: '#eaeaea',
       width: '95%',
       margin: 'auto',
     },
