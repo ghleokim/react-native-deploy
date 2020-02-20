@@ -39,7 +39,7 @@ export const Modal: React.FC<Props> = observer(({ notice, imgURL }) => {
   console.log(!!imgURL, imgURL, BannerStore.imgHeight)
 
   return (
-    <Animated.View style={{position: 'absolute', top: topOffset, width: '100%', height: '100%', backgroundColor: '#ffffff', zIndex: 2}}>
+    <Animated.View style={{position: 'absolute', top: topOffset, width: '100%', height: MainStore.screenHeight - MainStore.headerHeight, backgroundColor: '#ffffff', zIndex: 2}}>
       <View style={{height: 40, borderBottomColor: '#a090c0', borderBottomWidth: 1, justifyContent: 'center'}}>
         <TouchableOpacity onPressOut={()=>{setModalState(false); setTimeout(()=>{BannerStore.active=false; BannerStore.pageIndex = -1}, 500)}} style={{flex: 1, flexDirection:'row', justifyContent: 'space-between'}}>
           <View style={{width: 20}}></View>
@@ -50,7 +50,6 @@ export const Modal: React.FC<Props> = observer(({ notice, imgURL }) => {
       <ScrollView contentContainerStyle={{flex: 1,}}>
         {MainStore.modalData.category === 'banner' ? <View style={{width: '100%'}}>
           <Image style={{height: BannerStore.imgHeight, width: '100%', resizeMode: 'contain'}} source={{uri: imgURL}} defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}/>
-          <Image style={{height: '100%', width: '100%', resizeMode: 'contain'}} source={{uri: imgURL}} defaultSource={require('@foodtruckmap/common/src/static/icon_processed/truck_bw_120.png')}/>
           </View>
           : <View>
               <View style={{height: 80, paddingHorizontal: 15, justifyContent: 'center', borderBottomColor: '#c0c0c0', borderBottomWidth: 1}}>
