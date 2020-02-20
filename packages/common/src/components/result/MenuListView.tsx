@@ -12,9 +12,9 @@ interface Props {
 }
 
 const categoryToStr = (id) => {
-    if(id === 90) return '부적절한 언행 | 부적절한 언행 또는 욕설';
-    else if(id === 91) return '음란물 | 음란물, 선정적인 내용';
-    else if(id === 92) return '폭력적인 내용 | 폭력적인 내용';
+    if(id === 90) return '부적절한 언행 또는 욕설';
+    else if(id === 91) return '음란물, 선정적인 내용';
+    else if(id === 92) return '폭력적인 내용';
 };
 
 export const MenuListView: React.FC<Props> = observer(({history}) => {
@@ -27,32 +27,36 @@ export const MenuListView: React.FC<Props> = observer(({history}) => {
     }
 
 	return (
-        <View>
+        <View style={{zIndex:10000, position: 'absolute',top:'1vh',}}>
+        <View style={{borderStyle: 'solid', borderRightColor: 'transparent', borderLeftColor: 'transparent', borderTopColor:'transparent', borderBottomColor:'#333333', borderTopWidth: 15, borderBottomWidth: 15, borderLeftWidth: 10, borderRightWidth: 10, left:'50%', marginLeft:'-10px', width:5}}></View>
+        <View style={{borderWidth:2, borderRadius: 10}}>
             <TouchableOpacity onPress={()=>handleItemSelect(90)} style={[styles.listView, { flexDirection: 'row' }]}>
                 <View style={{ flex: 3, justifyContent: 'center' }}>
-    <Text style={[CustomText.title, {color: Colors.black}]}>{categoryToStr(90)}</Text>
+    <Text style={[CustomText.title, {color: Colors.black, paddingHorizontal: 15, textAlign: 'center'}]}>{categoryToStr(90)}</Text>
                 </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={()=>handleItemSelect(91)} style={[styles.listView, { flexDirection: 'row' }]}>
                 <View style={{ flex: 3, justifyContent: 'center' }}>
-                    <Text style={[CustomText.title, {color: Colors.black}]}>{categoryToStr(91)}</Text>
+                    <Text style={[CustomText.title, {color: Colors.black, paddingHorizontal: 15, textAlign: 'center'}]}>{categoryToStr(91)}</Text>
                 </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={()=>handleItemSelect(92)} style={[styles.listView, { flexDirection: 'row' }]}>
                 <View style={{ flex: 3, justifyContent: 'center' }}>
-                    <Text style={[CustomText.title, {color: Colors.black}]}>{categoryToStr(92)}</Text>
+                    <Text style={[CustomText.title, {color: Colors.black, paddingHorizontal: 15, textAlign: 'center'}]}>{categoryToStr(92)}</Text>
                 </View>
             </TouchableOpacity>
+        </View>
         </View>
 	)
 });
 
 const localStyle = StyleSheet.create({
 	listView: {
+        backgroundColor: '#FFFFFF',
 		borderBottomColor: `rgba(${COLOR_DARKGRAY}, 0.5)`,
-		borderBottomWidth: 1,
-		paddingHorizontal: '6%',
-		paddingVertical: '3%'
+        borderBottomWidth: 1,
+		paddingHorizontal: '0',
+		paddingVertical: '5%'
 	}
 });
 

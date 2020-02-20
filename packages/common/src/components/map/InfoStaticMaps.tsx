@@ -30,7 +30,7 @@ export default (props: IProps) => {
         {props.histories.map(history => 
           <Marker // 내 위치를 띄우는 마커
           position={{y: history.latitude, x: history.longitude, _lat: history.latitude, _lng: history.longitude}}
-          icon={require("@foodtruckmap/common/src/static/img/sample_shrimp_50.png")}
+          icon={require("@foodtruckmap/common/src/static/img/myPos_history_24.png")}
           zIndex={9}
           key={history.id}
         />  

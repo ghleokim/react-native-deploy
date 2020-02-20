@@ -1,6 +1,6 @@
 {
-  "name": "Foodtruck Map",
-  "short_name": "Foodtruck Map",
+  "name": "foodduck",
+  "short_name": "foodduck - foodtruck near me",
   "icons": [
     {
       "src": "favicon.ico",
