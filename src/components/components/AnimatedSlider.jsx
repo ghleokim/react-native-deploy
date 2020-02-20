@@ -67,7 +67,7 @@ export const AnimatedSlider = observer(() => {
   useInterval(() => {
     setPage((curPage + 1) % 3)
     
-    console.log('b')
+    // console.log('b')
   }, 3000)
 
   const transitionImage = () => {

@@ -35,7 +35,7 @@ export const AnimatedTitle = () => {
 
   useInterval(() => {
     setUp(!up)
-    console.log('b')
+    // console.log('b')
   }, 3000)
 
   const transitionText = (textA, textB) => {

@@ -82,7 +82,7 @@ const ScrollView = ({children}) => {
       window.scrollTo(0, SCREEN_HEIGHT)
     }
     const offset = page * SCREEN_HEIGHT - prevY.current
-    console.log('offset', offset) 
+    // console.log('offset', offset) 
   }
 
   useEffect(()=>{
@@ -98,11 +98,11 @@ const ScrollView = ({children}) => {
 
       if (currentY !== 0) {
         goToPage(1)
-        console.log(moving)
+        // console.log(moving)
       }
 
       prevY.current = currentY;
-      console.log(prevY.current, curPage,)
+      // console.log(prevY.current, curPage,)
     }
 
     window.addEventListener('scroll', handleScroll, {passive: true})
