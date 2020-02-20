@@ -60,7 +60,7 @@ export const Navbar: React.FC<Props> = observer(({ history }) => {
   return (
     <View style={[styles.footer]}>
       {history.location.pathname === '/' ? <></> : 
-      <TouchableOpacity onPress={() => history.replace('/')} style={styles.navButton}>
+      <TouchableOpacity onPress={() => history.go(-1)} style={styles.navButton}>
         <Image
           style={styles.navButtonImage}
           source={require('@foodtruckmap/common/src/static/icon_processed/noun_back_1015371.png')}
