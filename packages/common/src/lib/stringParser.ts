@@ -3,5 +3,5 @@ export const numberWithCommas = (n: number) => {
 }
 
 export const numberWithFirstDecimal = (n: number) => {
-    return Math.round(n * 10) / 10
+    return n.toFixed(1)
 }
