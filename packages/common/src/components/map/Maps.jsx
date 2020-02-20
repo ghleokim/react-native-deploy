@@ -60,8 +60,8 @@ export const Maps = observer(({ history }) => {
           console.log("mapStore", mapStore);
           console.log("mapStore.userCenter : ", mapStore.userCenter);
           const bounds = new naver.maps.LatLngBounds(
-            new naver.maps.LatLng(mapStore.center.lat - 0.0161, mapStore.center.lng - 0.02764),
-            new naver.maps.LatLng(mapStore.center.lat + 0.0161, mapStore.center.lng + 0.02764)
+            new naver.maps.LatLng(mapStore.center._lat - 0.0161, mapStore.center._lng - 0.02764),
+            new naver.maps.LatLng(mapStore.center._lat + 0.0161, mapStore.center._lng + 0.02764)
           )
           mapStore.bounds = bounds
           console.log('getMyLocation bounds : ', bounds)
@@ -80,8 +80,8 @@ export const Maps = observer(({ history }) => {
           console.log("mapStore", mapStore);
           console.log("defaultCenter : ", mapStore.userCenter);
           const bounds = new naver.maps.LatLngBounds(
-            new naver.maps.LatLng(mapStore.userCenter.lat - 0.0161, mapStore.userCenter.lng - 0.02764),
-            new naver.maps.LatLng(mapStore.userCenter.lat + 0.0161, mapStore.userCenter.lng + 0.02764)
+            new naver.maps.LatLng(mapStore.userCenter._lat - 0.0161, mapStore.userCenter._lng - 0.02764),
+            new naver.maps.LatLng(mapStore.userCenter._lat + 0.0161, mapStore.userCenter._lng + 0.02764)
           )
           mapStore.bounds = bounds
           console.log('mapstore.bounds : ', mapStore.bounds)
