@@ -5,6 +5,7 @@ import { mainStoreContext } from '../../store/MainStore';
 import axios from 'axios';
 import { History, LocationState } from 'history'
 import { numberWithFirstDecimal } from '../../lib/stringParser'
+import { StarYellowOutline } from '../foodtruckDetail/Stars';
 
 interface TruckItem {
   id: number,
@@ -217,8 +218,7 @@ export const PersonalPage: React.FC<Props> = ({history}) => {
               <Text style={[CustomText.title, {marginRight: 3, }]} numberOfLines={1} ellipsizeMode='clip'>{truck.title}</Text>
             </View>
             <View style={{flexDirection: 'row', }}>
-              <Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')}
-                style={{ height: 20, width: 20, tintColor: '#feb246' }} />
+              <StarYellowOutline height={20} width={20} />
               <Text style={CustomText.title}>{truck.starRatingAVG !== null ? numberWithFirstDecimal(truck.starRatingAVG) : '0.0'}</Text>
             </View>
           </View>
