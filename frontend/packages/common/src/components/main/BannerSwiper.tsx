@@ -49,7 +49,7 @@ export const BannerSwiper: React.FC = () => {
         <TouchableOpacity
           activeOpacity={1}
           onPressIn={(e)=>{BannerStore.touchIn = {X: e.nativeEvent.locationX, Y: e.nativeEvent.locationY, timestamp: e.nativeEvent.timestamp}}}
-          onPressOut={(e)=>{BannerStore.touchOut = {X: e.nativeEvent.locationX, Y: e.nativeEvent.locationY, timestamp: e.nativeEvent.timestamp}; handleTouchOrSwipe(1, 'https://lh3.googleusercontent.com/proxy/vwQ06YKty4T_pALw5WJfPSeJkWTBnkv9jprllPijrjcrQ43HvbeZRRmvBnPkzyHP6Pmh3WtfZBtJcs4HjSJDsiQlXi7T6olyWvq9aeFCf7in')}}
+          onPressOut={(e)=>{BannerStore.touchOut = {X: e.nativeEvent.locationX, Y: e.nativeEvent.locationY, timestamp: e.nativeEvent.timestamp}; handleTouchOrSwipe(1, 'https://user-images.githubusercontent.com/52501513/74900404-054f8300-53e3-11ea-827c-0a9a7713777d.png')}}
         >
           <Image style={[styles.mainBannerImage, { height: bannerHeight, width: bannerWidth }]} source={require('@foodtruckmap/common/src/static/banner/bamdokkabi_1280_480.png')} />
         </TouchableOpacity>

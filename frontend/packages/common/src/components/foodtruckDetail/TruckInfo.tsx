@@ -9,6 +9,7 @@ import InfoStaticMaps from './../map/InfoStaticMaps';
 import OpeningState from './../seller/OpeningState';
 import TruckSaleHistoryDetail from "./TruckSaleHistoryDetail";
 import { CustomText } from '../../static/CustomStyle';
+import { StarYellow } from './Stars';
 
 interface IState {
   id: number,
@@ -44,26 +45,15 @@ export default (props: IProps) => {
   return (
     <View style={styles.menuListContainer}>
     <View style={styles.menuListContentContainer}>
-    <View style={styles.menuListTitle}>
-      <Text style={[CustomText.textCenter, CustomText.titleHN, { fontSize: 22 }]}>정보</Text>
-    </View>
     <View style={styles.truckInfoContent}>
-    
       <View style={styles.truckInfoCard}>
         <Text style={styles.truckInfoSubTitle}>가게 소개</Text>
-        <Text style={{color:'#AAAAAA', lineHeight: 25, fontSize: 12}}>{props.data.truckNotice}</Text>
+        <Text style={{color:'#505050', lineHeight: 25, fontSize: 14}}>{props.data.truckNotice}</Text>
       </View>
 
       <View style={styles.truckInfoCard}>
       <TruckSaleHistoryDetail truckId={props.id} mapState={mapState}></TruckSaleHistoryDetail>
-      </View>      
-
-      <View style={{flexDirection: 'row'}}>
-        <Image source={require('@foodtruckmap/common/src/static/icon_processed/star.png')}
-          style={{ height: 20, width: 20, tintColor: '#feb246' }} />
-        <Text>{props.data.starRatingAVG !== null ? props.data.starRatingAVG : '0.0'}</Text>
       </View>
-
     </View>
   </View>
   </View>
@@ -92,7 +82,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   truckInfoCard: {
-    paddingVertical: 20
+    paddingBottom: 10,
   },
   truckInfoSubTitle: {
     fontSize: 16,
