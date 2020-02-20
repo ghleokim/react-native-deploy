@@ -57,7 +57,7 @@ export const BannerSwiper: React.FC = () => {
         <TouchableOpacity
           activeOpacity={1}
           onPressIn={(e)=>{BannerStore.touchIn = {X: e.nativeEvent.locationX, Y: e.nativeEvent.locationY, timestamp: e.nativeEvent.timestamp}}}
-          onPressOut={(e)=>{BannerStore.touchOut = {X: e.nativeEvent.locationX, Y: e.nativeEvent.locationY, timestamp: e.nativeEvent.timestamp}; handleTouchOrSwipe(2, "https://food-truck.shop/api/user/web-banner-02-1582161109034.png")}}
+          onPressOut={(e)=>{BannerStore.touchOut = {X: e.nativeEvent.locationX, Y: e.nativeEvent.locationY, timestamp: e.nativeEvent.timestamp}; handleTouchOrSwipe(2, "https://user-images.githubusercontent.com/52501513/74899085-40e84e00-53df-11ea-8682-9ffd9380851a.png")}}
         >
           <Image style={[styles.mainBannerImage, { height: bannerHeight, width: bannerWidth }]} source={require('@foodtruckmap/common/src/static/banner/tacoandboonguh_1280_480.png')} />
         </TouchableOpacity>
