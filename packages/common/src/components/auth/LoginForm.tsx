@@ -7,7 +7,6 @@ import { loginStoreContext } from "../../store/LoginStore";
 import { CustomStyle, CustomText } from "../../static/CustomStyle";
 import { Colors } from "../../static/CustomColor";
 import { History, LocationState } from 'history';
-import LoadingBar from "../../common/LoadingBar";
 
 interface Props {
   history: History<LocationState>;
@@ -96,7 +95,6 @@ export const NewLoginForm: React.FC<Props> = observer(({ history }) => {
           source={require('@foodtruckmap/common/src/static/img/foodtruck.png')}
         />
         <Text style={[CustomText.logo, { paddingVertical: '10%', paddingHorizontal: '10%', position: 'absolute', textAlign: 'center', color: '#ffffff', }]}><Text style={{backgroundColor: 'rgba(236, 76, 100, 0.7)'}}> 로그인 후 {"\n"} 푸드트럭 정보를 찾아보세요 ! </Text></Text>
-        {/* <Text style={{position: 'absolute', bottom: 5, right: 10, color: '#ffffff', backgroundColor: 'rgba(230,76,76,0.8)'}}>Photo by REVOLT on Unsplash</Text> */}
       </View>
       <View style={{ flex: 2 }}>
         <View style={[styles.inputContainer]}>

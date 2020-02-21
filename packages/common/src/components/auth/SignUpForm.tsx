@@ -1,4 +1,4 @@
-import React, { Component, useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, TouchableOpacity, TextInput, StyleSheet, Image } from "react-native";
 import axios from 'axios';
 import { CustomStyle, CustomText } from "../../static/CustomStyle";
@@ -144,7 +144,6 @@ export const SignupForm: React.FC<Props> = observer(({ history }) => {
           source={require('@foodtruckmap/common/src/static/img/foodtruck.png')}
         />
         <Text style={[CustomText.logo, { paddingVertical: '10%', paddingHorizontal: '10%', position: 'absolute', textAlign: 'center', color: '#ffffff' }]}><Text style={{backgroundColor: 'rgba(236, 76, 100, 0.7)'}}> 회원가입 후 {"\n"} 푸드트럭 정보를 찾아보세요 ! </Text></Text>
-        {/* <Text style={{position: 'absolute', bottom: 5, right: 10, color: '#ffffff', backgroundColor: 'rgba(230,76,76,0.8)'}}>Photo by REVOLT on Unsplash</Text> */}
       </View>
       <View style={{ flex: 2 }}>
       <View style={styles.inputContainer}>
