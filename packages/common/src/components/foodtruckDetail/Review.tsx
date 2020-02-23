@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { CustomText } from '../../static/CustomStyle';
-import Line from '../Line';
 import axios from 'axios';
 import { IReview } from './TruckInterface';
 import { ReviewReply } from './ReviewReply';

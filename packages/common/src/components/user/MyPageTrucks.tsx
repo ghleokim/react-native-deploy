@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
-import { Colors } from '../../static/CustomColor';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { CustomStyle, CustomText } from '../../static/CustomStyle';
 import axios from 'axios'
 import { mainStoreContext } from '../../store/MainStore';

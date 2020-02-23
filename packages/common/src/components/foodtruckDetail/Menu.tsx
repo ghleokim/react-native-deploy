@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { } from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { CustomText } from '../../static/CustomStyle';
-import {numberWithCommas} from '../../lib/stringParser'
+import { numberWithCommas } from '../../lib/stringParser'
 
 interface IProps {
   id: number,

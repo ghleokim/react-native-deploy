@@ -1,11 +1,9 @@
-import React, {useContext, useState} from 'react';
+import React, { useState } from 'react';
 import {
   Image,
   View,
   Text,
-  TextInput,
   StyleSheet,
-  Button,
   TouchableOpacity,
 } from "react-native";
 import { CustomStyle, CustomText } from "../../static/CustomStyle";

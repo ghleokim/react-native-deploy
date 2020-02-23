@@ -4,7 +4,6 @@ import { observer } from 'mobx-react-lite';
 import { mainStoreContext } from '../../store/MainStore';
 import { CustomStyle } from '../../static/CustomStyle';
 import { COLOR_HEADER } from '../../static/CustomColor';
-import { searchResultContext } from '../../store/SearchStore';
 import { RouteComponentProps } from 'react-router-dom';
 import SellerState from '../seller/SellerState';
 import axios from 'axios';

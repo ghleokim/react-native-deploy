@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useContext } from 'react';
-import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { CustomText, CustomStyle } from '../../static/CustomStyle'
 import { COLOR_DARKGRAY, Colors } from '../../static/CustomColor'
 import { History, LocationState } from 'history';

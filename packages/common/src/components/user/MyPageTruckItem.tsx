@@ -1,10 +1,7 @@
 import * as React from 'react';
-import { useState, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Colors } from '../../static/CustomColor';
-import { CustomStyle, CustomText } from '../../static/CustomStyle';
-import axios from 'axios'
-import { mainStoreContext } from '../../store/MainStore';
+import { CustomStyle } from '../../static/CustomStyle';
 import { History, LocationState } from 'history';
 
 interface TruckProps {

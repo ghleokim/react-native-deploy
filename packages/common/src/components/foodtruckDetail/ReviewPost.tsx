@@ -4,8 +4,7 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
-  StyleSheet,
-  Image,
+  StyleSheet
 } from "react-native";
 import axios from 'axios';
 import { StarYellow, StarGray } from './Stars';

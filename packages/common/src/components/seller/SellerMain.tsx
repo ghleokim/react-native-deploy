@@ -5,23 +5,17 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  Button,
   TouchableOpacity,
 } from "react-native";
 
 import MenuList from './MenuList';
 import TruckInfo from './TruckInfo';
-import Line from '../Line'
 import axios from 'axios'
 
 import { CustomStyle, CustomText } from "../../static/CustomStyle";
-import EditBtn from '../EditBtn';
-import { Navbar } from '../main/Navbar';
-import SellerState from './SellerState';
 import ReviewList from '../foodtruckDetail/ReviewList';
-import { IReview, IReply } from './../foodtruckDetail/TruckInterface';
+import { IReview } from './../foodtruckDetail/TruckInterface';
 import Dropzone from 'react-dropzone'
-import { History, LocationState } from 'history';
 
 interface IState {
   id: Number,
@@ -321,7 +315,6 @@ export default () => {
           <View style={{ paddingHorizontal: '5%' }}>
             {editContentComponent('contents')}
           </View>
-          <Line></Line>
           <DetailNavBar />
           <DetailNavContents />
           {/* <SellerState/> */}

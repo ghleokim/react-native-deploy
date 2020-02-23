@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, StyleSheet, Image, FlatList } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, FlatList } from "react-native";
 import { IReply } from './TruckInterface';
 import { CustomText } from '../../static/CustomStyle';
 import axios from 'axios';

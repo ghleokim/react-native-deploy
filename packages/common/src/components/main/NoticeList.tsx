@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, FlatList, Animated, Button } from 'react-native';
+import React, { useContext, useRef, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import { CustomText, CustomStyle } from '../../static/CustomStyle';
 import { mainStoreContext } from '../../store/MainStore';
 import { observer } from 'mobx-react-lite';

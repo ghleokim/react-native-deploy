@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import { View, ScrollView, Text, Animated } from 'react-native';
+import React, { useContext } from 'react';
+import { View, ScrollView, Text } from 'react-native';
 import { mainStoreContext } from '../../store/MainStore';
 import { observer } from 'mobx-react-lite';
 

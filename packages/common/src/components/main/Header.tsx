@@ -1,18 +1,9 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  Animated,
-  Button,
-} from 'react-native';
+import React, { useContext, useState } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, Animated } from 'react-native';
 import { observer } from 'mobx-react-lite';
 import { mainStoreContext } from '../../store/MainStore';
 import { CustomStyle } from '../../static/CustomStyle';
 import { Colors, COLOR_HEADER } from '../../static/CustomColor';
-import axios from 'axios';
 import { RouteComponentProps } from 'react-router-dom';
 import { useInterval } from '../../functions/functions';
 
@@ -22,32 +13,10 @@ export const Header: React.FC<Props> = observer(({ history }) => {
   const mainStore = useContext(mainStoreContext);
   mainStore.headerHeight = mainStore.screenHeight / 13.5;
 
-  // test for dev
-  const devTest = () => {
-    axios.get('/')
-      .then((response) => { console.log('db health check',response); alert(JSON.stringify(response.data)) })
-      .catch((error) => { console.log(error.response); alert(JSON.stringify(error.response.data)) })
-  }
-
   const sellerButton = () => {
     return mainStore.isSeller ? 
       <TouchableOpacity style={{position: 'absolute', right: 10}} onPress={()=>history.push('/seller')}><View style={{ paddingVertical: 7, paddingHorizontal: 4, backgroundColor: Colors.success, borderRadius: 3 }}><Text style={{ color: Colors.white, fontSize: 12 }}>내트럭</Text></View></TouchableOpacity>
       : <></>
-  }
-
-  const [duck, setDuck] = useState(false);
-
-  const stA:any = {
-    pos: new Animated.Value(-10),
-    width: new Animated.Value(0),
-    height: new Animated.Value(0),
-    opacity: new Animated.Value(0),
-  }
-  const stB:any = {
-    pos: new Animated.Value(0),
-    width: new Animated.Value(10),
-    height: new Animated.Value(10),
-    opacity: new Animated.Value(1),
   }
 
   const posA:any = new Animated.Value(-10)
