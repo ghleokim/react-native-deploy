@@ -1,10 +1,9 @@
 import * as React from 'react'
 import { useState } from 'react'
-import { View, Image, StyleSheet, Text, Button, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { ListView } from './ListView'
 import { CustomStyle } from '../../static/CustomStyle'
-import { Colors, COLOR_DARKGRAY } from '../../static/CustomColor'
-import { SearchResultType, SearchResultItem, truckStatus, searchResultContext } from '../../store/SearchStore'
+import { SearchResultType, SearchResultItem } from '../../store/SearchStore'
 import axios from 'axios'
 import { mainStoreContext } from '../../store/MainStore'
 import { History, LocationState } from 'history';

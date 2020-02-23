@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { } from 'react';
 import {
   View,
   Text,
   FlatList,
   StyleSheet,
-  TouchableOpacity,
 } from "react-native";
 import { CustomText } from '../../static/CustomStyle';
 import Review from './Review';
-import { Colors } from '../../static/CustomColor';
 import { ReviewPost } from './ReviewPost';
 import { IReview, IReply } from './TruckInterface';
 
@@ -59,7 +57,6 @@ export default (props: IProps) => {
       </View>
     </View>
   );
-
 };
 
 const styles = StyleSheet.create({

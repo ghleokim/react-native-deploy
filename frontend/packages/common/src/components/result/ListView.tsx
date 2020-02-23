@@ -2,7 +2,7 @@ import * as React from 'react'
 import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { CustomText, CustomStyle } from '../../static/CustomStyle'
 import { COLOR_DARKGRAY, Colors } from '../../static/CustomColor'
-import { truckStatus, searchResultContext } from '../../store/SearchStore'
+import { truckStatus } from '../../store/SearchStore'
 import { History, LocationState } from 'history';
 
 interface Props {

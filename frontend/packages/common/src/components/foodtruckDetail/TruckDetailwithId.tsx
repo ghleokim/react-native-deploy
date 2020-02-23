@@ -7,12 +7,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 import MenuList from './MenuList';
-import Line from '../Line'
 import axios from 'axios'
 import { CustomStyle, CustomText } from '../../static/CustomStyle';
 import ReviewList from './ReviewList';
 import TruckInfo from './TruckInfo';
-import { Colors } from '../../static/CustomColor';
 import { mainStoreContext } from '../../store/MainStore';
 import OpeningState from './../seller/OpeningState';
 import { StarYellow } from './Stars';
