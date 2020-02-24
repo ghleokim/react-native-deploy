@@ -12,7 +12,7 @@ export const CustomText = StyleSheet.create({
     fontWeight: '700'
   },
   title: {
-    fontFamily: "sans-serif, Gill Sans",
+    fontFamily: "Gill Sans, sans-serif",
     fontWeight: '700',
   },
   body: {
