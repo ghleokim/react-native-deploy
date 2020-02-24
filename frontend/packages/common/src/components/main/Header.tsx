@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Animated } from 'react-native';
 import { observer } from 'mobx-react-lite';
 import { mainStoreContext } from '../../store/MainStore';
@@ -6,6 +6,7 @@ import { CustomStyle } from '../../static/CustomStyle';
 import { Colors, COLOR_HEADER } from '../../static/CustomColor';
 import { RouteComponentProps } from 'react-router-dom';
 import { useInterval } from '../../functions/functions';
+import { fonts } from '../../static/TextStyle';
 
 interface Props extends RouteComponentProps {}
 
@@ -43,7 +44,7 @@ export const Header: React.FC<Props> = observer(({ history }) => {
 
 return (
   <View style={[styles.header, { height: mainStore.headerHeight }]}>
-    <Text style={styles.headerText} onPress={()=>history.replace('/')}>food{transitionText('tr', 'd')}<View style={{width: 18}}></View>uck {transitionText('🚚', '🦆', {top: mainStore.headerHeight / 2 - 16})}</Text>
+    <Text style={[fonts.Logo, fonts.bold, fonts.sizeH1, styles.headerText]} onPress={()=>history.replace('/')}>food{transitionText('tr', 'd')}<View style={{width: 18}}></View>uck {transitionText('🚚', '🦆', {top: mainStore.headerHeight / 2 - 16})}</Text>
     {sellerButton()}
   </View>
 )
@@ -63,8 +64,6 @@ const localStyle = StyleSheet.create({
     borderBottomWidth: 1
   },
   headerText: {
-    fontFamily: "Palatino Linotype, Book Antiqua, Palatino, serif",
-    fontWeight: '700',
     fontSize: 24,
     marginRight: 18
   },
